@@ -71,7 +71,7 @@ namespace MasterProject
             // Read Codec Rate value from a file
             try
             {
-                string text = File.ReadAllText("C:\\ApplicationProfile\\CodecRate.txt");
+                string text = "120";//File.ReadAllText("C:\\ApplicationProfile\\CodecRate.txt");
                 CodecRate = Convert.ToDouble(text);
             }
             catch
@@ -365,16 +365,6 @@ namespace MasterProject
                 UploadBWPerLandmarkArray[BWindex] = Convert.ToInt32(mbpsUP); // Size of file in Mbits / Time in Sec = Mbps
 
                 // Calculate Downloading Bandwidth
-                FileStream FileEcho;
-                try
-                {
-                    FileEcho = new FileStream("C:\\ClientFiles\\EchoedFile.txt", FileMode.OpenOrCreate | FileMode.Truncate);
-                }
-                catch
-                {
-                    MessageBox.Show("Problem in creating the echoed-back file from the server! Please check your administrative settings.", "Error");
-                    return null;
-                }
                 // Receiving the file
                 try
                 {
@@ -392,14 +382,13 @@ namespace MasterProject
                 }
                 catch
                 {
-                    MessageBox.Show("Problem in receiving the file from the landmark: " + Landmark + " ! Please, try agian later.", "Error");
+                    MessageBox.Show("Error occurred when receiving the file from the landmark: " + Landmark + " !", "Error");
                     return null;
                 }
                 // Downloading Bandwidth is
                 Double mbpsDWN = ((double)FileRec.Length) * 8 / kilo / kilo * 1000 / watch.ElapsedMilliseconds;
                 System.Console.WriteLine("Calculated Download Bandiwidth {0} Mbps", mbpsDWN);
                 DownloadBWPerLandmarkArray[BWindex] = Convert.ToInt32(mbpsDWN); // Size of file in Mbits / Time in Sec = Mbps
-                FileEcho.Close();
                 BWindex++;
                 ClientSocket.Close();
             }
