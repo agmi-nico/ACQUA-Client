@@ -123,7 +123,14 @@ namespace MasterProject
                 {
                     LossRatePerLandmark = (int)(Math.Max((CodecRate - UploadBWPerLandmarkArray[i]), 0) / UploadBWPerLandmarkArray[i]) * 100;
                     if (LossRatePerLandmark > 100) LossRatePerLandmark = 100;
-                    System.Console.WriteLine("QoEPerLanmark {0}", i);
+                    LossRatePerLandmark = 0;
+                    System.Console.WriteLine("QoEPerLanmark:{0} Delay:{1} Jitter:{2} UBW:{3} DBW:{4} LR:{5}",
+                                            i,
+                                            TwoWayDelayPerLandmarkArray[i],   // Delay
+                                            JitterPerLandmarkArray[i],        // Jitter
+                                            UploadBWPerLandmarkArray[i],      // UBandwidth
+                                            DownloadBWPerLandmarkArray[i],    // DBandwidth
+                                            LossRatePerLandmark);
                     QoEPerLanmark[i] = CallerClass.Call(root,                             // Decision-tree Root
                                                         TwoWayDelayPerLandmarkArray[i],   // Delay
                                                         JitterPerLandmarkArray[i],        // Jitter
@@ -133,6 +140,12 @@ namespace MasterProject
                 }
                 //// Then for the Mean Values of Measurements
                 System.Console.WriteLine("Mean QoE");
+                System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} LR:{4}",
+                                            FinalDelayAndJitterArray[LocalIndex].dimension1,
+                                            FinalDelayAndJitterArray[LocalIndex].dimension2,   
+                                            FinalBandwidthArray[LocalIndex].dimension1,
+                                            FinalBandwidthArray[LocalIndex].dimension2,     
+                                            LossRate);
                 MeanResult = CallerClass.Call(root,                                            // Decision-tree Root
                                               FinalDelayAndJitterArray[LocalIndex].dimension1, // Delay
                                               FinalDelayAndJitterArray[LocalIndex].dimension2, // Jitter
