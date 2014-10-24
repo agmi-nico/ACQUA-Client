@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MasterProject.Time">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAgAAAAAAAAAAAAAAAAAiAAAAAAA=</HashCode>
+      <FileName>Time.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MasterProject.Form1" Collapsed="true">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>eCyIAgQxgmAUABogwxikEBqSKMg4AAAGQPSPBBDxBEo=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MasterProject.ICMP">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAgAAAAIAAAAAgAgAAAAAAAAAAAQAAIAAAAAA=</HashCode>
+      <FileName>ICMP.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MasterProject.MeasurementVector">
+    <Position X="5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MeasurementVector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MasterProject.Node">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAgAAAAAAAAAAAAAAAAAACAAAAAAACACgAEAAAAA=</HashCode>
+      <FileName>Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MasterProject.CallerClass">
+    <Position X="1.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAwAAAAAAAQAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>CallerClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="MasterProject.EType">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABAAgABA=</HashCode>
+      <FileName>Node.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
