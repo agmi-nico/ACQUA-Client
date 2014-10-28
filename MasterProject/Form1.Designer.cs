@@ -151,18 +151,6 @@
             // 
             // JitterChart
             // 
-<<<<<<< HEAD
-            chartArea1.Name = "ChartArea1";
-            this.JitterChart.ChartAreas.Add(chartArea1); //adding chart to ChartArea
-            legend1.Name = "Legend1";
-            this.JitterChart.Legends.Add(legend1);
-            this.JitterChart.Location = new System.Drawing.Point(6, 237);
-            this.JitterChart.Name = "JitterChart";
-            series1.ChartArea = "ChartArea1"; //not sure what a series is
-            series1.Legend = "Legend1";
-            series1.Name = "Jitter";
-            this.JitterChart.Series.Add(series1);
-=======
             chartArea7.Name = "ChartArea1";
             this.JitterChart.ChartAreas.Add(chartArea7);
             legend7.Name = "Legend1";
@@ -173,7 +161,7 @@
             series7.Legend = "Legend1";
             series7.Name = "Jitter";
             this.JitterChart.Series.Add(series7);
->>>>>>> acea4e79eea4312d417bdab1f56127f1a0c647bf
+
             this.JitterChart.Size = new System.Drawing.Size(452, 215);
             this.JitterChart.TabIndex = 1;
             this.JitterChart.Text = "chart1";
@@ -186,19 +174,12 @@
             this.DelayChart.Legends.Add(legend8);
             this.DelayChart.Location = new System.Drawing.Point(5, 16);
             this.DelayChart.Name = "DelayChart";
-<<<<<<< HEAD
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Round-trip Delay";
-            series2.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
-            this.DelayChart.Series.Add(series2);
-=======
+
             series8.ChartArea = "ChartArea1";
             series8.Legend = "Legend1";
             series8.Name = "Round-trip Delay";
-            series8.YValuesPerPoint = 2;
+            series8.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
             this.DelayChart.Series.Add(series8);
->>>>>>> acea4e79eea4312d417bdab1f56127f1a0c647bf
             this.DelayChart.Size = new System.Drawing.Size(453, 215);
             this.DelayChart.TabIndex = 0;
             this.DelayChart.Text = "chart1";
