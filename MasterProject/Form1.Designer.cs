@@ -47,18 +47,22 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            // tab 1: delay and jitter
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.JitterChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.DelayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            // tab 2: bandwidth
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.DownloadBandwidthChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.UploadBandwidthChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            // tab 3 (4?): QoE for the provided decision tree
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.MeanQoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.QoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            // what are "periodic numeric" and "probes numeric"?
             this.PeriodNumeric = new System.Windows.Forms.NumericUpDown();
             this.ProbesNumeric = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -75,6 +79,8 @@
             this.radioButtonRandom = new System.Windows.Forms.RadioButton();
             this.radioButtonIntelligent = new System.Windows.Forms.RadioButton();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
+            // decision tree is here. 
+            //TODO: allow more than one decision tree. Open a tab for each decision tree. Save tabs and decision trees in arrays
             this.DecisionTreeTxtBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -89,6 +95,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            // "starting" graphs?
             ((System.ComponentModel.ISupportInitialize)(this.JitterChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DelayChart)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -111,7 +118,7 @@
             this.SuspendLayout();
             // 
             // tabControl1
-            // 
+            // adding all tabs 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
@@ -122,7 +129,7 @@
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
-            // 
+            // drawing tab1 borders and margins
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -132,8 +139,8 @@
             this.tabPage1.Text = "Delay";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
-            // 
+            // groupBox2 
+            // adding jitter and delay charts to groupBox2 (and so to tab1 too)
             this.groupBox2.Controls.Add(this.JitterChart);
             this.groupBox2.Controls.Add(this.DelayChart);
             this.groupBox2.Location = new System.Drawing.Point(3, -1);
@@ -145,12 +152,12 @@
             // JitterChart
             // 
             chartArea1.Name = "ChartArea1";
-            this.JitterChart.ChartAreas.Add(chartArea1);
+            this.JitterChart.ChartAreas.Add(chartArea1); //adding chart to ChartArea
             legend1.Name = "Legend1";
             this.JitterChart.Legends.Add(legend1);
             this.JitterChart.Location = new System.Drawing.Point(6, 237);
             this.JitterChart.Name = "JitterChart";
-            series1.ChartArea = "ChartArea1";
+            series1.ChartArea = "ChartArea1"; //not sure what a series is
             series1.Legend = "Legend1";
             series1.Name = "Jitter";
             this.JitterChart.Series.Add(series1);
@@ -169,14 +176,14 @@
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Round-trip Delay";
-            series2.YValuesPerPoint = 2;
+            series2.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
             this.DelayChart.Series.Add(series2);
             this.DelayChart.Size = new System.Drawing.Size(453, 215);
             this.DelayChart.TabIndex = 0;
             this.DelayChart.Text = "chart1";
             // 
             // tabPage2
-            // 
+            // drawing tab2 borders and margins
             this.tabPage2.Controls.Add(this.groupBox6);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -187,7 +194,7 @@
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox6
-            // 
+            // adding bw charts to groupBox6 (and so to tab2 too)
             this.groupBox6.Controls.Add(this.DownloadBandwidthChart);
             this.groupBox6.Controls.Add(this.UploadBandwidthChart);
             this.groupBox6.Location = new System.Drawing.Point(4, -1);
@@ -229,7 +236,7 @@
             this.UploadBandwidthChart.Text = "chart2";
             // 
             // tabPage4
-            // 
+            // drawing tab4 borders and margins
             this.tabPage4.Controls.Add(this.groupBox8);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -240,7 +247,7 @@
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // groupBox8
-            // 
+            // dding QoE charts to groupBox8 (and so to tab4 too)
             this.groupBox8.Controls.Add(this.MeanQoEChart);
             this.groupBox8.Controls.Add(this.QoEChart);
             this.groupBox8.Location = new System.Drawing.Point(4, -1);
@@ -282,28 +289,31 @@
             this.QoEChart.Text = "chart4";
             // 
             // PeriodNumeric
-            // 
+            // what's this???
             this.PeriodNumeric.Location = new System.Drawing.Point(138, 232);
             this.PeriodNumeric.Name = "PeriodNumeric";
             this.PeriodNumeric.Size = new System.Drawing.Size(68, 20);
             this.PeriodNumeric.TabIndex = 12;
             this.PeriodNumeric.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+                                                                1,
+                                                                0,
+                                                                0,
+                                                                0});
             // 
             // ProbesNumeric
-            // 
+            //  what's this???
             this.ProbesNumeric.Location = new System.Drawing.Point(105, 24);
             this.ProbesNumeric.Name = "ProbesNumeric";
             this.ProbesNumeric.Size = new System.Drawing.Size(197, 20);
             this.ProbesNumeric.TabIndex = 11;
             this.ProbesNumeric.Value = new decimal(new int[] {
-            4,
-            0,
-            0,
-            0});
+                                                                4,
+                                                                0,
+                                                                0,
+                                                                0});
+            //
+            // LEFT PART OF THE WINDOW
+            // (EXPERIMENT CONFIGURATION)
             // 
             // label9
             // 
@@ -352,7 +362,7 @@
             this.label2.Text = "Number of Probes";
             // 
             // groupBox10
-            // 
+            // "configuration" group (the whole left side of the window)
             this.groupBox10.Controls.Add(this.pictureBox1);
             this.groupBox10.Controls.Add(this.groupBox3);
             this.groupBox10.Controls.Add(this.groupBox13);
@@ -370,7 +380,7 @@
             this.groupBox10.Text = "Configuration";
             // 
             // pictureBox1
-            // 
+            // probably the picture with the bolt
             this.pictureBox1.Image = global::MasterProject.Properties.Resources.Utilities;
             this.pictureBox1.Location = new System.Drawing.Point(255, 35);
             this.pictureBox1.Name = "pictureBox1";
@@ -380,7 +390,7 @@
             this.pictureBox1.TabStop = false;
             // 
             // groupBox3
-            // 
+            // right column, landmark selection
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.LandmarksNo);
             this.groupBox3.Controls.Add(this.SelectLandmarks);
@@ -445,7 +455,7 @@
             this.radioButtonIntelligent.UseVisualStyleBackColor = true;
             // 
             // groupBox13
-            // 
+            // DECISION TREE goes here
             this.groupBox13.Controls.Add(this.DecisionTreeTxtBox);
             this.groupBox13.Controls.Add(this.label11);
             this.groupBox13.Controls.Add(this.button5);
@@ -492,7 +502,7 @@
             this.groupBox12.Size = new System.Drawing.Size(368, 60);
             this.groupBox12.TabIndex = 15;
             this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "Bandwidth Config.";
+            this.groupBox12.Text = "Choose file to transfer";
             // 
             // BWFileTxtBox
             // 
@@ -568,7 +578,7 @@
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
-            // 
+            // Global window: adding all components
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(877, 493);
@@ -584,7 +594,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.JitterChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.JitterChart)).EndInit(); //why?
             ((System.ComponentModel.ISupportInitialize)(this.DelayChart)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
