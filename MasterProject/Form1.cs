@@ -12,6 +12,9 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using System.Collections;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Net;
 
 namespace MasterProject
 {
@@ -23,19 +26,17 @@ namespace MasterProject
             CheckForIllegalCrossThreadCalls = false;
         }
 
-        // Close Application Button
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         int LandmarksNumber = 0, index;
         MeasurementVector[] FinalDelayAndJitterArray;
         MeasurementVector[] FinalBandwidthArray;
         Time[] TimeArray;
-        static double CodecRate = 0;
+
         private void button1_Click(object sender, EventArgs e)
         {
+            int[] series=new int[2];
+            series[1] = 2;
+            series[0] = 1;
+           
             FinalDelayAndJitterArray = new MeasurementVector[1000];
             FinalBandwidthArray = new MeasurementVector[1000];
             TimeArray = new Time[1000];
@@ -43,8 +44,8 @@ namespace MasterProject
 
             if (LandmarksDelayRchTxt.Text == "")
             {
-                MessageBox.Show("Choose landmarks, please !", "Error");
-                return;
+                LandNumber = 1;
+                BeginLandmarksSelection();
             }
             if (BWFileTxtBox.Text == "")
             {
@@ -66,29 +67,21 @@ namespace MasterProject
 
             // Count the number of landmarks in the richTextBox
             foreach (string landmark in LandmarksDelayRchTxt.Lines)
-                LandmarksNumber++;
+                LandmarksNumber++;   
 
-            // Read Codec Rate value from a file
-            try
-            {
-                string text = "120";//File.ReadAllText("C:\\ApplicationProfile\\CodecRate.txt");
-                CodecRate = Convert.ToDouble(text);
-            }
-            catch
-            {
-                MessageBox.Show("Cannot find Application Configuration file ! Codec rate value is missing.", "Error");
-                return;
-            }
-            System.Console.WriteLine("Starting...");
             Thread t = new Thread(new ThreadStart(Run));
+            System.Console.WriteLine("Starting...");
             t.Start();
         }
 
         int MeanResult = -1;
         int[] QoEPerLanmark;
+        int[] skypeQoEPerLandmark;
+        int skypeQoEMeanResult;
         void Run()
         {
             QoEPerLanmark = new int[LandmarksNumber];
+            skypeQoEPerLandmark=new int[LandmarksNumber];
             int LocalIndex = 0;
             while (true)
             {
@@ -103,56 +96,47 @@ namespace MasterProject
                     return;
 
                 // Calculate Loss Rate LR = max(CR - AB, 0) / AB
-                int LossRate;
-                try
-                {
-                    LossRate = (int)(Math.Max((CodecRate - FinalBandwidthArray[LocalIndex].dimension1), 0) /
-                                                   FinalBandwidthArray[LocalIndex].dimension1) * 100;
-                    if (LossRate > 100) LossRate = 100;
-                }
-                catch
-                {
-                    MessageBox.Show("Problem in getting the Codec Rate value, please check file settings !", "Error");
-                    return;
-                }
+                int[] LossRate=new int[2];
+                LossRate = PingHostLossProb(AllLandmarks[LocalIndex], 100, LocalIndex);
 
                 //// Make QoE Estimation
                 //// For the Set of Landmarks First
-                int LossRatePerLandmark = 0;
+                int[] LossRatePerLandmark = new int[2];
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
-                    LossRatePerLandmark = (int)(Math.Max((CodecRate - UploadBWPerLandmarkArray[i]), 0) / UploadBWPerLandmarkArray[i]) * 100;
-                    if (LossRatePerLandmark > 100) LossRatePerLandmark = 100;
-                    LossRatePerLandmark = 0;
-                    System.Console.WriteLine("QoEPerLanmark:{0} Delay:{1} Jitter:{2} UBW:{3} DBW:{4} LR:{5}",
-                                            i,
-                                            TwoWayDelayPerLandmarkArray[i],   // Delay
-                                            JitterPerLandmarkArray[i],        // Jitter
-                                            UploadBWPerLandmarkArray[i],      // UBandwidth
-                                            DownloadBWPerLandmarkArray[i],    // DBandwidth
-                                            LossRatePerLandmark);
+                    LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], 100,i);
                     QoEPerLanmark[i] = CallerClass.Call(root,                             // Decision-tree Root
                                                         TwoWayDelayPerLandmarkArray[i],   // Delay
                                                         JitterPerLandmarkArray[i],        // Jitter
                                                         UploadBWPerLandmarkArray[i],      // UBandwidth
                                                         DownloadBWPerLandmarkArray[i],    // DBandwidth
-                                                        LossRatePerLandmark);             // LossRate
+                                                        LossRatePerLandmark[0],           // DLossRate
+                                                        LossRatePerLandmark[1]);          // ULossRate 
+                    skypeQoEPerLandmark[i] = estimatedSkypeQuality(DownloadBWPerLandmarkArray[i], 
+                                                                    UploadBWPerLandmarkArray[i], 
+                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2, 
+                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2, 
+                                                                    LossRatePerLandmark[0], 
+                                                                    LossRatePerLandmark[1]);
                 }
-                //// Then for the Mean Values of Measurements
                 System.Console.WriteLine("Mean QoE");
-                System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} LR:{4}",
+                System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} DLR:{4} ULR:{5}",
                                             FinalDelayAndJitterArray[LocalIndex].dimension1,
-                                            FinalDelayAndJitterArray[LocalIndex].dimension2,   
+                                            FinalDelayAndJitterArray[LocalIndex].dimension2,
                                             FinalBandwidthArray[LocalIndex].dimension1,
-                                            FinalBandwidthArray[LocalIndex].dimension2,     
-                                            LossRate);
+                                            FinalBandwidthArray[LocalIndex].dimension2,
+                                            LossRate[0],
+                                            LossRate[1]);
+                //// Then for the Mean Values of Measurements
+
                 MeanResult = CallerClass.Call(root,                                            // Decision-tree Root
                                               FinalDelayAndJitterArray[LocalIndex].dimension1, // Delay
                                               FinalDelayAndJitterArray[LocalIndex].dimension2, // Jitter
                                               FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
                                               FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
-                                              LossRate);                                       // LossRate
-
+                                              LossRate[0],                                     // DLossRate
+                                              LossRate[1]);                                    // ULossRate
+                skypeQoEMeanResult = estimatedSkypeQuality(FinalBandwidthArray[LocalIndex].dimension2, FinalBandwidthArray[LocalIndex].dimension1, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, LossRate[0], LossRate[1]);
                 // Get Full Time
                 TimeArray[LocalIndex] = new Time();
 
@@ -161,14 +145,16 @@ namespace MasterProject
                 this.JitterChart.Series["Jitter"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalDelayAndJitterArray[LocalIndex].dimension2);
                 this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalBandwidthArray[LocalIndex].dimension1);
                 this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalBandwidthArray[LocalIndex].dimension2);
+
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
-                    this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLanmark[i]);
+                    this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, skypeQoEPerLandmark[i]);
                 }
-                this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), MeanResult);
-                LocalIndex++;
+                this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), skypeQoEMeanResult);
+
+                Console.WriteLine("Finished with loss: " + LossRate[0] + ", " + LossRate[1] + "\nbandwidth: " + FinalBandwidthArray[LocalIndex].dimension1 + ", " + FinalBandwidthArray[LocalIndex].dimension2 + "\ndelay: " + TwoWayDelayArray[LocalIndex] + ", " + TwoWayDelayArray[LocalIndex]);
+                
                 Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000);
-                //Thread.Sleep(50000);
             }
         }
 
@@ -181,32 +167,15 @@ namespace MasterProject
         int MeanTwowayDelay = 0, MeanJitter = 0;
         double[] TwoWayDelayArray;
         bool MoreThanOneCampaign = true;
+       
         public MeasurementVector PingSetOfLandmarks()
         {
             index = 0;
             Total2WD = 0;
             Total2WDPerLandmark = 0;
-            byte[] data = new byte[1024];
-            int recv;
-            Socket host;
-            var watch = Stopwatch.StartNew();
-
+           
             if (ProbesNumeric.Value == 1)
                 MoreThanOneCampaign = false;
-
-            try
-            {
-                host = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.Icmp);
-            }
-            catch(SocketException e)
-            {
-                MessageBox.Show("Some problem occured during building the socket !\nPlease, check your account administrative settings.", "Error");
-                Console.WriteLine(e.Message);
-                return null;
-            }
-            IPEndPoint iep;
-            EndPoint ep;
-            ICMP packet;
 
             TwoWayDelayPerLandmarkArray = new int[LandmarksNumber];
             JitterPerLandmarkArray = new int[LandmarksNumber];
@@ -219,52 +188,10 @@ namespace MasterProject
                 // Ping selected landmark n times (ProbesNumeric.Value)
                 for (int i = 0; i < ProbesNumeric.Value; i++)
                 {
-                    // Ping (for one-time) Implementation
-                    try
-                    {
-                        iep = new IPEndPoint(IPAddress.Parse(Landmark), 0);
-                        ep = (EndPoint)iep;
-                        packet = new ICMP();
-                        packet.Type = 0x08;
-                        packet.Code = 0x00;
-                        packet.Checksum = 0;
-                        Buffer.BlockCopy(BitConverter.GetBytes((short)1), 0, packet.Message, 0, 2);
-                        Buffer.BlockCopy(BitConverter.GetBytes((short)1), 0, packet.Message, 2, 2);
-                        data = Encoding.ASCII.GetBytes("test packet");
-                        Buffer.BlockCopy(data, 0, packet.Message, 4, data.Length);
-                        packet.MessageSize = data.Length + 4;
-                        int packetsize = packet.MessageSize + 4;
+                    int RTT = PingHostDelay(Landmark);
 
-                        UInt16 chcksum = packet.getChecksum();
-                        packet.Checksum = chcksum;
-
-                        host.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 3000);
-                        watch = Stopwatch.StartNew(); // Start a timer before ping
-                        host.SendTo(packet.getBytes(), packetsize, SocketFlags.None, iep);
-                        try
-                        {
-                            data = new byte[1024];
-                            recv = host.ReceiveFrom(data, ref ep);
-                            watch.Stop(); // Stop timer after ping
-                        }
-                        catch (SocketException)
-                        {
-                            MessageBox.Show("No response from host: " + Landmark +
-                                            " Please check the availability of this host or your Internet connection!", "Error");
-                            return null;
-                        }
-                        ICMP response = new ICMP(data, recv);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Problem in pinging host: " + Landmark, "Error");
-                        return null;
-                    }
-
-                    elapsedMs = watch.ElapsedMilliseconds;
-                    _2WD = elapsedMs; // _2WD : Two-way Delay
-                    Total2WDPerLandmark += _2WD;
-                    TwoWayDelayArray[i] = _2WD;
+                    Total2WDPerLandmark += RTT;
+                    TwoWayDelayArray[i] = RTT;
                 }
 
                 // Jitter Per Landmark
@@ -302,7 +229,6 @@ namespace MasterProject
 
             MeanTwowayDelay = (int)(Total2WD / LandmarksNumber); // This is the final-average-value of One-way Delay
 
-            host.Close();
             return new MeasurementVector(MeanTwowayDelay, MeanJitter);
         }
 
@@ -329,7 +255,7 @@ namespace MasterProject
                 // Creating the socket and the target IPEndPoint object
                 try
                 {
-                    ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                 }
                 catch
                 {
@@ -373,10 +299,10 @@ namespace MasterProject
                     return null;
                 }
                 // Uploading Bandwidth is
-                Double mbpsUP = ((double)FileContent.Length) * 8 / kilo / kilo * 1000 / watch.ElapsedMilliseconds;
-                System.Console.WriteLine("Calculated Upload Bandiwidth {0} Mbps", mbpsUP);
-                UploadBWPerLandmarkArray[BWindex] = Convert.ToInt32(mbpsUP); // Size of file in Mbits / Time in Sec = Mbps
-
+                float kbpsUP = ((float)FileContent.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
+                System.Console.WriteLine("Calculated Upload Bandiwidth {0} Kbps", kbpsUP);
+                UploadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsUP); // Size of file in Kbits / Time in Sec = Kbps
+                
                 // Calculate Downloading Bandwidth
                 // Receiving the file
                 try
@@ -399,9 +325,10 @@ namespace MasterProject
                     return null;
                 }
                 // Downloading Bandwidth is
-                Double mbpsDWN = ((double)FileRec.Length) * 8 / kilo / kilo * 1000 / watch.ElapsedMilliseconds;
-                System.Console.WriteLine("Calculated Download Bandiwidth {0} Mbps", mbpsDWN);
-                DownloadBWPerLandmarkArray[BWindex] = Convert.ToInt32(mbpsDWN); // Size of file in Mbits / Time in Sec = Mbps
+                float kbpsDWN = ((float)FileRec.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
+                System.Console.WriteLine("Calculated Download Bandiwidth {0} Kbps", kbpsDWN);
+                DownloadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsDWN); // Size of file in Kbits / Time in Sec = Kbps
+                
                 BWindex++;
                 ClientSocket.Close();
             }
@@ -420,14 +347,14 @@ namespace MasterProject
 
         // Browse File to Use for Bandwidth Measurement
         FileStream fs;
-        int _10MB = 10 * kilo;
+        int _MB = 1 * kilo * kilo;
         private void button4_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 fs = new FileStream(openFileDialog1.FileName, FileMode.Open);
-                if (fs.Length > _10MB) // File size needed to be greater then 10MB
+                if (fs.Length > _MB) // File size needed to be greater then 10MB
                 {
                     BWFileTxtBox.Text = fs.Name;
                     fsNew = fs;
@@ -435,7 +362,7 @@ namespace MasterProject
                 }
                 else
                 {
-                    MessageBox.Show("Plese choose a file with a size greater than 10MB !", "Error");
+                    MessageBox.Show("Plese choose a file with a size greater than 2MB !", "Error");
                     fs = null;
                     return;
                 }
@@ -473,9 +400,6 @@ namespace MasterProject
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        { }
-
         private void SelectLandmarks_Click(object sender, EventArgs e)
         {
             try
@@ -503,6 +427,7 @@ namespace MasterProject
         ArrayList LandmarksthirdSet = new ArrayList();
         int LandNumber;
         static Random r;
+        private static byte[] data;
         public void BeginLandmarksSelection()
         {
             IPEndPoint iep;
@@ -526,7 +451,9 @@ namespace MasterProject
                 r = new Random();
                 while (i < LandNumber)
                 {
-                    RandomLandmark = AllLandmarks[r.Next(0, 99)];
+                    int size = getLandmarkNumber();
+                    int randomNumber = r.Next(0, size-1);
+                    RandomLandmark = AllLandmarks[randomNumber];
                     if (!ChosenLandmarks.Contains(RandomLandmark))
                     {
                         ChosenLandmarks.Add(RandomLandmark);
@@ -685,106 +612,181 @@ namespace MasterProject
 
         private void InitializeLandmarksArray()
         {
-            AllLandmarks[0] = "134.76.249.230";
-            AllLandmarks[1] = "161.106.240.18";
-            AllLandmarks[2] = "193.10.64.35";
-            AllLandmarks[3] = "130.192.157.138";
-            AllLandmarks[4] = "156.17.10.52";
-            AllLandmarks[5] = "192.33.210.16";
-            AllLandmarks[6] = "131.188.44.100";
-            AllLandmarks[7] = "194.167.254.18";
-            AllLandmarks[8] = "158.110.27.116";
-            AllLandmarks[9] = "195.148.124.73";
-            AllLandmarks[10] = "150.244.58.161";
-            AllLandmarks[11] = "193.55.112.41";
-            AllLandmarks[12] = "193.136.124.228";
-            AllLandmarks[13] = "193.136.166.56";
-            AllLandmarks[14] = "212.235.189.115";
-            AllLandmarks[15] = "192.42.43.22";
-            AllLandmarks[16] = "130.149.49.136";
-            AllLandmarks[17] = "194.42.17.121";
-            AllLandmarks[18] = "193.138.2.12";
-            AllLandmarks[19] = "169.229.50.4";
-            AllLandmarks[20] = "193.190.168.49";
-            AllLandmarks[21] = "138.246.99.250";
-            AllLandmarks[22] = "145.99.179.147";
-            AllLandmarks[23] = "212.51.218.237";
-            AllLandmarks[24] = "132.65.240.101";
-            AllLandmarks[25] = "193.144.21.130";
-            AllLandmarks[26] = "138.48.3.201";
-            AllLandmarks[27] = "147.102.3.113";
-            AllLandmarks[28] = "195.148.124.74";
-            AllLandmarks[29] = "157.181.175.248";
-            AllLandmarks[30] = "155.185.54.249";
-            AllLandmarks[31] = "130.237.50.124";
-            AllLandmarks[32] = "132.227.62.121";
-            AllLandmarks[33] = "131.254.208.11";
-            AllLandmarks[34] = "130.192.157.131";
-            AllLandmarks[35] = "130.92.70.254";
-            AllLandmarks[36] = "212.199.61.205";
-            AllLandmarks[37] = "158.110.27.127";
-            AllLandmarks[38] = "128.232.103.202";
-            AllLandmarks[39] = "193.167.187.186";
-            AllLandmarks[40] = "212.235.189.114";
-            AllLandmarks[41] = "131.130.69.164";
-            AllLandmarks[42] = "194.42.17.123";
-            AllLandmarks[43] = "83.230.127.122";
-            AllLandmarks[44] = "145.99.179.146";
-            AllLandmarks[45] = "139.91.90.239";
-            AllLandmarks[46] = "130.37.193.143";
-            AllLandmarks[47] = "130.73.142.87";
-            AllLandmarks[48] = "149.156.5.116";
-            AllLandmarks[49] = "193.1.170.135";
-            AllLandmarks[50] = "143.215.131.206";
-            AllLandmarks[51] = "138.48.3.203";
-            AllLandmarks[52] = "130.237.50.125";
-            AllLandmarks[53] = "147.83.29.234";
-            AllLandmarks[54] = "193.136.166.54";
-            AllLandmarks[55] = "85.23.168.77";
-            AllLandmarks[56] = "195.130.121.204";
-            AllLandmarks[57] = "130.104.72.201";
-            AllLandmarks[58] = "141.76.45.18";
-            AllLandmarks[59] = "195.113.161.13";
-            AllLandmarks[60] = "221.199.217.144";
-            AllLandmarks[61] = "213.73.40.105";
-            AllLandmarks[62] = "193.167.187.185";
-            AllLandmarks[63] = "134.151.255.181";
-            AllLandmarks[64] = "157.181.175.249";
-            AllLandmarks[65] = "130.206.158.140";
-            AllLandmarks[66] = "130.83.166.243";
-            AllLandmarks[67] = "130.79.48.57";
-            AllLandmarks[68] = "193.145.46.242";
-            AllLandmarks[69] = "195.130.124.1";
-            AllLandmarks[70] = "85.23.168.76";
-            AllLandmarks[71] = "194.167.254.19";
-            AllLandmarks[72] = "192.41.135.219";
-            AllLandmarks[73] = "129.88.70.227";
-            AllLandmarks[74] = "194.47.148.170";
-            AllLandmarks[75] = "192.38.109.143";
-            AllLandmarks[76] = "193.205.215.74";
-            AllLandmarks[77] = "147.83.30.164";
-            AllLandmarks[78] = "193.166.160.98";
-            AllLandmarks[79] = "148.81.140.194";
-            AllLandmarks[80] = "139.165.12.212";
-            AllLandmarks[81] = "152.66.245.162";
-            AllLandmarks[82] = "129.242.19.196";
-            AllLandmarks[83] = "80.65.237.10";
-            AllLandmarks[84] = "193.1.170.136";
-            AllLandmarks[85] = "193.226.19.30";
-            AllLandmarks[86] = "128.232.103.203";
-            AllLandmarks[87] = "193.138.2.13";
-            AllLandmarks[88] = "222.99.146.83";
-            AllLandmarks[89] = "222.99.146.81";
-            AllLandmarks[90] = "128.36.233.153";
-            AllLandmarks[91] = "156.62.231.244";
-            AllLandmarks[92] = "133.9.81.164";
-            AllLandmarks[93] = "157.92.44.103";
-            AllLandmarks[94] = "169.229.50.14";
-            AllLandmarks[95] = "128.112.139.42";
-            AllLandmarks[96] = "200.129.132.18";
-            AllLandmarks[97] = "133.1.74.162";
-            AllLandmarks[98] = "142.150.238.13";
-            AllLandmarks[99] = "140.109.17.181";
+            AllLandmarks[0] = "10.0.0.1";
+        }
+
+        private int getLandmarkNumber()
+        {
+            int count = 0;
+            foreach(String landmark in AllLandmarks){
+                if (landmark != null)
+                    count++;
+            }
+            return count;
+        }
+        //ME
+        public static int[] PingHostLossProb(string host, int times,int index)
+        {
+            int[] losses = new int[2];
+
+            UdpClient udpClient = new UdpClient();
+            udpClient.Connect(host, 9050);
+            
+            Console.WriteLine("Sending udp packets to server");
+            for (int i = 0; i < 100; i++)
+            {
+                Byte[] senddata = Encoding.ASCII.GetBytes(i.ToString());
+                udpClient.Send(senddata, senddata.Length);
+            }
+            Console.WriteLine("Done.");
+            
+            Console.WriteLine("Receiving udp packets from server");
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            UdpClient udpClient2 = new UdpClient(9050);
+            Byte[] receiveBytes = udpClient2.Receive(ref RemoteIpEndPoint);
+
+            string received = Encoding.ASCII.GetString(receiveBytes);
+
+
+            int uploadLoss = 100 - int.Parse(received);
+            Console.WriteLine("Upload Loss= " + uploadLoss + "%");
+            Thread.Sleep(5000);
+
+            int downloadReceived = 0;
+            //receive all packets for download
+            while (true)
+            {
+                try
+                {
+                    Byte[] receiveBytes1 = udpClient2.Receive(ref RemoteIpEndPoint);
+                    string received1 = Encoding.ASCII.GetString(receiveBytes1);
+                    udpClient2.Client.ReceiveTimeout = 5000;
+                    if (received1 == "secret")
+                        downloadReceived++;
+                    Console.WriteLine("RECEIVED packet " + downloadReceived);
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            int downloadLoss = 100 - downloadReceived++;
+            Console.WriteLine("Upload Loss= " + uploadLoss + "%");
+            Console.WriteLine("Download Loss= " + downloadLoss + "%");
+            udpClient.Close();
+            udpClient2.Close();
+            losses[1] = uploadLoss;
+            losses[0] = downloadLoss;
+            return losses;
+        
+        
+        }
+        public static int PingHostDelay(string host)
+        {
+            int RTT = 0;
+            IPAddress address = GetIpFromHost(ref host);
+            PingOptions pingOptions = new PingOptions(128, true);
+            Ping ping = new Ping();
+            byte[] buffer = new byte[32];
+
+                try
+                {
+                    PingReply pingReply = ping.Send(address, 1000, buffer, pingOptions);
+                    if (!(pingReply == null))
+                    {
+                        switch (pingReply.Status)
+                        {
+                            case IPStatus.Success:
+                                RTT = (int)pingReply.RoundtripTime;
+                                break;
+                            default:
+                                Console.WriteLine("Ping failed: {0}", pingReply.Status.ToString());
+                                break;
+                        }
+                    }
+                }
+                catch (PingException ex)
+                {
+                    Console.WriteLine("Connection Error: {0}", ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Connection Error: {0}", ex.Message);
+                }
+
+                return RTT;
+        }
+        private static IPAddress GetIpFromHost(ref string host)
+        {
+            //variable to hold our error message (if something fails)
+            string errMessage = string.Empty;
+
+            //IPAddress instance for holding the returned host
+            IPAddress address = null;
+
+            //wrap the attempt in a try..catch to capture
+            //any exceptions that may occur
+            try
+            {
+                //get the host IP from the name provided
+                address = Dns.GetHostEntry(host).AddressList[0];
+            }
+            catch (SocketException ex)
+            {
+                //some DNS error happened, return the message
+                errMessage = string.Format("DNS Error: {0}", ex.Message);
+            }
+            return address;
+        }
+        // Close Application Button
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private int estimatedSkypeQuality(int downloadBandwidth, int uploadBandwidth, int downloadDelay, int uploadDelay, int downloadLoss, int uploadLoss)
+        {
+            int estimation=2;
+
+            if (downloadBandwidth > 1078 && downloadDelay <= 94) estimation = 3;
+
+            if (uploadBandwidth > 1903 && downloadBandwidth > 1078) estimation = 3;
+
+            if (downloadBandwidth <= 1078 && downloadDelay <= 665 && uploadLoss > 0 && uploadLoss <= 2 && downloadLoss > 0 && downloadLoss <= 2) estimation = 3;
+
+            if (downloadBandwidth <= 12) estimation = 0;
+
+            if (uploadBandwidth <= 14 && uploadDelay <= 854) estimation = 0;
+
+            if (downloadBandwidth <= 723 && uploadDelay <= 400 && downloadDelay > 481 && uploadLoss > 36 && uploadLoss <= 46 && downloadLoss > 22 && downloadLoss <= 45) estimation = 0;
+
+            if (uploadBandwidth <= 18 && downloadDelay > 417 && downloadDelay <= 665) estimation = 0;
+
+            if (uploadDelay > 464 && uploadDelay <= 615 && uploadLoss <= 27 && downloadLoss > 43) estimation = 0;
+
+            if (uploadLoss > 27 && uploadLoss <= 46 && downloadLoss > 45) estimation = 0;
+
+            if (downloadBandwidth <= 848 && uploadDelay > 479 && uploadLoss > 47) estimation = 0;
+
+            if (uploadLoss <= 27 && downloadLoss > 48) estimation = 0;
+
+            if (uploadDelay <= 479 && uploadLoss > 46) estimation = 1;
+
+            if (uploadBandwidth > 14 && uploadBandwidth <= 17) estimation = 1;
+
+            if (downloadDelay > 992) estimation = 1;
+
+            if (uploadBandwidth > 17 && downloadBandwidth > 12 && uploadDelay > 400 && uploadLoss > 27 && downloadLoss <= 44) estimation = 1;
+
+            if (uploadBandwidth > 17 && uploadBandwidth <= 1903 && downloadBandwidth > 12 && downloadDelay > 94 && uploadLoss <= 27 && downloadLoss <= 9) estimation = 2;
+
+            if (uploadDelay <= 400 && uploadLoss > 27 && uploadLoss <= 46 && downloadLoss <= 22) estimation = 2;
+
+            if (uploadBandwidth > 30 && downloadBandwidth > 12 && uploadLoss <= 27 && downloadLoss > 9 && downloadLoss <= 43) estimation = 2;
+
+            if (uploadBandwidth > 17 && downloadBandwidth > 12 && uploadDelay > 400 && uploadLoss <= 28 && downloadLoss <= 35) estimation = 2;
+
+            return estimation;
         }
     }
 }

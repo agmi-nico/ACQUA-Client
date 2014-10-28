@@ -85,6 +85,7 @@
     <Compile Include="Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
+    <Compile Include="LossTest.cs" />
     <Compile Include="MeasurementVector.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Program.cs" />

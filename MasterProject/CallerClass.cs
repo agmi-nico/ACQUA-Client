@@ -8,14 +8,15 @@ namespace MasterProject
 {
     class CallerClass
     {
-        public static int Call(Node root, int D, int JTR, int UBW, int DBW, int LR)
+        public static int Call(Node root, int D, int JTR, int UBW, int DBW, int DLR, int ULR)
         {
-            Node.Values = new int[5];
+            Node.Values = new int[6];
             Node.Values[0] = D;
             Node.Values[1] = JTR;
             Node.Values[2] = UBW;
             Node.Values[3] = DBW;
-            Node.Values[4] = LR;
+            Node.Values[4] = ULR;
+            Node.Values[5] = DLR;
             return Calculate(root);
         }
 
