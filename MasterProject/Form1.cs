@@ -631,11 +631,13 @@ namespace MasterProject
 
             UdpClient udpClient = new UdpClient();
             udpClient.Connect(host, 9050);
-            
+            // Loss Rate in the upload direction
             Console.WriteLine("Sending udp packets to server");
             for (int i = 0; i < 100; i++)
             {
                 Byte[] senddata = Encoding.ASCII.GetBytes(i.ToString());
+                // TODO Here add a sleeping time in order to get an overall sending rate
+                // equal to 0.5 * upload_bandwidth. In the server you'll do the same.
                 udpClient.Send(senddata, senddata.Length);
             }
             Console.WriteLine("Done.");
@@ -653,6 +655,7 @@ namespace MasterProject
             Thread.Sleep(5000);
 
             int downloadReceived = 0;
+            // Loss Rate in the download direction
             //receive all packets for download
             while (true)
             {
