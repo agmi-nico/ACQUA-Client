@@ -7,7 +7,7 @@ namespace MasterProject
 {
     public enum EType
     {
-        D, JTR, UBW, DBW, LR, LEAF
+        D, JTR, UBW, DBW, ULR, DLR, LEAF
     }
 
     class Node
@@ -38,8 +38,13 @@ namespace MasterProject
                     return EType.UBW;
                 case "DBW":
                     return EType.DBW;
+                    //case LR transform to ULR because ULR and DLR are currently the same, and i didnt want to change the xml files
                 case "LR":
-                    return EType.LR;
+                    return EType.ULR;
+                case "ULR":
+                    return EType.ULR;
+                case "DLR":
+                    return EType.DLR;
                 case "LEAF":
                     return EType.LEAF;
                 default:
