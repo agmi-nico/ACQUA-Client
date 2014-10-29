@@ -49,18 +49,18 @@ namespace MasterProject
             }
             if (BWFileTxtBox.Text == "")
             {
-                MessageBox.Show("Enter file path you want to make your test with, please !", "Error");
+                MessageBox.Show("File for data transfer missing", "Error");
                 return;
             }
             if (DecisionTreeTxtBox.Text == "")
             {
-                MessageBox.Show("No decision tree is chosen, please choose one !", "Error");
+                MessageBox.Show("Decision Tree missing", "Error");
                 return;
             }
 
             if (ProbesNumeric.Value == 1)
             {
-                DialogResult dr = MessageBox.Show("Jitter cannot be calculated! Only one probe is sent. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
+                DialogResult dr = MessageBox.Show("Jitter can't be calculated with only one probe. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.No)
                     return;
             }
@@ -75,27 +75,29 @@ namespace MasterProject
         }
 
         int MeanResult = -1;
-        int[] QoEPerLanmark;
+        int[] QoEPerLandmark;
         int[] skypeQoEPerLandmark;
         int skypeQoEMeanResult;
+        int max_points_per_graph = 10;
         void Run()
         {
-            QoEPerLanmark = new int[LandmarksNumber];
+            QoEPerLandmark = new int[LandmarksNumber];
             skypeQoEPerLandmark=new int[LandmarksNumber];
             int LocalIndex = 0;
+            int measurement_count = 0;
             while (true)
             {
-                // Get Two-way Delay and Jitter Values 
+                // Compute delay and jitter 
                 FinalDelayAndJitterArray[LocalIndex] = PingSetOfLandmarks();
                 if (FinalDelayAndJitterArray[LocalIndex] == null)
                     return;
 
-                // Get Bandwidth (Uploading + Downnloading) Values
+                // Compute upload and download bandwidth (or rather, the goodput)
                 FinalBandwidthArray[LocalIndex] = SendFileToSetOfLandmarks();
                 if (FinalBandwidthArray[LocalIndex] == null)
                     return;
 
-                // Calculate Loss Rate LR = max(CR - AB, 0) / AB
+                // Compute loss rate
                 int[] LossRate=new int[2];
                 LossRate = PingHostLossProb(AllLandmarks[LocalIndex], 100, LocalIndex);
 
@@ -105,7 +107,7 @@ namespace MasterProject
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
                     LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], 100,i);
-                    QoEPerLanmark[i] = CallerClass.Call(root,                             // Decision-tree Root
+                    QoEPerLandmark[i] = CallerClass.Call(root,                             // Decision-tree Root
                                                         TwoWayDelayPerLandmarkArray[i],   // Delay
                                                         JitterPerLandmarkArray[i],        // Jitter
                                                         UploadBWPerLandmarkArray[i],      // UBandwidth
@@ -138,9 +140,24 @@ namespace MasterProject
                                               LossRate[1]);                                    // ULossRate
                 skypeQoEMeanResult = estimatedSkypeQuality(FinalBandwidthArray[LocalIndex].dimension2, FinalBandwidthArray[LocalIndex].dimension1, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, LossRate[0], LossRate[1]);
                 // Get Full Time
+                // This will appear on the x axis...
                 TimeArray[LocalIndex] = new Time();
 
                 // Draw the Charts
+                // I have to:
+                /*
+                 * For each chart:
+                 * check whether the series has more than n pairs of numbers,
+                 * if it doesn't, just add the current pair of points
+                 * if it does, you have to extract all points, emove the first point and decrease by 1 the x-value of all the remaining points, and plot them
+                 * Then, you add the current point
+                 * 
+                 * 
+                 * 
+                 * /
+                */
+                //this.DelayChart.Series["Round-trip Delay"] = AddPointToFixedSizeCollection((double) TimeArray[LocalIndex], FinalDelayAndJitterArray[LocalIndex].dimension1, this.DelayChart.Series["Round-trip Delay"], max_points_per_graph);
+                //this.DelayChart.Series["Round-trip Delay"].Points.RemoveAt
                 this.DelayChart.Series["Round-trip Delay"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalDelayAndJitterArray[LocalIndex].dimension1);
                 this.JitterChart.Series["Jitter"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalDelayAndJitterArray[LocalIndex].dimension2);
                 this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalBandwidthArray[LocalIndex].dimension1);
@@ -388,14 +405,14 @@ namespace MasterProject
                 root = CallerClass.Load(DecisionTreeFile.Name);
                 if (root == null)
                 {
-                    MessageBox.Show("Error in Decision Tree File Format ! Please choose a valid XML file format.", "Error");
+                    MessageBox.Show("Error in Decision Tree Format. Please choose a valid XML format.", "Error");
                     DecisionTreeFile.Close();
                     return;
                 }
             }
             else
             {
-                MessageBox.Show("Error in opening the requested Decision Tree file !", "Error");
+                MessageBox.Show("Error in opening the Decision Tree file", "Error");
                 return;
             }
         }
@@ -408,12 +425,12 @@ namespace MasterProject
             }
             catch
             {
-                MessageBox.Show("Please enter the number of landmarks !", "Error");
+                MessageBox.Show("Please enter the number of landmarks", "Error");
                 return;
             }
             if (LandNumber < 1 || LandNumber >100)
             {
-                MessageBox.Show("Landmarks number shall be a value between 1 and 100 !","Error");
+                MessageBox.Show("Landmarks number must be a value between 1 and 100 !","Error");
                 return;
             }
             Thread t = new Thread(new ThreadStart(BeginLandmarksSelection));
@@ -469,7 +486,7 @@ namespace MasterProject
                 }
                 catch
                 {
-                    MessageBox.Show("Some problem occured during building the socket !\nPlease, check your account administrative settings.", "Error");
+                    MessageBox.Show("A problem occurred when creating the socket !\n Check your administrative settings.", "Error");
                     return;
                 }
 
@@ -746,6 +763,24 @@ namespace MasterProject
         {
             this.Close();
         }
+
+        public System.Windows.Forms.DataVisualization.Charting.DataPointCollection AddPointToFixedSizeCollection(double x_val, double y_val, System.Windows.Forms.DataVisualization.Charting.DataPointCollection aCollection, int max_size)
+        {
+            if (aCollection.Count > max_size)
+            {
+                // remove oldest point and shift the x value of all remaining points to the left
+                aCollection.RemoveAt(0);
+                for (int i = 0; i < aCollection.Count; i++)
+                {
+                    double point_x = aCollection[i].XValue - 1.0;
+                    double[] point_y = aCollection[i].YValues;
+                    aCollection[i].SetValueXY(point_x, point_y);
+                }
+            }
+            aCollection.AddXY(x_val, y_val);
+            return aCollection;
+        }
+
 
         private int estimatedSkypeQuality(int downloadBandwidth, int uploadBandwidth, int downloadDelay, int uploadDelay, int downloadLoss, int uploadLoss)
         {
