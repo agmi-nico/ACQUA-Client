@@ -13,8 +13,6 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Net;
 
 namespace MasterProject
 {
@@ -95,16 +93,19 @@ namespace MasterProject
                 if (FinalBandwidthArray[LocalIndex] == null)
                     return;
 
-                // Calculate Loss Rate LR = max(CR - AB, 0) / AB
                 int[] LossRate=new int[2];
-                LossRate = PingHostLossProb(AllLandmarks[LocalIndex], 100, LocalIndex);
+                int download_probing_rate = FinalBandwidthArray[LocalIndex].dimension1 / 2;
+                //asdf
+                int upload_probing_rate = FinalBandwidthArray[LocalIndex].dimension2 / 2;
+                int probing_duration = 5;
+                //LossRate = PingHostLossProb(AllLandmarks[LocalIndex], LocalIndex, upload_probing_rate, download_probing_rate, probing_duration);
 
                 //// Make QoE Estimation
                 //// For the Set of Landmarks First
                 int[] LossRatePerLandmark = new int[2];
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
-                    LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], 100,i);
+                    LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], i, upload_probing_rate, download_probing_rate, probing_duration);
                     QoEPerLanmark[i] = CallerClass.Call(root,                             // Decision-tree Root
                                                         TwoWayDelayPerLandmarkArray[i],   // Delay
                                                         JitterPerLandmarkArray[i],        // Jitter
@@ -118,7 +119,13 @@ namespace MasterProject
                                                                     (int)TwoWayDelayPerLandmarkArray[i] / 2, 
                                                                     LossRatePerLandmark[0], 
                                                                     LossRatePerLandmark[1]);
+                    LossRate[0] += LossRatePerLandmark[0];
+                    LossRate[1] += LossRatePerLandmark[1];
                 }
+                //LossRate is the average loss rate per landmark
+                LossRate[0] /= LandmarksNumber;
+                LossRate[1] /= LandmarksNumber;
+
                 System.Console.WriteLine("Mean QoE");
                 System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} DLR:{4} ULR:{5}",
                                             FinalDelayAndJitterArray[LocalIndex].dimension1,
@@ -152,7 +159,7 @@ namespace MasterProject
                 }
                 this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), skypeQoEMeanResult);
 
-                Console.WriteLine("Finished with loss: " + LossRate[0] + ", " + LossRate[1] + "\nbandwidth: " + FinalBandwidthArray[LocalIndex].dimension1 + ", " + FinalBandwidthArray[LocalIndex].dimension2 + "\ndelay: " + TwoWayDelayArray[LocalIndex] + ", " + TwoWayDelayArray[LocalIndex]);
+                Console.WriteLine("Finished with loss: " + LossRate[0] + ", " + LossRate[1] + "\nbandwidth: " + FinalBandwidthArray[LocalIndex].dimension1 + ", " + FinalBandwidthArray[LocalIndex].dimension2 + "\ndelay: " + TwoWayDelayArray[LocalIndex] + ", " + TwoWayDelayArray[LocalIndex] + "\nHARDCODED TREE: " + skypeQoEMeanResult);
                 
                 Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000);
             }
@@ -284,8 +291,14 @@ namespace MasterProject
                     ClientSocket.Send(BitConverter.GetBytes(FileContent.Length)); // Send file size
                     ClientSocket.Send(BitConverter.GetBytes(0)); // End of send : send(0)
                     int x = 0;
-                    x = ClientSocket.Send(FileContent, 0, FileContent.Length, SocketFlags.None);
                     byte[] confirmation = new byte[1];
+                    //if (ClientSocket.Receive(confirmation, 0, 1, SocketFlags.None) != 1 || Encoding.UTF8.GetString(confirmation, 0, 1) != "0")
+                    //{
+                      //  System.Console.WriteLine("Error with upload confirmation");
+                    //}
+                    //confirmation = new byte[1];
+                    //watch.Restart(); // Start a timer before sending the file
+                    x = ClientSocket.Send(FileContent, 0, FileContent.Length, SocketFlags.None);
                     if (ClientSocket.Receive(confirmation, 0, 1, SocketFlags.None) != 1 || Encoding.UTF8.GetString(confirmation, 0, 1) != "0")
                     {
                         System.Console.WriteLine("Error with upload confirmation");
@@ -624,52 +637,103 @@ namespace MasterProject
             }
             return count;
         }
-        //ME
-        public static int[] PingHostLossProb(string host, int times,int index)
+
+        //probing_rate [bytes/sec]
+        //probing_duration [seconds]
+        public static int[] PingHostLossProb(string host, int index, int upload_probing_rate, int download_probing_rate, int probing_duration)
         {
             int[] losses = new int[2];
 
+            //client to send
             UdpClient udpClient = new UdpClient();
             udpClient.Connect(host, 9050);
+            //client to receive
+            UdpClient udpClient2 = new UdpClient(9050);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            
             
             Console.WriteLine("Sending udp packets to server");
-            for (int i = 0; i < 100; i++)
+            int probe_size = 10;//bytes
+
+            int upload_pps = upload_probing_rate / probe_size;
+            int download_pps = download_probing_rate / probe_size;
+
+            int number_probes_up = upload_pps * probing_duration;
+            int number_probes_down = download_pps * probing_duration;
+
+            //number_probes_up must be smaller than ushort.MaxValue
+            for (int i = 0; i < number_probes_up; i++)
             {
-                Byte[] senddata = Encoding.ASCII.GetBytes(i.ToString());
+                ushort id = (ushort)i;
+                
+                var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+                Byte[] timestamp = BitConverter.GetBytes(timeSpan.TotalMilliseconds);
+                
+                Byte[] senddata = new Byte[10];
+                
+                Buffer.BlockCopy(BitConverter.GetBytes(id),0,senddata,0,2);
+                Buffer.BlockCopy(timestamp, 0, senddata, 2, 8);
+                
                 udpClient.Send(senddata, senddata.Length);
+                Thread.Sleep(1000/upload_pps);
             }
             Console.WriteLine("Done.");
+
+            // = udpClient2.Receive(ref RemoteIpEndPoint);
+            Byte[] receivedBytes;
+
+            Console.WriteLine("Connecting to server [tcp]");
+            Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             
-            Console.WriteLine("Receiving udp packets from server");
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            UdpClient udpClient2 = new UdpClient(9050);
-            Byte[] receiveBytes = udpClient2.Receive(ref RemoteIpEndPoint);
-
-            string received = Encoding.ASCII.GetString(receiveBytes);
-
-
-            int uploadLoss = 100 - int.Parse(received);
-            Console.WriteLine("Upload Loss= " + uploadLoss + "%");
-            Thread.Sleep(5000);
-
-            int downloadReceived = 0;
-            //receive all packets for download
-            while (true)
+            bool connected = false;
+            while (!connected)
             {
                 try
                 {
-                    Byte[] receiveBytes1 = udpClient2.Receive(ref RemoteIpEndPoint);
-                    string received1 = Encoding.ASCII.GetString(receiveBytes1);
-                    udpClient2.Client.ReceiveTimeout = 5000;
-                    if (received1 == "secret")
-                        downloadReceived++;
-                    Console.WriteLine("RECEIVED packet " + downloadReceived);
+                    ClientSocket.Connect(host, 9051);
+                    connected = true;
                 }
                 catch
                 {
-                    break;
+                    connected = false;
+                    Console.WriteLine("Error connecting to {0}:{1}", host, 9051);
                 }
             }
+            Console.WriteLine("Waiting for count of udp packets received by the server");
+            receivedBytes = new Byte[4];
+            int x = ClientSocket.Receive(receivedBytes, 0, 4, SocketFlags.None);
+            int uploadLoss = 100 - BitConverter.ToInt32(receivedBytes,0);
+
+            Console.WriteLine("Sending download test info to server");
+            //send number_probes_down, download_pps
+            ClientSocket.Send(BitConverter.GetBytes(number_probes_down));
+            ClientSocket.Send(BitConverter.GetBytes(1000/download_pps));
+
+            Console.WriteLine("Closing tcp connection");
+            ClientSocket.Close();
+
+            Console.WriteLine("Waiting udp packets from server");
+            udpClient2.Client.ReceiveTimeout = 5000;
+
+            int downloadReceived = 0;
+            //receive all packets for download
+            bool probing = true;
+            while (probing)
+            {
+                try
+                {
+                    receivedBytes = udpClient2.Receive(ref RemoteIpEndPoint);
+                    //handle info [2 bytes id][8 bytes timestamp]
+                    string received1 = Encoding.ASCII.GetString(receivedBytes);
+                    downloadReceived++;
+                    Console.Write("{0} ", downloadReceived);
+                }
+                catch
+                {
+                    probing = false;
+                }
+            }
+            
             int downloadLoss = 100 - downloadReceived++;
             Console.WriteLine("Upload Loss= " + uploadLoss + "%");
             Console.WriteLine("Download Loss= " + downloadLoss + "%");
@@ -678,9 +742,8 @@ namespace MasterProject
             losses[1] = uploadLoss;
             losses[0] = downloadLoss;
             return losses;
-        
-        
         }
+
         public static int PingHostDelay(string host)
         {
             int RTT = 0;
