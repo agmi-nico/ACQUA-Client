@@ -358,7 +358,7 @@
             this.LandmarksDelayRchTxt.Name = "LandmarksDelayRchTxt";
             this.LandmarksDelayRchTxt.Size = new System.Drawing.Size(178, 183);
             this.LandmarksDelayRchTxt.TabIndex = 0;
-            this.LandmarksDelayRchTxt.Text = "10.0.0.1";
+            this.LandmarksDelayRchTxt.Text = "";
             // 
             // label2
             // 

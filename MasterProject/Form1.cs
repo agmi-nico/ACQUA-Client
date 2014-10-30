@@ -31,10 +31,10 @@ namespace MasterProject
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int[] series=new int[2];
+            int[] series = new int[2];
             series[1] = 2;
             series[0] = 1;
-           
+
             FinalDelayAndJitterArray = new MeasurementVector[1000];
             FinalBandwidthArray = new MeasurementVector[1000];
             TimeArray = new Time[1000];
@@ -65,7 +65,7 @@ namespace MasterProject
 
             // Count the number of landmarks in the richTextBox
             foreach (string landmark in LandmarksDelayRchTxt.Lines)
-                LandmarksNumber++;   
+                LandmarksNumber++;
 
             Thread t = new Thread(new ThreadStart(Run));
             System.Console.WriteLine("Starting...");
@@ -80,7 +80,7 @@ namespace MasterProject
         void Run()
         {
             QoEPerLandmark = new int[LandmarksNumber];
-            skypeQoEPerLandmark=new int[LandmarksNumber];
+            skypeQoEPerLandmark = new int[LandmarksNumber];
             int LocalIndex = 0;
             int measurement_count = 0;
             while (true)
@@ -97,7 +97,7 @@ namespace MasterProject
 
 
                 // Compute loss rate
-                int[] LossRate=new int[2];
+                int[] LossRate = new int[2];
                 int download_probing_rate = FinalBandwidthArray[LocalIndex].dimension1 / 2;
                 //asdf
                 int upload_probing_rate = FinalBandwidthArray[LocalIndex].dimension2 / 2;
@@ -106,7 +106,7 @@ namespace MasterProject
 
                 //// Make QoE Estimation
                 //// For the Set of Landmarks First
-                int[] LossRatePerLandmark = new int[2];
+                float[] LossRatePerLandmark = new float[2];
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
                     LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], i, upload_probing_rate, download_probing_rate, probing_duration);
@@ -115,25 +115,26 @@ namespace MasterProject
                                                         JitterPerLandmarkArray[i],        // Jitter
                                                         UploadBWPerLandmarkArray[i],      // UBandwidth
                                                         DownloadBWPerLandmarkArray[i],    // DBandwidth
-                                                        LossRatePerLandmark[0],           // DLossRate
-                                                        LossRatePerLandmark[1]);          // ULossRate 
-                    skypeQoEPerLandmark[i] = estimatedSkypeQuality(DownloadBWPerLandmarkArray[i], 
-                                                                    UploadBWPerLandmarkArray[i], 
-                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2, 
-                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2, 
-                                                                    LossRatePerLandmark[0], 
-                                                                    LossRatePerLandmark[1]);
-                    LossRate[0] += LossRatePerLandmark[0];
-                    LossRate[1] += LossRatePerLandmark[1];
+                                                        (int)LossRatePerLandmark[0],           // DLossRate
+                                                        (int)LossRatePerLandmark[1]);          // ULossRate 
+                    skypeQoEPerLandmark[i] = estimatedSkypeQuality(DownloadBWPerLandmarkArray[i],
+                                                                    UploadBWPerLandmarkArray[i],
+                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2,
+                                                                    (int)TwoWayDelayPerLandmarkArray[i] / 2,
+                                                                    (int)LossRatePerLandmark[0],
+                                                                    (int)LossRatePerLandmark[1]);
+                    LossRate[0] += (int)LossRatePerLandmark[0];
+                    LossRate[1] += (int)LossRatePerLandmark[1];
                 }
                 //LossRate is the average loss rate per landmark
                 LossRate[0] /= LandmarksNumber;
                 LossRate[1] /= LandmarksNumber;
 
                 System.Console.WriteLine("Mean QoE");
+                //TwoWayDelayArray[LocalIndex]
                 System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} DLR:{4} ULR:{5}",
-                                            FinalDelayAndJitterArray[LocalIndex].dimension1,
-                                            FinalDelayAndJitterArray[LocalIndex].dimension2,
+                                            FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
+                                            FinalDelayAndJitterArray[LocalIndex].dimension2 / 2,
                                             FinalBandwidthArray[LocalIndex].dimension1,
                                             FinalBandwidthArray[LocalIndex].dimension2,
                                             LossRate[0],
@@ -141,8 +142,8 @@ namespace MasterProject
                 //// Then for the Mean Values of Measurements
 
                 MeanResult = CallerClass.Call(root,                                            // Decision-tree Root
-                                              FinalDelayAndJitterArray[LocalIndex].dimension1, // Delay
-                                              FinalDelayAndJitterArray[LocalIndex].dimension2, // Jitter
+                                              FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, // Delay
+                                              FinalDelayAndJitterArray[LocalIndex].dimension2 / 2, // Jitter
                                               FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
                                               FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
                                               LossRate[0],                                     // DLossRate
@@ -176,12 +177,12 @@ namespace MasterProject
 
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
-                    this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, skypeQoEPerLandmark[i]);
+                    this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[i]);
                 }
-                this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), skypeQoEMeanResult);
+                this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), MeanResult);
 
-                Console.WriteLine("Finished with loss: " + LossRate[0] + ", " + LossRate[1] + "\nbandwidth: " + FinalBandwidthArray[LocalIndex].dimension1 + ", " + FinalBandwidthArray[LocalIndex].dimension2 + "\ndelay: " + TwoWayDelayArray[LocalIndex] + ", " + TwoWayDelayArray[LocalIndex] + "\nHARDCODED TREE: " + skypeQoEMeanResult);
-                
+                Console.WriteLine("HardCoded calculation:{0}", skypeQoEMeanResult);
+
                 Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000);
             }
         }
@@ -195,13 +196,13 @@ namespace MasterProject
         int MeanTwowayDelay = 0, MeanJitter = 0;
         double[] TwoWayDelayArray;
         bool MoreThanOneCampaign = true;
-       
+
         public MeasurementVector PingSetOfLandmarks()
         {
             index = 0;
             Total2WD = 0;
             Total2WDPerLandmark = 0;
-           
+
             if (ProbesNumeric.Value == 1)
                 MoreThanOneCampaign = false;
 
@@ -304,21 +305,22 @@ namespace MasterProject
 
                 // Calculating Uploading Bandwidth
                 // Sending the file
+                byte[] confirmation;
                 try
                 {
+                    confirmation = new byte[1];
+                    if (ClientSocket.Receive(confirmation, 0, 1, SocketFlags.None) != 1 || Encoding.UTF8.GetString(confirmation, 0, 1) != "0")
+                    {
+                        System.Console.WriteLine("Error with start upload confirmation");
+                    }
                     FileContent = File.ReadAllBytes(fsNew.Name);
                     System.Console.WriteLine("Uploading File...");
+
                     watch.Restart(); // Start a timer before sending the file
                     ClientSocket.Send(BitConverter.GetBytes(FileContent.Length)); // Send file size
                     ClientSocket.Send(BitConverter.GetBytes(0)); // End of send : send(0)
                     int x = 0;
-                    byte[] confirmation = new byte[1];
-                    //if (ClientSocket.Receive(confirmation, 0, 1, SocketFlags.None) != 1 || Encoding.UTF8.GetString(confirmation, 0, 1) != "0")
-                    //{
-                      //  System.Console.WriteLine("Error with upload confirmation");
-                    //}
-                    //confirmation = new byte[1];
-                    //watch.Restart(); // Start a timer before sending the file
+                    confirmation = new byte[1];
                     x = ClientSocket.Send(FileContent, 0, FileContent.Length, SocketFlags.None);
                     if (ClientSocket.Receive(confirmation, 0, 1, SocketFlags.None) != 1 || Encoding.UTF8.GetString(confirmation, 0, 1) != "0")
                     {
@@ -336,7 +338,7 @@ namespace MasterProject
                 float kbpsUP = ((float)FileContent.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
                 System.Console.WriteLine("Calculated Upload Bandiwidth {0} Kbps", kbpsUP);
                 UploadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsUP); // Size of file in Kbits / Time in Sec = Kbps
-                
+
                 // Calculate Downloading Bandwidth
                 // Receiving the file
                 try
@@ -362,7 +364,7 @@ namespace MasterProject
                 float kbpsDWN = ((float)FileRec.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
                 System.Console.WriteLine("Calculated Download Bandiwidth {0} Kbps", kbpsDWN);
                 DownloadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsDWN); // Size of file in Kbits / Time in Sec = Kbps
-                
+
                 BWindex++;
                 ClientSocket.Close();
             }
@@ -445,9 +447,9 @@ namespace MasterProject
                 MessageBox.Show("Please enter the number of landmarks", "Error");
                 return;
             }
-            if (LandNumber < 1 || LandNumber >100)
+            if (LandNumber < 1 || LandNumber > 100)
             {
-                MessageBox.Show("Landmarks number must be a value between 1 and 100 !","Error");
+                MessageBox.Show("Landmarks number must be a value between 1 and 100 !", "Error");
                 return;
             }
             Thread t = new Thread(new ThreadStart(BeginLandmarksSelection));
@@ -486,7 +488,7 @@ namespace MasterProject
                 while (i < LandNumber)
                 {
                     int size = getLandmarkNumber();
-                    int randomNumber = r.Next(0, size-1);
+                    int randomNumber = r.Next(0, size - 1);
                     RandomLandmark = AllLandmarks[randomNumber];
                     if (!ChosenLandmarks.Contains(RandomLandmark))
                     {
@@ -572,7 +574,7 @@ namespace MasterProject
                 int k = 0;
                 while (ChosenLandmarks.Count != LandNumber)
                 {
-                    k=0;
+                    k = 0;
                     while (k < Convert.ToInt32(LandNumber * LandmarksFirstSet.Count / 100))
                     {
                         if (ChosenLandmarks.Count == LandNumber)
@@ -652,7 +654,8 @@ namespace MasterProject
         private int getLandmarkNumber()
         {
             int count = 0;
-            foreach(String landmark in AllLandmarks){
+            foreach (String landmark in AllLandmarks)
+            {
                 if (landmark != null)
                     count++;
             }
@@ -661,9 +664,9 @@ namespace MasterProject
 
         //probing_rate [bytes/sec]
         //probing_duration [seconds]
-        public static int[] PingHostLossProb(string host, int index, int upload_probing_rate, int download_probing_rate, int probing_duration)
+        public static float[] PingHostLossProb(string host, int index, int upload_probing_rate, int download_probing_rate, int probing_duration)
         {
-            int[] losses = new int[2];
+            float[] losses = new float[2];
 
             //client to send
             UdpClient udpClient = new UdpClient();
@@ -673,7 +676,6 @@ namespace MasterProject
             //client to receive
             UdpClient udpClient2 = new UdpClient(9050);
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            Console.WriteLine("Sending udp packets to server");
             int probe_size = 10;//bytes
 
             int upload_pps = upload_probing_rate / probe_size;
@@ -682,22 +684,24 @@ namespace MasterProject
             int number_probes_up = upload_pps * probing_duration;
             int number_probes_down = download_pps * probing_duration;
 
+            Console.WriteLine("Sending {0} udp packets to server", number_probes_up);
+
             //number_probes_up must be smaller than ushort.MaxValue
             for (int i = 0; i < number_probes_up; i++)
             {
 
                 ushort id = (ushort)i;
-                
+
                 var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
                 Byte[] timestamp = BitConverter.GetBytes(timeSpan.TotalMilliseconds);
-                
+
                 Byte[] senddata = new Byte[10];
-                
-                Buffer.BlockCopy(BitConverter.GetBytes(id),0,senddata,0,2);
+
+                Buffer.BlockCopy(BitConverter.GetBytes(id), 0, senddata, 0, 2);
                 Buffer.BlockCopy(timestamp, 0, senddata, 2, 8);
 
                 udpClient.Send(senddata, senddata.Length);
-                Thread.Sleep(1000/upload_pps);
+                Thread.Sleep(1000 / upload_pps);
             }
             Console.WriteLine("Done.");
 
@@ -706,7 +710,7 @@ namespace MasterProject
 
             Console.WriteLine("Connecting to server [tcp]");
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
+
             bool connected = false;
             while (!connected)
             {
@@ -724,12 +728,15 @@ namespace MasterProject
             Console.WriteLine("Waiting for count of udp packets received by the server");
             receivedBytes = new Byte[4];
             int x = ClientSocket.Receive(receivedBytes, 0, 4, SocketFlags.None);
-            int uploadLoss = 100 - BitConverter.ToInt32(receivedBytes,0);
+            int server_received_probes = BitConverter.ToInt32(receivedBytes, 0);
 
-            Console.WriteLine("Sending download test info to server");
+            Console.WriteLine("Server received {0} packets", server_received_probes);
+            float uploadLoss = 100 - 100f * server_received_probes / number_probes_up;
+
+            Console.WriteLine("Sending download test info to server number_probes:{0}", number_probes_down);
             //send number_probes_down, download_pps
             ClientSocket.Send(BitConverter.GetBytes(number_probes_down));
-            ClientSocket.Send(BitConverter.GetBytes(1000/download_pps));
+            ClientSocket.Send(BitConverter.GetBytes(1000 / download_pps));
 
             Console.WriteLine("Closing tcp connection");
             ClientSocket.Close();
@@ -749,17 +756,22 @@ namespace MasterProject
                     //handle info [2 bytes id][8 bytes timestamp]
                     string received1 = Encoding.ASCII.GetString(receivedBytes);
                     downloadReceived++;
-                    Console.Write("{0} ", downloadReceived);
+                    if (downloadReceived % 200 == 0)
+                    {
+                        Console.Write("{0} ", downloadReceived);
+                    }
                 }
                 catch
                 {
                     probing = false;
                 }
             }
-            
-            int downloadLoss = 100 - downloadReceived++;
-            Console.WriteLine("Upload Loss= " + uploadLoss + "%");
-            Console.WriteLine("Download Loss= " + downloadLoss + "%");
+            Console.WriteLine("Received {0} udp packets", downloadReceived);
+
+            float downloadLoss = 100 - 100f * downloadReceived / number_probes_down;
+
+            Console.WriteLine("Upload Loss: " + uploadLoss + "%");
+            Console.WriteLine("Download Loss: " + downloadLoss + "%");
             udpClient.Close();
             udpClient2.Close();
             losses[1] = uploadLoss;
@@ -775,32 +787,32 @@ namespace MasterProject
             Ping ping = new Ping();
             byte[] buffer = new byte[32];
 
-                try
+            try
+            {
+                PingReply pingReply = ping.Send(address, 1000, buffer, pingOptions);
+                if (!(pingReply == null))
                 {
-                    PingReply pingReply = ping.Send(address, 1000, buffer, pingOptions);
-                    if (!(pingReply == null))
+                    switch (pingReply.Status)
                     {
-                        switch (pingReply.Status)
-                        {
-                            case IPStatus.Success:
-                                RTT = (int)pingReply.RoundtripTime;
-                                break;
-                            default:
-                                Console.WriteLine("Ping failed: {0}", pingReply.Status.ToString());
-                                break;
-                        }
+                        case IPStatus.Success:
+                            RTT = (int)pingReply.RoundtripTime;
+                            break;
+                        default:
+                            Console.WriteLine("Ping failed: {0}", pingReply.Status.ToString());
+                            break;
                     }
                 }
-                catch (PingException ex)
-                {
-                    Console.WriteLine("Connection Error: {0}", ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Connection Error: {0}", ex.Message);
-                }
+            }
+            catch (PingException ex)
+            {
+                Console.WriteLine("Connection Error: {0}", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Connection Error: {0}", ex.Message);
+            }
 
-                return RTT;
+            return RTT;
         }
         private static IPAddress GetIpFromHost(ref string host)
         {
@@ -865,7 +877,7 @@ namespace MasterProject
 
         private int estimatedSkypeQuality(int downloadBandwidth, int uploadBandwidth, int downloadDelay, int uploadDelay, int downloadLoss, int uploadLoss)
         {
-            int estimation=2;
+            int estimation = 2;
 
             if (downloadBandwidth > 1078 && downloadDelay <= 94) estimation = 3;
 
