@@ -23,11 +23,11 @@ namespace MasterProject
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
         }
-
+        int max_num_experiments = 10000;
         int LandmarksNumber = 0, index;
         MeasurementVector[] FinalDelayAndJitterArray;
         MeasurementVector[] FinalBandwidthArray;
-        Time[] TimeArray;
+        //Time[] TimeArray;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -35,9 +35,9 @@ namespace MasterProject
             series[1] = 2;
             series[0] = 1;
 
-            FinalDelayAndJitterArray = new MeasurementVector[1000];
-            FinalBandwidthArray = new MeasurementVector[1000];
-            TimeArray = new Time[1000];
+            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
+            FinalBandwidthArray = new MeasurementVector[max_num_experiments];
+            //TimeArray = new Time[max_num_experiments];
             LandmarksNumber = 0;
 
             if (LandmarksDelayRchTxt.Text == "")
@@ -72,52 +72,53 @@ namespace MasterProject
             t.Start();
         }
 
-        int MeanResult = -1;
-        int[] QoEPerLandmark;
-        int[] skypeQoEPerLandmark;
-        int skypeQoEMeanResult;
+        //int MeanResult = -1;
+        int[,] QoEPerLandmark;
+        int[,] skypeQoEPerLandmark;
         int max_points_per_graph = 10;
+        int[] meanQoE;
+        int[] skypeQoE;
+
         void Run()
         {
-            QoEPerLandmark = new int[LandmarksNumber];
-            skypeQoEPerLandmark = new int[LandmarksNumber];
+            QoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
+            skypeQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
+            meanQoE = new int[max_num_experiments];
+            skypeQoE = new int[max_num_experiments];
             int LocalIndex = 0;
-            int measurement_count = 0;
             while (true)
             {
                 // Compute delay and jitter 
                 FinalDelayAndJitterArray[LocalIndex] = PingSetOfLandmarks();
                 if (FinalDelayAndJitterArray[LocalIndex] == null)
                     return;
-
                 // Compute upload and download bandwidth (or rather, the goodput)
                 FinalBandwidthArray[LocalIndex] = SendFileToSetOfLandmarks();
                 if (FinalBandwidthArray[LocalIndex] == null)
                     return;
-
-
+                int download_probing_rate = (int) FinalBandwidthArray[LocalIndex].dimension1 / 2;
+                //asdf (??)
+                int upload_probing_rate = (int) FinalBandwidthArray[LocalIndex].dimension2 / 2;
                 // Compute loss rate
                 int[] LossRate = new int[2];
-                int download_probing_rate = FinalBandwidthArray[LocalIndex].dimension1 / 2;
-                //asdf
-                int upload_probing_rate = FinalBandwidthArray[LocalIndex].dimension2 / 2;
                 int probing_duration = 5;
                 //LossRate = PingHostLossProb(AllLandmarks[LocalIndex], LocalIndex, upload_probing_rate, download_probing_rate, probing_duration);
-
                 //// Make QoE Estimation
                 //// For the Set of Landmarks First
                 float[] LossRatePerLandmark = new float[2];
                 for (int i = 0; i < LandmarksNumber; i++)
                 {
                     LossRatePerLandmark = PingHostLossProb(AllLandmarks[i], i, upload_probing_rate, download_probing_rate, probing_duration);
-                    QoEPerLandmark[i] = CallerClass.Call(root,                             // Decision-tree Root
+                    // Estimate QoE with the provided tree
+                    QoEPerLandmark[LocalIndex, i] = CallerClass.Call(root,                             // Decision-tree Root
                                                         TwoWayDelayPerLandmarkArray[i],   // Delay
                                                         JitterPerLandmarkArray[i],        // Jitter
                                                         UploadBWPerLandmarkArray[i],      // UBandwidth
                                                         DownloadBWPerLandmarkArray[i],    // DBandwidth
                                                         (int)LossRatePerLandmark[0],           // DLossRate
                                                         (int)LossRatePerLandmark[1]);          // ULossRate 
-                    skypeQoEPerLandmark[i] = estimatedSkypeQuality(DownloadBWPerLandmarkArray[i],
+                    // just to compare the above result with the hard-coded tree in the bottom of this file
+                    skypeQoEPerLandmark[LocalIndex, i] = estimatedSkypeQuality(DownloadBWPerLandmarkArray[i],
                                                                     UploadBWPerLandmarkArray[i],
                                                                     (int)TwoWayDelayPerLandmarkArray[i] / 2,
                                                                     (int)TwoWayDelayPerLandmarkArray[i] / 2,
@@ -133,26 +134,93 @@ namespace MasterProject
                 System.Console.WriteLine("Mean QoE");
                 //TwoWayDelayArray[LocalIndex]
                 System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} DLR:{4} ULR:{5}",
-                                            FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
-                                            FinalDelayAndJitterArray[LocalIndex].dimension2 / 2,
-                                            FinalBandwidthArray[LocalIndex].dimension1,
-                                            FinalBandwidthArray[LocalIndex].dimension2,
-                                            LossRate[0],
-                                            LossRate[1]);
+                                            (int) FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
+                                            (int) FinalDelayAndJitterArray[LocalIndex].dimension2 / 2,
+                                            (int) FinalBandwidthArray[LocalIndex].dimension1,
+                                            (int) FinalBandwidthArray[LocalIndex].dimension2,
+                                            (int) LossRate[0],
+                                            (int) LossRate[1]);
                 //// Then for the Mean Values of Measurements
 
-                MeanResult = CallerClass.Call(root,                                            // Decision-tree Root
-                                              FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, // Delay
-                                              FinalDelayAndJitterArray[LocalIndex].dimension2 / 2, // Jitter
-                                              FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
-                                              FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
-                                              LossRate[0],                                     // DLossRate
-                                              LossRate[1]);                                    // ULossRate
-                skypeQoEMeanResult = estimatedSkypeQuality(FinalBandwidthArray[LocalIndex].dimension2, FinalBandwidthArray[LocalIndex].dimension1, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, LossRate[0], LossRate[1]);
+                meanQoE[LocalIndex] = CallerClass.Call(root,                                            // Decision-tree Root
+                                             (int) FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, // Delay
+                                              (int) FinalDelayAndJitterArray[LocalIndex].dimension2 / 2, // Jitter
+                                              (int) FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
+                                              (int) FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
+                                              (int) LossRate[0],                                     // DLossRate
+                                              (int) LossRate[1]);                                    // ULossRate
+                skypeQoE[LocalIndex] = estimatedSkypeQuality((int)FinalBandwidthArray[LocalIndex].dimension2,
+                                                            (int)FinalBandwidthArray[LocalIndex].dimension1,
+                                                            (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
+                                                            (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
+                                                            (int) LossRate[0],
+                                                            (int) LossRate[1]);
+                /*
                 // Get Full Time
                 // This will appear on the x axis...
                 TimeArray[LocalIndex] = new Time();
+                */
+                if (LocalIndex > max_points_per_graph)
+                {
+                    // for each graph, clear everything and redraw the last 19 points. Add the 20th at the end.
+                    //delay
+                    this.DelayChart.Series["Round-trip Delay"].Points.Clear();
+                    int xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.DelayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension1);
+                        xval++;
+                    }
 
+
+                    //jitter
+                    this.JitterChart.Series["Jitter"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.JitterChart.Series["Jitter"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension2);
+                        xval++;
+                    }
+
+                    // upload bw
+                    this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension1);
+                        xval++;
+                    }
+
+                    // download bw
+                    this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension2);
+                        xval++;
+                    }
+
+                    // QoE 
+                    for (int i = 0; i < LandmarksNumber; i++)
+                    {
+                        //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
+                        this.QoEChart.Series["QoE"].Points.Clear();
+                        xval = 0;
+                        for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                        {
+                            this.QoEChart.Series["QoE"].Points.AddXY((double)xval, QoEPerLandmark[pos, i]);
+                            xval++;
+                        }
+                    }
+                    // QoE bis
+                    this.MeanQoEChart.Series["Mean QoE"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.MeanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, meanQoE[pos]);
+                        xval++;
+                    }
+                }
                 // Draw the Charts
                 // I have to:
                 /*
@@ -170,20 +238,23 @@ namespace MasterProject
                 //this.DelayChart.Series["Round-trip Delay"].Points.RemoveAt
                 //System.Windows.Forms.[] plotted_data = new Array[this.DelayChart.Series["Round-trip Delay"].Points.Count];
                 //this.DelayChart.Series["Round-trip Delay"].Points.CopyTo(plotted_data, 0);
-                this.DelayChart.Series["Round-trip Delay"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalDelayAndJitterArray[LocalIndex].dimension1);
-                this.JitterChart.Series["Jitter"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalDelayAndJitterArray[LocalIndex].dimension2);
-                this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalBandwidthArray[LocalIndex].dimension1);
-                this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(TimeArray[LocalIndex].ToString(), FinalBandwidthArray[LocalIndex].dimension2);
-
-                for (int i = 0; i < LandmarksNumber; i++)
+                else
                 {
-                    this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[i]);
+                    this.DelayChart.Series["Round-trip Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension1);
+                    this.JitterChart.Series["Jitter"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension2);
+                    this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension1);
+                    this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
+                    // TODO: Loss Rate!!! We need a tab with the loss rate (upstream and downstream!)
+                    for (int i = 0; i < LandmarksNumber; i++)
+                    {
+                        this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
+                    }
+                    this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
                 }
-                this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(TimeArray[LocalIndex].ToString(), MeanResult);
-
-                Console.WriteLine("HardCoded calculation:{0}", skypeQoEMeanResult);
-
-                Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000);
+                
+                Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
+                LocalIndex++;
+                Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
             }
         }
 
@@ -288,7 +359,7 @@ namespace MasterProject
                 }
                 catch
                 {
-                    MessageBox.Show("Some problem occured during building the socket !\nPlease, check your account administrative settings.", "Error");
+                    MessageBox.Show("A problem occurred when creating the socket!\nPlease, check your account administrative settings.", "Error");
                     return null;
                 }
                 IPEndPoint iep = new IPEndPoint(IPAddress.Parse(Landmark), 51254);
@@ -299,7 +370,7 @@ namespace MasterProject
                 }
                 catch
                 {
-                    MessageBox.Show("Landmark: " + Landmark + " is not available! Please, try agian later.", "Error");
+                    MessageBox.Show("Landmark: " + Landmark + " is not available.", "Error");
                     return null;
                 }
 
@@ -327,16 +398,16 @@ namespace MasterProject
                         System.Console.WriteLine("Error with upload confirmation");
                     }
                     watch.Stop(); // Stop the timer after sending the file
-                    System.Console.WriteLine("Uploaded {0} bytes in {1} miliseconds", x, watch.ElapsedMilliseconds);
+                    System.Console.WriteLine("Uploaded {0} bytes in {1} ms", x, watch.ElapsedMilliseconds);
                 }
                 catch
                 {
-                    MessageBox.Show("Problem in sending the file to the landmark: " + Landmark + " ! Please, try agian later.", "Error");
+                    MessageBox.Show("Problem when sending the file to the landmark: " + Landmark + "! Please, try again later.", "Error");
                     return null;
                 }
-                // Uploading Bandwidth is
-                float kbpsUP = ((float)FileContent.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
-                System.Console.WriteLine("Calculated Upload Bandiwidth {0} Kbps", kbpsUP);
+                // Upload bandwidth is...
+                float kbpsUP = ((float)FileContent.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;// TODO add parenthesis to make the formula clear
+                System.Console.WriteLine("Calculated Upload Bandwidth {0} Kbps", kbpsUP);
                 UploadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsUP); // Size of file in Kbits / Time in Sec = Kbps
 
                 // Calculate Downloading Bandwidth
@@ -345,22 +416,22 @@ namespace MasterProject
                 {
                     offset = 0;
                     FileRec = new byte[FileContent.Length];
-                    System.Console.WriteLine("Downloading File...");
-                    watch.Restart(); // Start a timer before recieving the file
+                    System.Console.WriteLine("Downloading file...");
+                    watch.Restart(); // Start a timer before receiving the file
                     while (offset < FileContent.Length)
                     {
                         BytesRec = ClientSocket.Receive(FileRec);
                         offset += BytesRec;
                     }
                     watch.Stop(); // Stop the timer after receiving the file
-                    System.Console.WriteLine("Downloaded {0} bytes in {1} miliseconds", offset, watch.ElapsedMilliseconds);
+                    System.Console.WriteLine("Downloaded {0} bytes in {1} ms", offset, watch.ElapsedMilliseconds);
                 }
                 catch
                 {
                     MessageBox.Show("Error occurred when receiving the file from the landmark: " + Landmark + " !", "Error");
                     return null;
                 }
-                // Downloading Bandwidth is
+                // Download bandwidth is...
                 float kbpsDWN = ((float)FileRec.Length) * 8 / kilo * 1000 / watch.ElapsedMilliseconds;
                 System.Console.WriteLine("Calculated Download Bandiwidth {0} Kbps", kbpsDWN);
                 DownloadBWPerLandmarkArray[BWindex] = Convert.ToInt32(kbpsDWN); // Size of file in Kbits / Time in Sec = Kbps
@@ -398,14 +469,14 @@ namespace MasterProject
                 }
                 else
                 {
-                    MessageBox.Show("Plese choose a file with a size greater than 2MB !", "Error");
+                    MessageBox.Show("Please choose a file with a size greater than 2MB !", "Error");
                     fs = null;
                     return;
                 }
             }
             else
             {
-                MessageBox.Show("Error in opening the requested file !", "Error");
+                MessageBox.Show("Error when opening the requested file !", "Error");
                 return;
             }
         }
@@ -431,7 +502,7 @@ namespace MasterProject
             }
             else
             {
-                MessageBox.Show("Error in opening the Decision Tree file", "Error");
+                MessageBox.Show("Error when opening the Decision Tree file", "Error");
                 return;
             }
         }
@@ -673,44 +744,41 @@ namespace MasterProject
             udpClient.Connect(host, 9050);
 
             // Loss Rate in the upload direction
-            //client to receive
+            // ******* Upstream *******
             UdpClient udpClient2 = new UdpClient(9050);
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            // Size of probes at the application level
             int probe_size = 10;//bytes
-
             int upload_pps = upload_probing_rate / probe_size;
             int download_pps = download_probing_rate / probe_size;
-
             int number_probes_up = upload_pps * probing_duration;
             int number_probes_down = download_pps * probing_duration;
-
-            Console.WriteLine("Sending {0} udp packets to server", number_probes_up);
-
-            //number_probes_up must be smaller than ushort.MaxValue
+            Console.WriteLine("Sending {0} udp packets to server at {1} pps ({2} Kbps)", number_probes_up, upload_pps, upload_probing_rate*8/1000);
+            //number_probes_up must be smaller than ushort.MaxValue (range is [0, 65535])
+            /* TODO (not urgent) Here we should check whether with the desired sending rate (in bits/s) and probing duration
+               the resulting number of probes is less than 65535. If it is, we should keep the sending rate (in bits/s)
+               constant and reduce the duration of the experiment accordingly.
+            */
+            // Creating probes and sending them
             for (int i = 0; i < number_probes_up; i++)
             {
-
                 ushort id = (ushort)i;
-
                 var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
                 Byte[] timestamp = BitConverter.GetBytes(timeSpan.TotalMilliseconds);
-
                 Byte[] senddata = new Byte[10];
-
                 Buffer.BlockCopy(BitConverter.GetBytes(id), 0, senddata, 0, 2);
                 Buffer.BlockCopy(timestamp, 0, senddata, 2, 8);
-
                 udpClient.Send(senddata, senddata.Length);
                 Thread.Sleep(1000 / upload_pps);
             }
             Console.WriteLine("Done.");
 
             // = udpClient2.Receive(ref RemoteIpEndPoint);
-            Byte[] receivedBytes;
 
+            // Receiving details about the upstream experiment and sending info on the downstream one on a separate TCP socket
+            Byte[] receivedBytes;
             Console.WriteLine("Connecting to server [tcp]");
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
             bool connected = false;
             while (!connected)
             {
@@ -740,7 +808,7 @@ namespace MasterProject
 
             Console.WriteLine("Closing tcp connection");
             ClientSocket.Close();
-
+            // ******* Downstream *******
             Console.WriteLine("Waiting udp packets from server");
             udpClient2.Client.ReceiveTimeout = 5000;
 
