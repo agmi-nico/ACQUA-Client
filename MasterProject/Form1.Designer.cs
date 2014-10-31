@@ -148,6 +148,9 @@
             this.groupBox2.Size = new System.Drawing.Size(464, 487);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
+
+            int borderWidth = 5;
+
             // 
             // JitterChart
             // 
@@ -161,6 +164,7 @@
             series7.Legend = "Legend1";
             series7.Name = "Jitter";
             series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series7.BorderWidth = borderWidth;
             this.JitterChart.Series.Add(series7);
 
             this.JitterChart.Size = new System.Drawing.Size(452, 215);
@@ -181,6 +185,7 @@
             series8.Name = "Round-trip Delay";
             series8.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
             series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series8.BorderWidth = borderWidth;
             this.DelayChart.Series.Add(series8);
             this.DelayChart.Size = new System.Drawing.Size(453, 215);
             this.DelayChart.TabIndex = 0;
@@ -219,6 +224,7 @@
             series9.Legend = "Legend1";
             series9.Name = "Download Bandwidth";
             series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series9.BorderWidth = borderWidth;
             this.DownloadBandwidthChart.Series.Add(series9);
             this.DownloadBandwidthChart.Size = new System.Drawing.Size(453, 215);
             this.DownloadBandwidthChart.TabIndex = 1;
@@ -236,6 +242,7 @@
             series10.Legend = "Legend1";
             series10.Name = "Upload Bandwidth";
             series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series10.BorderWidth = borderWidth;
             this.UploadBandwidthChart.Series.Add(series10);
             this.UploadBandwidthChart.Size = new System.Drawing.Size(453, 215);
             this.UploadBandwidthChart.TabIndex = 0;
@@ -274,6 +281,7 @@
             series11.Legend = "Legend1";
             series11.Name = "Mean QoE";
             series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series11.BorderWidth = borderWidth;
             this.MeanQoEChart.Series.Add(series11);
             this.MeanQoEChart.Size = new System.Drawing.Size(453, 215);
             this.MeanQoEChart.TabIndex = 1;
@@ -291,6 +299,7 @@
             series12.Legend = "Legend1";
             series12.Name = "QoE";
             series12.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series12.BorderWidth = borderWidth;
             this.QoEChart.Series.Add(series12);
             this.QoEChart.Size = new System.Drawing.Size(453, 215);
             this.QoEChart.TabIndex = 0;
