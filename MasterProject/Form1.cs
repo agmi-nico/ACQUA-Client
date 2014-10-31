@@ -731,7 +731,7 @@ namespace MasterProject
             int server_received_probes = BitConverter.ToInt32(receivedBytes, 0);
 
             Console.WriteLine("Server received {0} packets", server_received_probes);
-            float uploadLoss = 100 - 100f * server_received_probes / number_probes_up;
+            float uploadLoss = 100f * (number_probes_up - server_received_probes) / number_probes_up;
 
             Console.WriteLine("Sending download test info to server number_probes:{0}", number_probes_down);
             //send number_probes_down, download_pps
@@ -756,10 +756,10 @@ namespace MasterProject
                     //handle info [2 bytes id][8 bytes timestamp]
                     string received1 = Encoding.ASCII.GetString(receivedBytes);
                     downloadReceived++;
-                    if (downloadReceived % 200 == 0)
-                    {
-                        Console.Write("{0} ", downloadReceived);
-                    }
+                    //if (downloadReceived % 200 == 0)
+                    //{
+                    //    Console.Write("{0} ", downloadReceived / 200);
+                    //}
                 }
                 catch
                 {
@@ -768,7 +768,7 @@ namespace MasterProject
             }
             Console.WriteLine("Received {0} udp packets", downloadReceived);
 
-            float downloadLoss = 100 - 100f * downloadReceived / number_probes_down;
+            float downloadLoss = 100f * (number_probes_down - downloadReceived) / number_probes_down;
 
             Console.WriteLine("Upload Loss: " + uploadLoss + "%");
             Console.WriteLine("Download Loss: " + downloadLoss + "%");
