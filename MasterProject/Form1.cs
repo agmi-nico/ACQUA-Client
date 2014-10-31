@@ -96,9 +96,9 @@ namespace MasterProject
                 FinalBandwidthArray[LocalIndex] = SendFileToSetOfLandmarks();
                 if (FinalBandwidthArray[LocalIndex] == null)
                     return;
-                int download_probing_rate = (int) FinalBandwidthArray[LocalIndex].dimension1 / 2;
+                int download_probing_rate = (int)FinalBandwidthArray[LocalIndex].dimension1 / 2;
                 //asdf (??)
-                int upload_probing_rate = (int) FinalBandwidthArray[LocalIndex].dimension2 / 2;
+                int upload_probing_rate = (int)FinalBandwidthArray[LocalIndex].dimension2 / 2;
                 // Compute loss rate
                 int[] LossRate = new int[2];
                 int probing_duration = 5;
@@ -134,27 +134,27 @@ namespace MasterProject
                 System.Console.WriteLine("Mean QoE");
                 //TwoWayDelayArray[LocalIndex]
                 System.Console.WriteLine("Mean QoE Delay:{0} Jitter:{1} UBW:{2} DBW:{3} DLR:{4} ULR:{5}",
-                                            (int) FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
-                                            (int) FinalDelayAndJitterArray[LocalIndex].dimension2 / 2,
-                                            (int) FinalBandwidthArray[LocalIndex].dimension1,
-                                            (int) FinalBandwidthArray[LocalIndex].dimension2,
-                                            (int) LossRate[0],
-                                            (int) LossRate[1]);
+                                            (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
+                                            (int)FinalDelayAndJitterArray[LocalIndex].dimension2 / 2,
+                                            (int)FinalBandwidthArray[LocalIndex].dimension1,
+                                            (int)FinalBandwidthArray[LocalIndex].dimension2,
+                                            (int)LossRate[0],
+                                            (int)LossRate[1]);
                 //// Then for the Mean Values of Measurements
 
                 meanQoE[LocalIndex] = CallerClass.Call(root,                                            // Decision-tree Root
-                                             (int) FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, // Delay
-                                              (int) FinalDelayAndJitterArray[LocalIndex].dimension2 / 2, // Jitter
-                                              (int) FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
-                                              (int) FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
-                                              (int) LossRate[0],                                     // DLossRate
-                                              (int) LossRate[1]);                                    // ULossRate
+                                             (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2, // Delay
+                                              (int)FinalDelayAndJitterArray[LocalIndex].dimension2 / 2, // Jitter
+                                              (int)FinalBandwidthArray[LocalIndex].dimension1,      // UBandwidth
+                                              (int)FinalBandwidthArray[LocalIndex].dimension2,      // DBandwidth
+                                              (int)LossRate[0],                                     // DLossRate
+                                              (int)LossRate[1]);                                    // ULossRate
                 skypeQoE[LocalIndex] = estimatedSkypeQuality((int)FinalBandwidthArray[LocalIndex].dimension2,
                                                             (int)FinalBandwidthArray[LocalIndex].dimension1,
                                                             (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
                                                             (int)FinalDelayAndJitterArray[LocalIndex].dimension1 / 2,
-                                                            (int) LossRate[0],
-                                                            (int) LossRate[1]);
+                                                            (int)LossRate[0],
+                                                            (int)LossRate[1]);
                 /*
                 // Get Full Time
                 // This will appear on the x axis...
@@ -251,10 +251,10 @@ namespace MasterProject
                     }
                     this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
                 }
-                
+
                 Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
-                Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
+                //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
             }
         }
 
@@ -717,6 +717,100 @@ namespace MasterProject
             }
         }
 
+        UdpClient udpOut;
+        UdpClient udpIn;
+        IPEndPoint RemoteIpEndPoint;
+        private void setUpMeasurement(string host, int udpPort, int tcpPort)
+        {
+            udpOut = new UdpClient();
+            udpOut.Connect(host, udpPort);
+            udpIn = new UdpClient(udpPort);
+            RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        }
+
+        Byte[] udpPacketBytes; 
+        Byte[] serverMeasurements = new Byte[100];
+        int udpPacketSize = 10;
+        private int[] getMeasurements(string host, int probing_duration, int number_probes, int udpPort, int tcpPort)
+        {
+            int[] ret = new int[8];
+
+            float[] lossRate = new float[2];
+            float[] bandwith = new float[2];
+            float[] delay = new float[2];
+
+            Console.WriteLine("Sending udp packet train...");
+            for (int i = 0; i < number_probes; i++)
+            {
+                ushort id = (ushort)i;
+                var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+                udpPacketBytes = new Byte[udpPacketSize];
+                Buffer.BlockCopy(BitConverter.GetBytes(id), 0, udpPacketBytes, 0, 2);
+                Buffer.BlockCopy(BitConverter.GetBytes(timeSpan.TotalMilliseconds), 0, udpPacketBytes, 2, 8);
+                udpOut.Send(udpPacketBytes, udpPacketBytes.Length);
+            }
+            Console.WriteLine("Done.");
+
+            Console.WriteLine("Connecting to server [tcp]...");
+            Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            bool connected = false;
+            while (!connected)
+            {
+                try
+                {
+                    ClientSocket.Connect(host, tcpPort);
+                    connected = true;
+                }
+                catch
+                {
+                    connected = false;
+                    Console.WriteLine("Error connecting to {0}:{1}", host, tcpPort);
+                }
+            }
+
+            Console.WriteLine("Waiting for server measurements...");
+            serverMeasurements = new Byte[4];
+            int x = ClientSocket.Receive(serverMeasurements, 0, 4, SocketFlags.None);
+            //TODO separar los valores del array de bytes
+            //delay[0]=
+            //bandwith[0]=
+            //lossRate[0]=
+            ClientSocket.Close();
+            //Console.WriteLine("Server response delay:{0} upload-bandwith:{1} lossRate:{2}", delay[0], bandwith[1], lossRate[2]);
+
+            Console.WriteLine("Waiting for udp packet train...");
+            udpPacketBytes = new Byte[udpPacketSize];
+
+            int seqId;
+            long timestamp;
+
+            udpIn.Client.ReceiveTimeout = 5000;
+
+            int packetsReceived = 0;
+            // Loss Rate in the download direction
+            //receive all packets for download
+            bool probing = true;
+            while (probing)
+            {
+                try
+                {
+                    udpPacketBytes = udpIn.Receive(ref RemoteIpEndPoint);
+                    //TODO parse [id][timestamp] values in udPakcetBytes
+
+                    //TODO use timestamp to measure "delay"
+                    packetsReceived++;
+                }
+                catch
+                {
+                    probing = false;
+                }
+            }
+            //TODO use packet count to measure packet loss
+            //TODO use initial and end time for "bandwith" NOTE: bandwith must consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
+
+            return ret;
+        }
+
         private void InitializeLandmarksArray()
         {
             AllLandmarks[0] = "10.0.0.1";
@@ -753,7 +847,7 @@ namespace MasterProject
             int download_pps = download_probing_rate / probe_size;
             int number_probes_up = upload_pps * probing_duration;
             int number_probes_down = download_pps * probing_duration;
-            Console.WriteLine("Sending {0} udp packets to server at {1} pps ({2} Kbps)", number_probes_up, upload_pps, upload_probing_rate*8/1000);
+            Console.WriteLine("Sending {0} udp packets to server at {1} pps ({2} Kbps)", number_probes_up, upload_pps, upload_probing_rate * 8 / 1000);
             //number_probes_up must be smaller than ushort.MaxValue (range is [0, 65535])
             /* TODO (not urgent) Here we should check whether with the desired sending rate (in bits/s) and probing duration
                the resulting number of probes is less than 65535. If it is, we should keep the sending rate (in bits/s)
