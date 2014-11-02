@@ -40,16 +40,6 @@ namespace MasterProject
             //TimeArray = new Time[max_num_experiments];
             LandmarksNumber = 0;
 
-            if (LandmarksDelayRchTxt.Text == "")
-            {
-                LandNumber = 1;
-                BeginLandmarksSelection();
-            }
-            if (BWFileTxtBox.Text == "")
-            {
-                MessageBox.Show("File for data transfer missing", "Error");
-                return;
-            }
             if (DecisionTreeTxtBox.Text == "")
             {
                 MessageBox.Show("Decision Tree missing", "Error");
@@ -87,7 +77,7 @@ namespace MasterProject
             skypeQoE = new int[max_num_experiments];
             int LocalIndex = 0;
 
-            setUpMeasurement("10.0.0.1", 9050, 9051, 200);
+            setUpMeasurement("127.0.0.1", 9050, 9051, 200);
 
             while (true)
             {
@@ -500,11 +490,10 @@ namespace MasterProject
             Console.WriteLine("Sending udp packet train...");
             for (int i = 0; i < number_probes; i++)
             {
-                ushort id = (ushort)i;
                 var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
                 udpPacketBytes = new Byte[udpPacketSize];
-                Buffer.BlockCopy(BitConverter.GetBytes(id), 0, udpPacketBytes, 0, 2);
-                Buffer.BlockCopy(BitConverter.GetBytes(timeSpan.TotalMilliseconds), 0, udpPacketBytes, 2, 8);
+                Buffer.BlockCopy(BitConverter.GetBytes(i), 0, udpPacketBytes, 0, 4);
+                Buffer.BlockCopy(BitConverter.GetBytes(timeSpan.TotalMilliseconds), 0, udpPacketBytes, 4, 8);
                 udpOut.Send(udpPacketBytes, udpPacketBytes.Length);
             }
             Console.WriteLine("Done.");
@@ -533,6 +522,9 @@ namespace MasterProject
             delay[0] = BitConverter.ToInt32(serverMeasurements, 0);
             bandwith[0] = BitConverter.ToInt32(serverMeasurements, 4);
             lossRate[0] = BitConverter.ToInt32(serverMeasurements, 8);
+
+            ClientSocket.Send(BitConverter.GetBytes('0'), 1, SocketFlags.None);
+
             ClientSocket.Close();
             Console.WriteLine("Server response delay:{0} upload-bandwith:{1} lossRate:{2}", delay[0], bandwith[1], lossRate[2]);
 
@@ -571,7 +563,7 @@ namespace MasterProject
 
                     seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
                     timestamp = BitConverter.ToInt64(udpPacketBytes, 4);
-                    delay_sum = (int)(timeSpan.TotalMilliseconds - timestamp);
+                    delay_sum += (int)(timeSpan.TotalMilliseconds - timestamp);
                     packets_received++;
                 }
                 catch
