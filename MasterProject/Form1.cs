@@ -251,10 +251,10 @@ namespace MasterProject
                     }
                     this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
                 }
-                
+                System.Console.WriteLine("-> Average delay:{0}", FinalDelayAndJitterArray[LocalIndex].dimension1);
                 Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
-                Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
+                //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
             }
         }
 
@@ -741,6 +741,7 @@ namespace MasterProject
 
             //client to send
             UdpClient udpClient = new UdpClient();
+            Console.WriteLine("Host: {0}", host);
             udpClient.Connect(host, 9050);
 
             // Loss Rate in the upload direction
