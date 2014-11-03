@@ -24,7 +24,7 @@ namespace MasterProject
             CheckForIllegalCrossThreadCalls = false;
         }
         int max_num_experiments = 10000;
-        int LandmarksNumber = 0, index;
+        int LandmarksNumber = 0;
         MeasurementVector[] FinalDelayAndJitterArray;
         MeasurementVector[] FinalBandwidthArray;
         //Time[] TimeArray;
@@ -37,7 +37,7 @@ namespace MasterProject
 
             FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
-            //TimeArray = new Time[max_num_experiments];
+
             LandmarksNumber = 0;
 
             if (DecisionTreeTxtBox.Text == "")
@@ -71,17 +71,26 @@ namespace MasterProject
 
         void Run()
         {
+            LandmarksNumber = 1;
             QoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             skypeQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             meanQoE = new int[max_num_experiments];
             skypeQoE = new int[max_num_experiments];
+            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
+            FinalBandwidthArray = new MeasurementVector[max_num_experiments];
             int LocalIndex = 0;
 
-            setUpMeasurement("127.0.0.1", 9050, 9051, 200);
+            setUpMeasurement("10.0.0.1", 9050, 9051, 1000);
 
             while (true)
             {
                 int[] measurements = getMeasurements();
+
+                System.Console.WriteLine("Calculating QoE with values:");
+                System.Console.WriteLine("Delay-U:{0}ms Delay-D:{1}ms", measurements[0], measurements[1]);
+                System.Console.WriteLine("Bandwith-U:{0}Kbit/s Bandwith-D:{1}Kbit/s", measurements[2], measurements[3]);
+                System.Console.WriteLine("LossRate-U:{0}% LossRate-D:{1}%", measurements[4], measurements[5]);
+
                 // Estimate QoE with the provided tree
                 QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
                                                                 measurements[0], // Delay
@@ -98,14 +107,12 @@ namespace MasterProject
                                                                 measurements[4],
                                                                 measurements[5]);
 
-                System.Console.WriteLine("Mean QoE");
-                //TwoWayDelayArray[LocalIndex]
-                System.Console.WriteLine("Mean QoE DelayUp:{0} DelayDown:{1} UBW:{2} DBW:{3} ULR:{4} DLR:{5}",
-                                            measurements[0], measurements[1], measurements[2],
-                                            measurements[3], measurements[4], measurements[5]);
+                FinalDelayAndJitterArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
+                FinalBandwidthArray[LocalIndex] = new MeasurementVector(measurements[2], measurements[3]);
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
+
                 /*
                 // Get Full Time
                 // This will appear on the x axis...
@@ -208,16 +215,6 @@ namespace MasterProject
                 //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
             }
         }
-
-        // Delay and Jitter Measurement
-        long elapsedMs = 0;
-        double Total2WDPerLandmark = 0, Total2WD = 0, _2WD = 0;
-        double TotalJitterPerLandmark = 0, TotalJitter = 0;
-        int[] TwoWayDelayPerLandmarkArray;
-        int[] JitterPerLandmarkArray;
-        int MeanTwowayDelay = 0, MeanJitter = 0;
-        double[] TwoWayDelayArray;
-        bool MoreThanOneCampaign = true;
 
         // Choose Decision Tree (Configuration File)
         Node root;
@@ -476,11 +473,14 @@ namespace MasterProject
 
         Byte[] udpPacketBytes;
         Byte[] serverMeasurements = new Byte[100];
-        int udpPacketSize = 12;
-        int serverMeasurementsSize = 4 * 3; //delay bandwith loss_rate [all int]
+        static int udpPacketSize = 12 + 1000;
+        static int bits_per_packet = 28 * 8 + udpPacketSize * 8; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
+        static int serverMeasurementsSize = 4 * 3; //delay bandwith loss_rate [all int]
 
         private int[] getMeasurements()
         {
+            Console.WriteLine("Executing Measurements...");
+
             int[] ret = new int[6];
 
             float[] lossRate = new float[2];
@@ -498,7 +498,7 @@ namespace MasterProject
             }
             Console.WriteLine("Done.");
 
-            Console.WriteLine("Connecting to server [tcp]...");
+            Console.WriteLine("Connecting to server (tcp)...");
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             bool connected = false;
             while (!connected)
@@ -526,15 +526,13 @@ namespace MasterProject
             ClientSocket.Send(BitConverter.GetBytes('0'), 1, SocketFlags.None);
 
             ClientSocket.Close();
-            Console.WriteLine("Server response delay:{0} upload-bandwith:{1} lossRate:{2}", delay[0], bandwith[1], lossRate[2]);
+            Console.WriteLine("Server measurements Delay-U:{0}ms Bandwith-U:{1}Kbits/s LossRate-U:{2}%", delay[0], bandwith[0], lossRate[0]);
 
             Console.WriteLine("Waiting for udp packet train...");
             udpPacketBytes = new Byte[udpPacketSize];
 
+            udpIn.Client.ReceiveTimeout = 0;
 
-            udpIn.Client.ReceiveTimeout = 5000;
-            // Loss Rate in the download direction
-            //receive all packets for download
             bool probing = true;
             int seq_id;
             long timestamp;
@@ -549,38 +547,50 @@ namespace MasterProject
                 try
                 {
                     udpPacketBytes = udpIn.Receive(ref RemoteIpEndPoint);
-                    if (start_time == 0)
-                    {
-                        start_time = DateTime.Now.Millisecond;
-                    }
-                    end_time = DateTime.Now.Millisecond;
-
-                    if (udpPacketBytes.Length != udpPacketSize)
-                    {
-                        Console.WriteLine("Wrong packet size");
-                    }
-                    var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-
-                    seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
-                    timestamp = BitConverter.ToInt64(udpPacketBytes, 4);
-                    delay_sum += (int)(timeSpan.TotalMilliseconds - timestamp);
-                    packets_received++;
                 }
                 catch
                 {
                     probing = false;
+                    break;
                 }
+
+                if (start_time == 0)
+                {
+                    udpIn.Client.ReceiveTimeout = 5000;
+                    start_time = DateTime.Now.Millisecond;
+                    Console.WriteLine("Receiving packets...");
+                }
+                end_time = DateTime.Now.Millisecond;
+
+                if (udpPacketBytes.Length != udpPacketSize)
+                {
+                    Console.WriteLine("Wrong packet size");
+                }
+
+                var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+
+                seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
+                timestamp = BitConverter.ToInt64(udpPacketBytes, 4);
+                delay_sum += (int)(timeSpan.TotalMilliseconds - timestamp);
+                packets_received++;
             }
+
+            Console.WriteLine("Done.");
+
             delay[1] = delay_sum / packets_received;
-            int bytes_per_packet = 28 + udpPacketSize; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
-            bandwith[1] = packets_received * bytes_per_packet / (end_time - start_time);
+            bandwith[1] = packets_received * bits_per_packet / (end_time - start_time);
             lossRate[1] = 100 * (number_probes - packets_received) / number_probes;
+
+            Console.WriteLine("Client measurements Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay[1], bandwith[1], lossRate[1]);
+
             ret[0] = (int)delay[0];
             ret[1] = (int)delay[1];
             ret[2] = (int)bandwith[0];
             ret[3] = (int)bandwith[1];
             ret[4] = (int)lossRate[0];
             ret[5] = (int)lossRate[1];
+
+            Console.WriteLine("Measurements Complete.");
 
             return ret;
         }
