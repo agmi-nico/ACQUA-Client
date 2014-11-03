@@ -240,7 +240,7 @@ namespace MasterProject
 
                 Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
-                //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // sleep for 6 seconds * what ???
+                //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // 
             }
         }
 
@@ -515,7 +515,6 @@ namespace MasterProject
             float[] lossRate = new float[2];
             float[] bandwith = new float[2];
             float[] delay = new float[2];
-
             Console.WriteLine("Sending udp packet train...");
             for (int i = 0; i < number_probes; i++)
             {
