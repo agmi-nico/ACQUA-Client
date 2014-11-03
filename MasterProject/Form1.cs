@@ -80,16 +80,16 @@ namespace MasterProject
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
             int LocalIndex = 0;
 
-            setUpMeasurement("10.0.0.1", 9050, 9051, 1000);
+            setUpMeasurement("10.0.0.1", 9050, 9051, 100);
 
             while (true)
             {
                 int[] measurements = getMeasurements();
 
                 System.Console.WriteLine("Calculating QoE with values:");
-                System.Console.WriteLine("Delay-U:{0}ms Delay-D:{1}ms", measurements[0], measurements[1]);
-                System.Console.WriteLine("Bandwith-U:{0}Kbit/s Bandwith-D:{1}Kbit/s", measurements[2], measurements[3]);
-                System.Console.WriteLine("LossRate-U:{0}% LossRate-D:{1}%", measurements[4], measurements[5]);
+                System.Console.WriteLine("Delay-U:   \t{0}ms    \tDelay-D:   \t{1}ms    ", measurements[0], measurements[1]);
+                System.Console.WriteLine("Bandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", measurements[2], measurements[3]);
+                System.Console.WriteLine("LossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
 
                 // Estimate QoE with the provided tree
                 QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
@@ -459,6 +459,7 @@ namespace MasterProject
         string host;
         IPEndPoint RemoteIpEndPoint;
         int number_probes;
+
         private void setUpMeasurement(string host_, int udpPort_, int tcpPort_, int number_probes_)
         {
             udpPort = udpPort_;
@@ -473,7 +474,7 @@ namespace MasterProject
 
         Byte[] udpPacketBytes;
         Byte[] serverMeasurements = new Byte[100];
-        static int udpPacketSize = 12 + 1000;
+        static int udpPacketSize = 12 + 500;
         static int bits_per_packet = 28 * 8 + udpPacketSize * 8; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
         static int serverMeasurementsSize = 4 * 3; //delay bandwith loss_rate [all int]
 
@@ -539,8 +540,9 @@ namespace MasterProject
 
             int delay_sum = 0;
             int packets_received = 0;
-            long start_time = 0;
-            long end_time = 0;
+            long exec_time = 0;
+
+            Stopwatch watch = new Stopwatch();
 
             while (probing)
             {
@@ -553,19 +555,13 @@ namespace MasterProject
                     probing = false;
                     break;
                 }
-
-                if (start_time == 0)
+                if (exec_time == 0)
                 {
                     udpIn.Client.ReceiveTimeout = 5000;
-                    start_time = DateTime.Now.Millisecond;
+                    watch.Start();
                     Console.WriteLine("Receiving packets...");
                 }
-                end_time = DateTime.Now.Millisecond;
-
-                if (udpPacketBytes.Length != udpPacketSize)
-                {
-                    Console.WriteLine("Wrong packet size");
-                }
+                exec_time = watch.ElapsedMilliseconds;
 
                 var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
 
@@ -574,11 +570,12 @@ namespace MasterProject
                 delay_sum += (int)(timeSpan.TotalMilliseconds - timestamp);
                 packets_received++;
             }
+            watch.Stop();
 
             Console.WriteLine("Done.");
 
             delay[1] = delay_sum / packets_received;
-            bandwith[1] = packets_received * bits_per_packet / (end_time - start_time);
+            bandwith[1] = packets_received * bits_per_packet / exec_time;
             lossRate[1] = 100 * (number_probes - packets_received) / number_probes;
 
             Console.WriteLine("Client measurements Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay[1], bandwith[1], lossRate[1]);
