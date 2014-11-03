@@ -27,6 +27,7 @@ namespace MasterProject
         int LandmarksNumber = 0, index;
         MeasurementVector[] FinalDelayAndJitterArray;
         MeasurementVector[] FinalBandwidthArray;
+        MeasurementVector[] FinalLossRateArray;
         //Time[] TimeArray;
 
         private void button1_Click(object sender, EventArgs e)
@@ -37,16 +38,17 @@ namespace MasterProject
 
             FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
+            FinalLossRateArray = new MeasurementVector[max_num_experiments];
             //TimeArray = new Time[max_num_experiments];
             LandmarksNumber = 0;
 
-            if (DecisionTreeTxtBox.Text == "")
+            if (decisionTreeTxtBox.Text == "")
             {
                 MessageBox.Show("Decision Tree missing", "Error");
                 return;
             }
 
-            if (ProbesNumeric.Value == 1)
+            if (probesNumber.Value == 1)
             {
                 DialogResult dr = MessageBox.Show("Jitter can't be calculated with only one probe. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.No)
@@ -54,7 +56,7 @@ namespace MasterProject
             }
 
             // Count the number of landmarks in the richTextBox
-            foreach (string landmark in LandmarksDelayRchTxt.Lines)
+            foreach (string landmark in landmarksListForm.Lines)
                 LandmarksNumber++;
 
             Thread t = new Thread(new ThreadStart(Run));
@@ -106,6 +108,14 @@ namespace MasterProject
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
+
+                FinalDelayAndJitterArray[LocalIndex].dimension1 = measurements[0];
+                FinalDelayAndJitterArray[LocalIndex].dimension2 = measurements[1];
+                FinalBandwidthArray[LocalIndex].dimension1 = measurements[2];
+                FinalBandwidthArray[LocalIndex].dimension1 = measurements[3];
+                FinalLossRateArray[LocalIndex].dimension1 = measurements[4];
+                FinalLossRateArray[LocalIndex].dimension2 = measurements[5]; 
+
                 /*
                 // Get Full Time
                 // This will appear on the x axis...
@@ -115,39 +125,57 @@ namespace MasterProject
                 {
                     // for each graph, clear everything and redraw the last 19 points. Add the 20th at the end.
                     //delay
-                    this.DelayChart.Series["Round-trip Delay"].Points.Clear();
+                    this.delayChart.Series["Round-trip Delay"].Points.Clear();
                     int xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.DelayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension1);
+                        this.delayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension1);
                         xval++;
                     }
 
 
                     //jitter
-                    this.JitterChart.Series["Jitter"].Points.Clear();
+                    this.jitterChart.Series["Jitter"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.JitterChart.Series["Jitter"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension2);
+                        this.jitterChart.Series["Jitter"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension2);
+                        xval++;
+                    }
+
+                    // upload loss rate
+                    this.uploadLossRateChart.Series["Upload Loss Rate"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.uploadLossRateChart.Series["Upload Loss Rate"].Points.AddXY((double)xval, FinalLossRateArray[pos].dimension1);
+                        xval++;
+                    }
+
+                    // download loss rate
+                    this.downloadLossRateChart.Series["Download Loss Rate"].Points.Clear();
+                    xval = 0;
+                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    {
+                        this.downloadLossRateChart.Series["Download Loss Rate"].Points.AddXY((double)xval, FinalLossRateArray[pos].dimension2);
                         xval++;
                     }
 
                     // upload bw
-                    this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.Clear();
+                    this.uploadBandwidthChart.Series["Upload Bandwidth"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension1);
+                        this.uploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension1);
                         xval++;
                     }
 
                     // download bw
-                    this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.Clear();
+                    this.downloadBandwidthChart.Series["Download Bandwidth"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension2);
+                        this.downloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY((double)xval, FinalBandwidthArray[pos].dimension2);
                         xval++;
                     }
 
@@ -164,11 +192,11 @@ namespace MasterProject
                         }
                     }
                     // QoE bis
-                    this.MeanQoEChart.Series["Mean QoE"].Points.Clear();
+                    this.meanQoEChart.Series["Mean QoE"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.MeanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, meanQoE[pos]);
+                        this.meanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, meanQoE[pos]);
                         xval++;
                     }
                 }
@@ -191,16 +219,17 @@ namespace MasterProject
                 //this.DelayChart.Series["Round-trip Delay"].Points.CopyTo(plotted_data, 0);
                 else
                 {
-                    this.DelayChart.Series["Round-trip Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension1);
-                    this.JitterChart.Series["Jitter"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension2);
-                    this.UploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension1);
-                    this.DownloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
-                    // TODO: Loss Rate!!! We need a tab with the loss rate (upstream and downstream!)
+                    this.delayChart.Series["Round-trip Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension1);
+                    this.jitterChart.Series["Jitter"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension2);
+                    this.uploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension1);
+                    this.downloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
+                    this.uploadLossRateChart.Series["Upload Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension1);
+                    this.downloadLossRateChart.Series["Download Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension2);
                     for (int i = 0; i < LandmarksNumber; i++)
                     {
                         this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
                     }
-                    this.MeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
+                    this.meanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
                 }
 
                 Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
@@ -228,7 +257,7 @@ namespace MasterProject
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 DecisionTreeFile = new FileStream(openFileDialog1.FileName, FileMode.Open);
-                DecisionTreeTxtBox.Text = DecisionTreeFile.Name;
+                decisionTreeTxtBox.Text = DecisionTreeFile.Name;
                 DecisionTreeFile.Close();
                 root = CallerClass.Load(DecisionTreeFile.Name);
                 if (root == null)
@@ -440,17 +469,17 @@ namespace MasterProject
                 }
             }
 
-            LandmarksDelayRchTxt.Clear();
+            landmarksListForm.Clear();
             // Fill the Landmarks RichTextBox
             for (int i = 0; i < ChosenLandmarks.Count; i++)
             {
                 if (i != ChosenLandmarks.Count - 1)
                 {
-                    LandmarksDelayRchTxt.Text += ChosenLandmarks[i] + "\n";
+                    landmarksListForm.Text += ChosenLandmarks[i] + "\n";
                 }
                 else
                 {
-                    LandmarksDelayRchTxt.Text += ChosenLandmarks[i];
+                    landmarksListForm.Text += ChosenLandmarks[i];
                 }
             }
         }
