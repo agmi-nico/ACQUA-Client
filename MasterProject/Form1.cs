@@ -589,7 +589,7 @@ namespace MasterProject
                     probing = false;
                     break;
                 }
-                if (exec_time == 0)
+                if (timestamp2 == 0)
                 {
                     udpIn.Client.ReceiveTimeout = 5000;
                     watch.Start();
