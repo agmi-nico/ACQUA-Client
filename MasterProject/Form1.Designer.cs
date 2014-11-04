@@ -178,7 +178,7 @@
             // 
             delayChartArea.Name = "delayChartArea";
             delayChartArea.AxisX.Title = "";
-            delayChartArea.AxisY.Title = "One-Way Delay (ms)";
+            delayChartArea.AxisY.Title = "One-Way (Up) Delay [ms]";
             this.delayChart.ChartAreas.Add(delayChartArea);
             delayLegend.Name = "delaySeriesLegend";
             this.delayChart.Legends.Add(delayLegend);
@@ -187,7 +187,7 @@
 
             delaySeries.ChartArea = "delayChartArea";
             delaySeries.Legend = "delaySeriesLegend";
-            delaySeries.Name = "Round-trip Delay";
+            delaySeries.Name = "Upload Delay";
             delaySeries.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
             delaySeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             delaySeries.BorderWidth = borderWidth;
@@ -200,7 +200,7 @@
             // 
             jitterChartArea.Name = "jitterChartArea";
             jitterChartArea.AxisX.Title = "";
-            jitterChartArea.AxisY.Title = "Jitter (ms)";
+            jitterChartArea.AxisY.Title = "One-Way (Down) Delay [ms]";
             this.jitterChart.ChartAreas.Add(jitterChartArea);
             jitterLegend.Name = "jitterLegend";
             this.jitterChart.Legends.Add(jitterLegend);
@@ -208,7 +208,7 @@
             this.jitterChart.Name = "jitterChart";
             jitterSeries.ChartArea = "jitterChartArea";
             jitterSeries.Legend = "jitterLegend";
-            jitterSeries.Name = "Jitter";
+            jitterSeries.Name = "Download Delay";
             jitterSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             jitterSeries.BorderWidth = borderWidth;
             this.jitterChart.Series.Add(jitterSeries);
@@ -349,7 +349,7 @@
             this.QoETab.Padding = new System.Windows.Forms.Padding(3);
             this.QoETab.Size = new System.Drawing.Size(473, 461);
             this.QoETab.TabIndex = 3;
-            this.QoETab.Text = "Skype QoE";
+            this.QoETab.Text = "Estimated QoE";
             this.QoETab.UseVisualStyleBackColor = true;
             // 
             // groupBox8
@@ -376,7 +376,7 @@
             this.QoEChart.Name = "QoEChart";
             QoESeries.ChartArea = "QoEChartArea";
             QoESeries.Legend = "QoELegend";
-            QoESeries.Name = "QoE";
+            QoESeries.Name = "Hardcoded";
             QoESeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             QoESeries.BorderWidth = borderWidth;
             this.QoEChart.Series.Add(QoESeries);
@@ -397,7 +397,7 @@
             this.meanQoEChart.Name = "meanQoEChart";
             meanQoESeries.ChartArea = "meanQoEChartArea";
             meanQoESeries.Legend = "meanQoELegend";
-            meanQoESeries.Name = "Mean QoE";
+            meanQoESeries.Name = "Tree";
             meanQoESeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             meanQoESeries.BorderWidth = borderWidth;
             this.meanQoEChart.Series.Add(meanQoESeries);
@@ -667,7 +667,7 @@
             this.probesNumberLabel.Size = new System.Drawing.Size(46, 13);
             this.probesNumberLabel.TabIndex = 9;
             this.probesNumberLabel.Text = "Probe(s)";
-            
+
             // 
             // button1
             // 
