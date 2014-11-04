@@ -28,131 +28,126 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea jitterChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend jitterLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series jitterSeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea delayChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend delayLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series delaySeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea uploadLossRateChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend uploadLossRateLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series uploadLossRateSeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea downloadLossRateChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend downloadLossRateLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series downloadLossRateSeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-
-
-            System.Windows.Forms.DataVisualization.Charting.ChartArea downloadBandwidthChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend downloadBandwidthLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series downloadBandwidthSeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea uploadBandwidthChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend uploadBandwidthLegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series uploadBandwidthSeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea meanQoEChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend meanQoELegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series meanQoESeries = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea QoEChartArea = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend QoELegend = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series QoESeries = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            // second qoe tab
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl = new System.Windows.Forms.TabControl();
-            // tab 1: delay and jitter
             this.jitterAndDelayTab = new System.Windows.Forms.TabPage();
             this.jitterAndDelayGroupBox = new System.Windows.Forms.GroupBox();
-            this.jitterChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.delayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            // tab 2: bandwidth
+            this.downloadDelayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.uploadDelayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.lossRateTab = new System.Windows.Forms.TabPage();
+            this.lossRateGroupBox = new System.Windows.Forms.GroupBox();
+            this.downloadLossRateChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.uploadLossRateChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.bandwidthTab = new System.Windows.Forms.TabPage();
             this.bandwidthGroupBox = new System.Windows.Forms.GroupBox();
             this.downloadBandwidthChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.uploadBandwidthChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            // tab 3: loss rate
-            this.lossRateTab = new System.Windows.Forms.TabPage();
-            this.lossRateGroupBox = new System.Windows.Forms.GroupBox();
-            this.uploadLossRateChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.downloadLossRateChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            // tab 4: QoE for the provided decision tree
             this.QoETab = new System.Windows.Forms.TabPage();
             this.QoEGroupBox = new System.Windows.Forms.GroupBox();
             this.meanQoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.QoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-
+            this.secondQoETab = new System.Windows.Forms.TabPage();
+            this.secondQoEGroupBox = new System.Windows.Forms.GroupBox();
+            this.secondMeanQoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.secondQoEChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.experimentSleepTime = new System.Windows.Forms.NumericUpDown();
-            this.probesNumber = new System.Windows.Forms.NumericUpDown();
-            this.measurementPeriodUnitLabel = new System.Windows.Forms.Label();
-            this.measurementPeriodLabel = new System.Windows.Forms.Label();
+            this.burstSize = new System.Windows.Forms.NumericUpDown();
+            this.probeSize = new System.Windows.Forms.NumericUpDown();
+            this.experimentSleepTimeUnitLabel = new System.Windows.Forms.Label();
+            this.experimentSleepTimeLabel = new System.Windows.Forms.Label();
             this.landmarksListGroupBox = new System.Windows.Forms.GroupBox();
             this.landmarksListForm = new System.Windows.Forms.RichTextBox();
-            this.probesNumberSelectionLabel = new System.Windows.Forms.Label();
+            this.burstSizeLabel = new System.Windows.Forms.Label();
             this.configurationGroupBox = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.landmarkSelectionGroupBox = new System.Windows.Forms.GroupBox();
-            this.landmarksNumberLabel = new System.Windows.Forms.Label();
-            this.LandmarksNo = new System.Windows.Forms.TextBox();
-            this.SelectLandmarks = new System.Windows.Forms.Button();
-            this.radioButtonRandom = new System.Windows.Forms.RadioButton();
-            this.radioButtonIntelligent = new System.Windows.Forms.RadioButton();
+            this.closeButton = new System.Windows.Forms.Button();
             this.decisionTreeGroupBox = new System.Windows.Forms.GroupBox();
-            // decision tree is here. 
-            //TODO: allow more than one decision tree. Open a tab for each decision tree. Save tabs and decision trees in arrays
-            this.decisionTreeTxtBox = new System.Windows.Forms.TextBox();
+            this.decisionTreeTwoTextBox = new System.Windows.Forms.TextBox();
+            this.decisionTreeTwoSelectionButton = new System.Windows.Forms.Button();
+            this.decisionTreeTextBox = new System.Windows.Forms.TextBox();
             this.decisionTreeSelectionLabel = new System.Windows.Forms.Label();
             this.decisionTreeSelectionButton = new System.Windows.Forms.Button();
-            this.fileToTransferGroupBox = new System.Windows.Forms.GroupBox();
-            this.BWFileTxtBox = new System.Windows.Forms.TextBox();
-            this.fileToTransferSelectionButton = new System.Windows.Forms.Button();
-            this.fileToTransferSelectionLabel = new System.Windows.Forms.Label();
-            this.delayConfigGroupBox = new System.Windows.Forms.GroupBox();
-            this.probesNumberLabel = new System.Windows.Forms.Label();
-            this.closeButton = new System.Windows.Forms.Button();
+            this.experimentConfigGroupBox = new System.Windows.Forms.GroupBox();
+            this.burstSizeUnitLabel = new System.Windows.Forms.Label();
+            this.probeSizeLabel = new System.Windows.Forms.Label();
+            this.probeSizeUnitLabel = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.jitterAndDelayTab.SuspendLayout();
             this.jitterAndDelayGroupBox.SuspendLayout();
-            // "starting" graphs?
-            ((System.ComponentModel.ISupportInitialize)(this.jitterChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.delayChart)).BeginInit();
-            this.bandwidthTab.SuspendLayout();
-            this.bandwidthGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.downloadBandwidthChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadDelayChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.uploadDelayChart)).BeginInit();
             this.lossRateTab.SuspendLayout();
             this.lossRateGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.downloadLossRateChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.uploadLossRateChart)).BeginInit();
+            this.bandwidthTab.SuspendLayout();
+            this.bandwidthGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadBandwidthChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).BeginInit();
             this.QoETab.SuspendLayout();
             this.QoEGroupBox.SuspendLayout();
+            this.secondQoEGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.probesNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.burstSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.probeSize)).BeginInit();
             this.landmarksListGroupBox.SuspendLayout();
             this.configurationGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.landmarkSelectionGroupBox.SuspendLayout();
             this.decisionTreeGroupBox.SuspendLayout();
-            this.fileToTransferGroupBox.SuspendLayout();
-            this.delayConfigGroupBox.SuspendLayout();
+            this.experimentConfigGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
-            // adding all tabs 
+            // 
             this.tabControl.Controls.Add(this.jitterAndDelayTab);
             this.tabControl.Controls.Add(this.lossRateTab);
             this.tabControl.Controls.Add(this.bandwidthTab);
-            this.tabControl.Controls.Add(this.QoETab);
+            //this.tabControl.Controls.Add(this.QoETab);
+            //this.tabControl.Controls.Add(this.secondQoETab);
             this.tabControl.Location = new System.Drawing.Point(391, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(481, 487);
             this.tabControl.TabIndex = 0;
-
-            // CAREFUL: Naming all components with a string (e.g. someComponent.name = "myName";) is only useful
-            // if you want to select that component with its assigned name. Otherwise, it's useless.
-            // I kept the name assignment everywhere, I just made sure the name reflected the purpose of the component.
-
             // 
-            // tab_delay_and_jitter
-            // drawing tab1 borders and margins
+            // jitterAndDelayTab
+            // 
             this.jitterAndDelayTab.Controls.Add(this.jitterAndDelayGroupBox);
             this.jitterAndDelayTab.Location = new System.Drawing.Point(4, 22);
             this.jitterAndDelayTab.Name = "jitterAndDelayTab";
@@ -162,64 +157,68 @@
             this.jitterAndDelayTab.Text = "Delay";
             this.jitterAndDelayTab.UseVisualStyleBackColor = true;
             // 
-            // jitterAndDelayGroupBox 
-            // adding jitter and delay charts to groupBox2 (and so to tab1 too)
-            this.jitterAndDelayGroupBox.Controls.Add(this.jitterChart);
-            this.jitterAndDelayGroupBox.Controls.Add(this.delayChart);
+            // jitterAndDelayGroupBox
+            // 
+            this.jitterAndDelayGroupBox.Controls.Add(this.downloadDelayChart);
+            this.jitterAndDelayGroupBox.Controls.Add(this.uploadDelayChart);
             this.jitterAndDelayGroupBox.Location = new System.Drawing.Point(3, -1);
             this.jitterAndDelayGroupBox.Name = "jitterAndDelayGroupBox";
             this.jitterAndDelayGroupBox.Size = new System.Drawing.Size(464, 487);
             this.jitterAndDelayGroupBox.TabIndex = 7;
             this.jitterAndDelayGroupBox.TabStop = false;
-
-            int borderWidth = 5;
             // 
-            // DelayChart
+            // jitterChart
             // 
-            delayChartArea.Name = "delayChartArea";
-            delayChartArea.AxisX.Title = "";
-            delayChartArea.AxisY.Title = "One-Way Delay (ms)";
-            this.delayChart.ChartAreas.Add(delayChartArea);
-            delayLegend.Name = "delaySeriesLegend";
-            this.delayChart.Legends.Add(delayLegend);
-            this.delayChart.Location = new System.Drawing.Point(5, 16);
-            this.delayChart.Name = "delayChart";
-
-            delaySeries.ChartArea = "delayChartArea";
-            delaySeries.Legend = "delaySeriesLegend";
-            delaySeries.Name = "Round-trip Delay";
-            delaySeries.YValuesPerPoint = 2; //what's this? 2 values on the Y-axis for each point on the X-Axis? A bar, then?
-            delaySeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            delaySeries.BorderWidth = borderWidth;
-            this.delayChart.Series.Add(delaySeries);
-            this.delayChart.Size = new System.Drawing.Size(453, 215);
-            this.delayChart.TabIndex = 0;
-            this.delayChart.Text = "delayChart";
+            chartArea1.AxisY.Title = "One-Way Delay (ms)";
+            chartArea1.Name = "downloadDelayChartArea";
+            this.downloadDelayChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "downloadDelayLegend";
+            this.downloadDelayChart.Legends.Add(legend1);
+            this.downloadDelayChart.Location = new System.Drawing.Point(6, 237);
+            this.downloadDelayChart.Name = "downloadDelayChart";
+            series1.BorderWidth = 5;
+            series1.ChartArea = "downloadDelayChartArea";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "downloadDelayLegend";
+            series1.Name = "Download OWD";
+            this.downloadDelayChart.Series.Add(series1);
+            this.downloadDelayChart.Size = new System.Drawing.Size(452, 215);
+            this.downloadDelayChart.TabIndex = 1;
+            this.downloadDelayChart.Text = "downloadDelayChart";
             // 
-            // JitterChart
+            // delayChart
             // 
-            jitterChartArea.Name = "jitterChartArea";
-            jitterChartArea.AxisX.Title = "";
-            jitterChartArea.AxisY.Title = "Jitter (ms)";
-            this.jitterChart.ChartAreas.Add(jitterChartArea);
-            jitterLegend.Name = "jitterLegend";
-            this.jitterChart.Legends.Add(jitterLegend);
-            this.jitterChart.Location = new System.Drawing.Point(6, 237);
-            this.jitterChart.Name = "jitterChart";
-            jitterSeries.ChartArea = "jitterChartArea";
-            jitterSeries.Legend = "jitterLegend";
-            jitterSeries.Name = "Jitter";
-            jitterSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            jitterSeries.BorderWidth = borderWidth;
-            this.jitterChart.Series.Add(jitterSeries);
-
-            this.jitterChart.Size = new System.Drawing.Size(452, 215);
-            this.jitterChart.TabIndex = 1;
-            this.jitterChart.Text = "jitterChart";
-
+            chartArea2.AxisY.Title = "One-Way Delay (ms)";
+            chartArea2.Name = "uploadDelayChartArea";
+            this.uploadDelayChart.ChartAreas.Add(chartArea2);
+            legend2.Name = "uploadDelayLegend";
+            this.uploadDelayChart.Legends.Add(legend2);
+            this.uploadDelayChart.Location = new System.Drawing.Point(5, 16);
+            this.uploadDelayChart.Name = "uploadDelayChart";
+            series2.BorderColor = System.Drawing.Color.Blue;
+            series2.BorderWidth = 5;
+            series2.ChartArea = "uploadDelayChartArea";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Legend = "uploadDelayLegend";
+            series2.Name = "Upload OWD";
+            /*
+            series3.BorderColor = System.Drawing.Color.Red;
+            series3.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
+            series3.BorderWidth = 5;
+            series3.ChartArea = "delayChartArea";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Legend = "delayLegend";
+            series3.Name = "Download OWD";
+            this.delayChart.Series.Add(series3);
+             * */
+            this.uploadDelayChart.Series.Add(series2);
+            
+            this.uploadDelayChart.Size = new System.Drawing.Size(453, 215);
+            this.uploadDelayChart.TabIndex = 0;
+            this.uploadDelayChart.Text = "uploadDelayChart";
             // 
-            // loss rate tab
-            // drawing borders and margins
+            // lossRateTab
+            // 
             this.lossRateTab.Controls.Add(this.lossRateGroupBox);
             this.lossRateTab.Location = new System.Drawing.Point(4, 22);
             this.lossRateTab.Name = "lossRateTab";
@@ -229,59 +228,56 @@
             this.lossRateTab.Text = "Loss Rate";
             this.lossRateTab.UseVisualStyleBackColor = true;
             // 
-            // loss rate group box
+            // lossRateGroupBox
+            // 
             this.lossRateGroupBox.Controls.Add(this.downloadLossRateChart);
             this.lossRateGroupBox.Controls.Add(this.uploadLossRateChart);
             this.lossRateGroupBox.Location = new System.Drawing.Point(4, -1);
             this.lossRateGroupBox.Name = "lossRateGroupBox";
             this.lossRateGroupBox.Size = new System.Drawing.Size(463, 456);
-            //this.lossRateGroupBox.TabIndex = 0;
+            this.lossRateGroupBox.TabIndex = 0;
             this.lossRateGroupBox.TabStop = false;
             // 
-            // DownloadLossRateChart
+            // downloadLossRateChart
             // 
-            downloadLossRateChartArea.Name = "downloadLossRateChartArea";
-            downloadLossRateChartArea.AxisX.Title = "";
-            downloadLossRateChartArea.AxisY.Title = "Download Loss Rate (%)";
-            this.downloadLossRateChart.ChartAreas.Add(downloadLossRateChartArea);
-            downloadLossRateLegend.Name = "downloadLossRateLegend";
-            this.downloadLossRateChart.Legends.Add(downloadLossRateLegend);
+            chartArea3.AxisY.Title = "Download Loss Rate (%)";
+            chartArea3.Name = "downloadLossRateChartArea";
+            this.downloadLossRateChart.ChartAreas.Add(chartArea3);
+            legend3.Name = "downloadLossRateLegend";
+            this.downloadLossRateChart.Legends.Add(legend3);
             this.downloadLossRateChart.Location = new System.Drawing.Point(6, 237);
             this.downloadLossRateChart.Name = "downloadLossRateChart";
-            downloadLossRateSeries.ChartArea = "downloadLossRateChartArea";
-            downloadLossRateSeries.Legend = "downloadLossRateLegend";
-            downloadLossRateSeries.Name = "Download Loss Rate";
-            downloadLossRateSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            downloadLossRateSeries.BorderWidth = borderWidth;
-            this.downloadLossRateChart.Series.Add(downloadLossRateSeries);
+            series4.BorderWidth = 5;
+            series4.ChartArea = "downloadLossRateChartArea";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Legend = "downloadLossRateLegend";
+            series4.Name = "Download Loss Rate";
+            this.downloadLossRateChart.Series.Add(series4);
             this.downloadLossRateChart.Size = new System.Drawing.Size(453, 215);
             this.downloadLossRateChart.TabIndex = 1;
             this.downloadLossRateChart.Text = "downloadLossRateChartArea";
             // 
-            // UploadLossRateChart
+            // uploadLossRateChart
             // 
-            uploadLossRateChartArea.Name = "uploadLossRateChartArea";
-            uploadLossRateChartArea.AxisX.Title = "";
-            uploadLossRateChartArea.AxisY.Title = "Upload Loss Rate (%)";
-            this.uploadLossRateChart.ChartAreas.Add(uploadLossRateChartArea);
-            uploadLossRateLegend.Name = "uploadLossRateLegend";
-            this.uploadLossRateChart.Legends.Add(uploadLossRateLegend);
+            chartArea4.AxisY.Title = "Upload Loss Rate (%)";
+            chartArea4.Name = "uploadLossRateChartArea";
+            this.uploadLossRateChart.ChartAreas.Add(chartArea4);
+            legend4.Name = "uploadLossRateLegend";
+            this.uploadLossRateChart.Legends.Add(legend4);
             this.uploadLossRateChart.Location = new System.Drawing.Point(4, 16);
             this.uploadLossRateChart.Name = "uploadLossRateChart";
-            uploadLossRateSeries.ChartArea = "uploadLossRateChartArea";
-            uploadLossRateSeries.Legend = "uploadLossRateLegend";
-            uploadLossRateSeries.Name = "Upload Loss Rate";
-            uploadLossRateSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            uploadLossRateSeries.BorderWidth = borderWidth;
-            this.uploadLossRateChart.Series.Add(uploadLossRateSeries);
+            series5.BorderWidth = 5;
+            series5.ChartArea = "uploadLossRateChartArea";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "uploadLossRateLegend";
+            series5.Name = "Upload Loss Rate";
+            this.uploadLossRateChart.Series.Add(series5);
             this.uploadLossRateChart.Size = new System.Drawing.Size(453, 215);
             this.uploadLossRateChart.TabIndex = 0;
             this.uploadLossRateChart.Text = "uploadLossRateChart";
-
-
             // 
-            // tab_bandwidth
-            // drawing tab2 borders and margins
+            // bandwidthTab
+            // 
             this.bandwidthTab.Controls.Add(this.bandwidthGroupBox);
             this.bandwidthTab.Location = new System.Drawing.Point(4, 22);
             this.bandwidthTab.Name = "bandwidthTab";
@@ -291,8 +287,8 @@
             this.bandwidthTab.Text = "Bandwidth";
             this.bandwidthTab.UseVisualStyleBackColor = true;
             // 
-            // bandwidth group box
-            // adding bw charts to groupBox6 (and so to tab2 too)
+            // bandwidthGroupBox
+            // 
             this.bandwidthGroupBox.Controls.Add(this.downloadBandwidthChart);
             this.bandwidthGroupBox.Controls.Add(this.uploadBandwidthChart);
             this.bandwidthGroupBox.Location = new System.Drawing.Point(4, -1);
@@ -301,48 +297,46 @@
             this.bandwidthGroupBox.TabIndex = 9;
             this.bandwidthGroupBox.TabStop = false;
             // 
-            // DownloadBandwidthChart
+            // downloadBandwidthChart
             // 
-            downloadBandwidthChartArea.Name = "downloadBandwidthChartArea";
-            downloadBandwidthChartArea.AxisX.Title = "";
-            downloadBandwidthChartArea.AxisY.Title = "Download Bandwidth (Kbs)";
-            this.downloadBandwidthChart.ChartAreas.Add(downloadBandwidthChartArea);
-            downloadBandwidthLegend.Name = "downloadBandwidthLegend";
-            this.downloadBandwidthChart.Legends.Add(downloadBandwidthLegend);
+            chartArea5.AxisY.Title = "Download Bandwidth (Kbs)";
+            chartArea5.Name = "downloadBandwidthChartArea";
+            this.downloadBandwidthChart.ChartAreas.Add(chartArea5);
+            legend5.Name = "downloadBandwidthLegend";
+            this.downloadBandwidthChart.Legends.Add(legend5);
             this.downloadBandwidthChart.Location = new System.Drawing.Point(6, 237);
             this.downloadBandwidthChart.Name = "downloadBandwidthChart";
-            downloadBandwidthSeries.ChartArea = "downloadBandwidthChartArea";
-            downloadBandwidthSeries.Legend = "downloadBandwidthLegend";
-            downloadBandwidthSeries.Name = "Download Bandwidth";
-            downloadBandwidthSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            downloadBandwidthSeries.BorderWidth = borderWidth;
-            this.downloadBandwidthChart.Series.Add(downloadBandwidthSeries);
+            series6.BorderWidth = 5;
+            series6.ChartArea = "downloadBandwidthChartArea";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series6.Legend = "downloadBandwidthLegend";
+            series6.Name = "Download Bandwidth";
+            this.downloadBandwidthChart.Series.Add(series6);
             this.downloadBandwidthChart.Size = new System.Drawing.Size(453, 215);
             this.downloadBandwidthChart.TabIndex = 1;
             this.downloadBandwidthChart.Text = "downloadBandwidthChartArea";
             // 
-            // UploadBandwidthChart
+            // uploadBandwidthChart
             // 
-            uploadBandwidthChartArea.Name = "uploadBandwidthChartArea";
-            uploadBandwidthChartArea.AxisX.Title = "";
-            uploadBandwidthChartArea.AxisY.Title = "Upload Bandwidth (Kbs)";
-            this.uploadBandwidthChart.ChartAreas.Add(uploadBandwidthChartArea);
-            uploadBandwidthLegend.Name = "uploadBandwidthLegend";
-            this.uploadBandwidthChart.Legends.Add(uploadBandwidthLegend);
+            chartArea6.AxisY.Title = "Upload Bandwidth (Kbs)";
+            chartArea6.Name = "uploadBandwidthChartArea";
+            this.uploadBandwidthChart.ChartAreas.Add(chartArea6);
+            legend6.Name = "uploadBandwidthLegend";
+            this.uploadBandwidthChart.Legends.Add(legend6);
             this.uploadBandwidthChart.Location = new System.Drawing.Point(4, 16);
             this.uploadBandwidthChart.Name = "uploadBandwidthChart";
-            uploadBandwidthSeries.ChartArea = "uploadBandwidthChartArea";
-            uploadBandwidthSeries.Legend = "uploadBandwidthLegend";
-            uploadBandwidthSeries.Name = "Upload Bandwidth";
-            uploadBandwidthSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            uploadBandwidthSeries.BorderWidth = borderWidth;
-            this.uploadBandwidthChart.Series.Add(uploadBandwidthSeries);
+            series7.BorderWidth = 5;
+            series7.ChartArea = "uploadBandwidthChartArea";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series7.Legend = "uploadBandwidthLegend";
+            series7.Name = "Upload Bandwidth";
+            this.uploadBandwidthChart.Series.Add(series7);
             this.uploadBandwidthChart.Size = new System.Drawing.Size(453, 215);
             this.uploadBandwidthChart.TabIndex = 0;
             this.uploadBandwidthChart.Text = "uploadBandwidthChart";
             // 
-            // QoE tab
-            // drawing tab4 borders and margins
+            // First QoETab
+            // 
             this.QoETab.Controls.Add(this.QoEGroupBox);
             this.QoETab.Location = new System.Drawing.Point(4, 22);
             this.QoETab.Name = "QoETab";
@@ -352,8 +346,8 @@
             this.QoETab.Text = "Skype QoE";
             this.QoETab.UseVisualStyleBackColor = true;
             // 
-            // groupBox8
-            // dding QoE charts to groupBox8 (and so to tab4 too)
+            // First QoEGroupBox
+            // 
             this.QoEGroupBox.Controls.Add(this.meanQoEChart);
             this.QoEGroupBox.Controls.Add(this.QoEChart);
             this.QoEGroupBox.Location = new System.Drawing.Point(4, -1);
@@ -361,244 +355,295 @@
             this.QoEGroupBox.Size = new System.Drawing.Size(463, 456);
             this.QoEGroupBox.TabIndex = 9;
             this.QoEGroupBox.TabStop = false;
-
             // 
-            // QoEChart (one value per landmark)
-            // TODO: one LINE per landmark
+            // First meanQoEChart
             // 
-            QoEChartArea.Name = "QoEChartArea";
-            QoEChartArea.AxisX.Title = "";
-            QoEChartArea.AxisY.Title = "QoE";
-            this.QoEChart.ChartAreas.Add(QoEChartArea);
-            QoELegend.Name = "QoELegend";
-            this.QoEChart.Legends.Add(QoELegend);
+            chartArea7.AxisY.Title = "QoE";
+            chartArea7.Name = "meanQoEChartArea";
+            this.meanQoEChart.ChartAreas.Add(chartArea7);
+            legend7.Name = "meanQoELegend";
+            this.meanQoEChart.Legends.Add(legend7);
+            this.meanQoEChart.Location = new System.Drawing.Point(6, 235);
+            this.meanQoEChart.Name = "meanQoEChart";
+            series8.BorderWidth = 5;
+            series8.ChartArea = "meanQoEChartArea";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series8.Legend = "meanQoELegend";
+            series8.Name = "Mean QoE";
+            this.meanQoEChart.Series.Add(series8);
+            this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.meanQoEChart.TabIndex = 1;
+            this.meanQoEChart.Text = "meanQoEChart";
+            // 
+            // First QoEChart
+            // 
+            chartArea8.AxisY.Title = "QoE";
+            chartArea8.Name = "QoEChartArea";
+            this.QoEChart.ChartAreas.Add(chartArea8);
+            legend8.Name = "QoELegend";
+            this.QoEChart.Legends.Add(legend8);
             this.QoEChart.Location = new System.Drawing.Point(4, 16);
             this.QoEChart.Name = "QoEChart";
-            QoESeries.ChartArea = "QoEChartArea";
-            QoESeries.Legend = "QoELegend";
-            QoESeries.Name = "QoE";
-            QoESeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            QoESeries.BorderWidth = borderWidth;
-            this.QoEChart.Series.Add(QoESeries);
+            series9.BorderWidth = 5;
+            series9.ChartArea = "QoEChartArea";
+            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series9.Legend = "QoELegend";
+            series9.Name = "QoE";
+            this.QoEChart.Series.Add(series9);
             this.QoEChart.Size = new System.Drawing.Size(453, 215);
             this.QoEChart.TabIndex = 0;
             this.QoEChart.Text = "QoEChart";
 
             // 
-            // MeanQoEChart
+            // Second QoETab
             // 
-            meanQoEChartArea.Name = "meanQoEChartArea";
-            meanQoEChartArea.AxisX.Title = "";
-            meanQoEChartArea.AxisY.Title = "QoE";
-            this.meanQoEChart.ChartAreas.Add(meanQoEChartArea);
-            meanQoELegend.Name = "meanQoELegend";
-            this.meanQoEChart.Legends.Add(meanQoELegend);
-            this.meanQoEChart.Location = new System.Drawing.Point(6, 235);
-            this.meanQoEChart.Name = "meanQoEChart";
-            meanQoESeries.ChartArea = "meanQoEChartArea";
-            meanQoESeries.Legend = "meanQoELegend";
-            meanQoESeries.Name = "Mean QoE";
-            meanQoESeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            meanQoESeries.BorderWidth = borderWidth;
-            this.meanQoEChart.Series.Add(meanQoESeries);
-            this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
-            this.meanQoEChart.TabIndex = 1;
-            this.meanQoEChart.Text = "meanQoEChart";
-
+            this.secondQoETab.Controls.Add(this.secondQoEGroupBox);
+            this.secondQoETab.Location = new System.Drawing.Point(4, 22);
+            this.secondQoETab.Name = "QoETab2";
+            this.secondQoETab.Padding = new System.Windows.Forms.Padding(3);
+            this.secondQoETab.Size = new System.Drawing.Size(473, 461);
+            this.secondQoETab.TabIndex = 3;
+            this.secondQoETab.Text = "QoE 2";
+            this.secondQoETab.UseVisualStyleBackColor = true;
             // 
-            // PeriodNumeric
-            this.experimentSleepTime.Location = new System.Drawing.Point(138, 232);
+            // Second QoEGroupBox
+            // 
+            this.secondQoEGroupBox.Controls.Add(this.secondMeanQoEChart);
+            this.secondQoEGroupBox.Controls.Add(this.secondQoEChart);
+            this.secondQoEGroupBox.Location = new System.Drawing.Point(4, -1);
+            this.secondQoEGroupBox.Name = "secondQoEGroupBox";
+            this.secondQoEGroupBox.Size = new System.Drawing.Size(463, 456);
+            this.secondQoEGroupBox.TabIndex = 9;
+            this.secondQoEGroupBox.TabStop = false;
+            // 
+            // Second meanQoEChart
+            // 
+            chartArea10.AxisY.Title = "QoE";
+            chartArea10.Name = "secondMeanQoEChartArea";
+            this.secondMeanQoEChart.ChartAreas.Add(chartArea10);
+            legend10.Name = "secondMeanQoELegend";
+            this.secondMeanQoEChart.Legends.Add(legend10);
+            this.secondMeanQoEChart.Location = new System.Drawing.Point(6, 235);
+            this.secondMeanQoEChart.Name = "secondMeanQoEChart";
+            series10.BorderWidth = 5;
+            series10.ChartArea = "secondMeanQoEChartArea";
+            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series10.Legend = "secondMeanQoELegend";
+            series10.Name = "Mean QoE";
+            this.secondMeanQoEChart.Series.Add(series10);
+            this.secondMeanQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.secondMeanQoEChart.TabIndex = 1;
+            this.secondMeanQoEChart.Text = "meanQoEChart";
+            // 
+            // Second QoEChart
+            // 
+            chartArea11.AxisY.Title = "QoE";
+            chartArea11.Name = "secondQoEChartArea";
+            this.secondQoEChart.ChartAreas.Add(chartArea11);
+            legend11.Name = "secondQoELegend";
+            this.secondQoEChart.Legends.Add(legend11);
+            this.secondQoEChart.Location = new System.Drawing.Point(4, 16);
+            this.secondQoEChart.Name = "secondQoEChart";
+            series11.BorderWidth = 5;
+            series11.ChartArea = "secondQoEChartArea";
+            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series11.Legend = "secondQoELegend";
+            series11.Name = "QoE";
+            this.secondQoEChart.Series.Add(series11);
+            this.secondQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.secondQoEChart.TabIndex = 0;
+            this.secondQoEChart.Text = "QoEChart";
+            // 
+            // experimentSleepTime
+            // 
+            this.experimentSleepTime.Location = new System.Drawing.Point(93, 83);
+            this.experimentSleepTime.Maximum = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
             this.experimentSleepTime.Name = "experimentSleepTime";
-            this.experimentSleepTime.Size = new System.Drawing.Size(68, 20);
+            this.experimentSleepTime.Size = new System.Drawing.Size(58, 20);
             this.experimentSleepTime.TabIndex = 12;
-            this.experimentSleepTime.Value = new decimal(new int[] {
-                                                                1,
-                                                                0,
-                                                                0,
-                                                                0});
+            this.experimentSleepTime.ValueChanged += new System.EventHandler(this.experimentSleepTime_ValueChanged);
             // 
-            // ProbesNumeric
-            //  what's this???
-            this.probesNumber.Location = new System.Drawing.Point(105, 24);
-            this.probesNumber.Name = "probesNumber";
-            this.probesNumber.Size = new System.Drawing.Size(197, 20);
-            this.probesNumber.TabIndex = 11;
-            this.probesNumber.Value = new decimal(new int[] {
-                                                                4,
-                                                                0,
-                                                                0,
-                                                                0});
-            //
-            // LEFT PART OF THE WINDOW
-            // (EXPERIMENT CONFIGURATION)
-
+            // burstSize
             // 
-            // measurementPeriodUnitLabel
+            this.burstSize.Location = new System.Drawing.Point(93, 24);
+            this.burstSize.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.burstSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.burstSize.Name = "burstSize";
+            this.burstSize.Size = new System.Drawing.Size(58, 20);
+            this.burstSize.TabIndex = 11;
+            this.burstSize.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
-            this.measurementPeriodUnitLabel.AutoSize = true;
-            this.measurementPeriodUnitLabel.Location = new System.Drawing.Point(212, 234);
-            this.measurementPeriodUnitLabel.Name = "measurementPeriodUnitLabel";
-            this.measurementPeriodUnitLabel.Size = new System.Drawing.Size(26, 13);
-            this.measurementPeriodUnitLabel.TabIndex = 10;
-            this.measurementPeriodUnitLabel.Text = "min.";
+            // probeSize
             // 
-            // measurementPeriodLabel
+            this.probeSize.Location = new System.Drawing.Point(93, 51);
+            this.probeSize.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.probeSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.probeSize.Name = "probeSize";
+            this.probeSize.Size = new System.Drawing.Size(58, 20);
+            this.probeSize.TabIndex = 11;
+            this.probeSize.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
-            this.measurementPeriodLabel.AutoSize = true;
-            this.measurementPeriodLabel.Location = new System.Drawing.Point(12, 234);
-            this.measurementPeriodLabel.Name = "measurementPeriodLabel";
-            this.measurementPeriodLabel.Size = new System.Drawing.Size(109, 13);
-            this.measurementPeriodLabel.TabIndex = 8;
-            this.measurementPeriodLabel.Text = "Measurements Period";
+            // experimentSleepTimeUnitLabel
+            // 
+            this.experimentSleepTimeUnitLabel.AutoSize = true;
+            this.experimentSleepTimeUnitLabel.Location = new System.Drawing.Point(157, 85);
+            this.experimentSleepTimeUnitLabel.Name = "experimentSleepTimeUnitLabel";
+            this.experimentSleepTimeUnitLabel.Size = new System.Drawing.Size(47, 13);
+            this.experimentSleepTimeUnitLabel.TabIndex = 10;
+            this.experimentSleepTimeUnitLabel.Text = "seconds";
+            // 
+            // experimentSleepTimeLabel
+            // 
+            this.experimentSleepTimeLabel.AutoSize = true;
+            this.experimentSleepTimeLabel.Location = new System.Drawing.Point(13, 83);
+            this.experimentSleepTimeLabel.Name = "experimentSleepTimeLabel";
+            this.experimentSleepTimeLabel.Size = new System.Drawing.Size(56, 13);
+            this.experimentSleepTimeLabel.TabIndex = 8;
+            this.experimentSleepTimeLabel.Text = "Sleep time";
             // 
             // landmarksListGroupBox
             // 
             this.landmarksListGroupBox.Controls.Add(this.landmarksListForm);
             this.landmarksListGroupBox.Location = new System.Drawing.Point(6, 19);
             this.landmarksListGroupBox.Name = "landmarksListGroupBox";
-            this.landmarksListGroupBox.Size = new System.Drawing.Size(190, 207);
+            this.landmarksListGroupBox.Size = new System.Drawing.Size(156, 184);
             this.landmarksListGroupBox.TabIndex = 6;
             this.landmarksListGroupBox.TabStop = false;
             this.landmarksListGroupBox.Text = "Landmarks";
             // 
-            // LandmarksDelayRchTxt
+            // landmarksListForm
             // 
             this.landmarksListForm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.landmarksListForm.Location = new System.Drawing.Point(6, 18);
             this.landmarksListForm.Name = "landmarksListForm";
-            this.landmarksListForm.Size = new System.Drawing.Size(178, 183);
+            this.landmarksListForm.Size = new System.Drawing.Size(144, 157);
             this.landmarksListForm.TabIndex = 0;
-            this.landmarksListForm.Text = "";
+            this.landmarksListForm.Text = "10.0.0.1";
             // 
-            // probesNumberSelectionLabel
+            // burstSizeLabel
             // 
-            this.probesNumberSelectionLabel.AutoSize = true;
-            this.probesNumberSelectionLabel.Location = new System.Drawing.Point(7, 26);
-            this.probesNumberSelectionLabel.Name = "probesNumberSelectionLabel";
-            this.probesNumberSelectionLabel.Size = new System.Drawing.Size(92, 13);
-            this.probesNumberSelectionLabel.TabIndex = 1;
-            this.probesNumberSelectionLabel.Text = "Number of Probes";
+            this.burstSizeLabel.AutoSize = true;
+            this.burstSizeLabel.Location = new System.Drawing.Point(13, 26);
+            this.burstSizeLabel.Name = "burstSizeLabel";
+            this.burstSizeLabel.Size = new System.Drawing.Size(55, 13);
+            this.burstSizeLabel.TabIndex = 1;
+            this.burstSizeLabel.Text = "Burst size:";
             // 
             // configurationGroupBox
-            // "configuration" group (the whole left side of the window)
+            // 
             this.configurationGroupBox.Controls.Add(this.pictureBox1);
-            this.configurationGroupBox.Controls.Add(this.landmarkSelectionGroupBox);
+            this.configurationGroupBox.Controls.Add(this.closeButton);
             this.configurationGroupBox.Controls.Add(this.decisionTreeGroupBox);
-            this.configurationGroupBox.Controls.Add(this.fileToTransferGroupBox);
-            this.configurationGroupBox.Controls.Add(this.delayConfigGroupBox);
-            this.configurationGroupBox.Controls.Add(this.measurementPeriodLabel);
+            this.configurationGroupBox.Controls.Add(this.experimentConfigGroupBox);
+            this.configurationGroupBox.Controls.Add(this.okButton);
             this.configurationGroupBox.Controls.Add(this.landmarksListGroupBox);
-            this.configurationGroupBox.Controls.Add(this.experimentSleepTime);
-            this.configurationGroupBox.Controls.Add(this.measurementPeriodUnitLabel);
             this.configurationGroupBox.Location = new System.Drawing.Point(2, 3);
             this.configurationGroupBox.Name = "configurationGroupBox";
-            this.configurationGroupBox.Size = new System.Drawing.Size(383, 452);
+            this.configurationGroupBox.Size = new System.Drawing.Size(383, 487);
             this.configurationGroupBox.TabIndex = 13;
             this.configurationGroupBox.TabStop = false;
             this.configurationGroupBox.Text = "Configuration";
             // 
             // pictureBox1
-            // probably the picture with the bolt
+            // 
             this.pictureBox1.Image = global::MasterProject.Properties.Resources.Utilities;
-            this.pictureBox1.Location = new System.Drawing.Point(255, 35);
+            this.pictureBox1.Location = new System.Drawing.Point(233, 137);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(64, 57);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 23;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // landmarkSelectionGroupBox
-            // right column, landmark selection
-            this.landmarkSelectionGroupBox.Controls.Add(this.landmarksNumberLabel);
-            this.landmarkSelectionGroupBox.Controls.Add(this.LandmarksNo);
-            this.landmarkSelectionGroupBox.Controls.Add(this.SelectLandmarks);
-            this.landmarkSelectionGroupBox.Controls.Add(this.radioButtonRandom);
-            this.landmarkSelectionGroupBox.Controls.Add(this.radioButtonIntelligent);
-            this.landmarkSelectionGroupBox.Location = new System.Drawing.Point(205, 109);
-            this.landmarkSelectionGroupBox.Name = "landmarkSelectionGroupBox";
-            this.landmarkSelectionGroupBox.Size = new System.Drawing.Size(169, 117);
-            this.landmarkSelectionGroupBox.TabIndex = 22;
-            this.landmarkSelectionGroupBox.TabStop = false;
-            this.landmarkSelectionGroupBox.Text = "Landmarks Selection";
+            // closeButton
             // 
-            // landmarksNumberLabel
+            this.closeButton.Image = global::MasterProject.Properties.Resources.Delete1;
+            this.closeButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.closeButton.Location = new System.Drawing.Point(204, 362);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(93, 39);
+            this.closeButton.TabIndex = 1;
+            this.closeButton.Text = "Close";
+            this.closeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.closeButton.UseVisualStyleBackColor = true;
+            this.closeButton.Click += new System.EventHandler(this.closeButtonClick);
             // 
-            this.landmarksNumberLabel.AutoSize = true;
-            this.landmarksNumberLabel.Location = new System.Drawing.Point(10, 24);
-            this.landmarksNumberLabel.Name = "landmarksNumberLabel";
-            this.landmarksNumberLabel.Size = new System.Drawing.Size(79, 13);
-            this.landmarksNumberLabel.TabIndex = 20;
-            this.landmarksNumberLabel.Text = "Landmarks No.";
+            // decisionTreeGroupBox
             // 
-            // LandmarksNo
-            // 
-            this.LandmarksNo.Location = new System.Drawing.Point(89, 21);
-            this.LandmarksNo.Name = "LandmarksNo";
-            this.LandmarksNo.Size = new System.Drawing.Size(63, 20);
-            this.LandmarksNo.TabIndex = 21;
-            // 
-            // SelectLandmarks
-            // 
-            this.SelectLandmarks.Image = global::MasterProject.Properties.Resources._3351;
-            this.SelectLandmarks.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.SelectLandmarks.Location = new System.Drawing.Point(31, 68);
-            this.SelectLandmarks.Name = "SelectLandmarks";
-            this.SelectLandmarks.Size = new System.Drawing.Size(105, 43);
-            this.SelectLandmarks.TabIndex = 17;
-            this.SelectLandmarks.Text = "Select";
-            this.SelectLandmarks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.SelectLandmarks.UseVisualStyleBackColor = true;
-            this.SelectLandmarks.Click += new System.EventHandler(this.SelectLandmarks_Click);
-            // 
-            // radioButtonRandom
-            // 
-            this.radioButtonRandom.AutoSize = true;
-            this.radioButtonRandom.Checked = true;
-            this.radioButtonRandom.Location = new System.Drawing.Point(15, 45);
-            this.radioButtonRandom.Name = "radioButtonRandom";
-            this.radioButtonRandom.Size = new System.Drawing.Size(65, 17);
-            this.radioButtonRandom.TabIndex = 18;
-            this.radioButtonRandom.TabStop = true;
-            this.radioButtonRandom.Text = "Random";
-            this.radioButtonRandom.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonIntelligent
-            // 
-            this.radioButtonIntelligent.AutoSize = true;
-            this.radioButtonIntelligent.Location = new System.Drawing.Point(86, 45);
-            this.radioButtonIntelligent.Name = "radioButtonIntelligent";
-            this.radioButtonIntelligent.Size = new System.Drawing.Size(70, 17);
-            this.radioButtonIntelligent.TabIndex = 19;
-            this.radioButtonIntelligent.Text = "Intelligent";
-            this.radioButtonIntelligent.UseVisualStyleBackColor = true;
-            // 
-            // groupBox13
-            // DECISION TREE goes here
-            this.decisionTreeGroupBox.Controls.Add(this.decisionTreeTxtBox);
+            this.decisionTreeGroupBox.Controls.Add(this.decisionTreeTextBox);
             this.decisionTreeGroupBox.Controls.Add(this.decisionTreeSelectionLabel);
             this.decisionTreeGroupBox.Controls.Add(this.decisionTreeSelectionButton);
-            this.decisionTreeGroupBox.Location = new System.Drawing.Point(6, 395);
+            this.decisionTreeGroupBox.Controls.Add(this.decisionTreeTwoTextBox);
+            this.decisionTreeGroupBox.Controls.Add(this.decisionTreeTwoSelectionButton);
+            this.decisionTreeGroupBox.Location = new System.Drawing.Point(5, 221);
             this.decisionTreeGroupBox.Name = "decisionTreeGroupBox";
-            this.decisionTreeGroupBox.Size = new System.Drawing.Size(368, 47);
+            this.decisionTreeGroupBox.Size = new System.Drawing.Size(368, 83);
             this.decisionTreeGroupBox.TabIndex = 10;
             this.decisionTreeGroupBox.TabStop = false;
             this.decisionTreeGroupBox.Text = "QoE Config.";
+            //this.decisionTreeGroupBox.Enter += new System.EventHandler(this.decisionTreeGroupBox_Enter);
             // 
-            // DecisionTreeTxtBox
+            // decisionTreeTwoTextBox
             // 
-            this.decisionTreeTxtBox.Location = new System.Drawing.Point(137, 20);
-            this.decisionTreeTxtBox.Name = "decisionTreeTxtBox";
-            this.decisionTreeTxtBox.Size = new System.Drawing.Size(129, 20);
-            this.decisionTreeTxtBox.TabIndex = 16;
+            this.decisionTreeTwoTextBox.Location = new System.Drawing.Point(137, 51);
+            this.decisionTreeTwoTextBox.Name = "decisionTreeTwoTextBox";
+            this.decisionTreeTwoTextBox.Size = new System.Drawing.Size(129, 20);
+            this.decisionTreeTwoTextBox.TabIndex = 19;
+            // 
+            // decisionTreeTwoSelectionButton
+            // 
+            this.decisionTreeTwoSelectionButton.Location = new System.Drawing.Point(275, 49);
+            this.decisionTreeTwoSelectionButton.Name = "decisionTreeTwoSelectionButton";
+            this.decisionTreeTwoSelectionButton.Size = new System.Drawing.Size(87, 23);
+            this.decisionTreeTwoSelectionButton.TabIndex = 18;
+            this.decisionTreeTwoSelectionButton.Text = "Browse...";
+            this.decisionTreeTwoSelectionButton.UseVisualStyleBackColor = true;
+            this.decisionTreeTwoSelectionButton.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // decisionTreeTextBox
+            // 
+            this.decisionTreeTextBox.Location = new System.Drawing.Point(137, 20);
+            this.decisionTreeTextBox.Name = "decisionTreeTextBox";
+            this.decisionTreeTextBox.Size = new System.Drawing.Size(129, 20);
+            this.decisionTreeTextBox.TabIndex = 16;
             // 
             // decisionTreeSelectionLabel
             // 
             this.decisionTreeSelectionLabel.AutoSize = true;
             this.decisionTreeSelectionLabel.Location = new System.Drawing.Point(7, 25);
             this.decisionTreeSelectionLabel.Name = "decisionTreeSelectionLabel";
-            this.decisionTreeSelectionLabel.Size = new System.Drawing.Size(112, 13);
+            this.decisionTreeSelectionLabel.Size = new System.Drawing.Size(123, 13);
             this.decisionTreeSelectionLabel.TabIndex = 2;
-            this.decisionTreeSelectionLabel.Text = "Choose Decision Tree";
+            this.decisionTreeSelectionLabel.Text = "Choose Decision Tree(s)";
+           // this.decisionTreeSelectionLabel.Click += new System.EventHandler(this.decisionTreeSelectionLabel_Click);
             // 
             // decisionTreeSelectionButton
             // 
@@ -610,100 +655,72 @@
             this.decisionTreeSelectionButton.UseVisualStyleBackColor = true;
             this.decisionTreeSelectionButton.Click += new System.EventHandler(this.button5_Click);
             // 
-            // fileToTransferGroupBox
+            // experimentConfigGroupBox
             // 
-            this.fileToTransferGroupBox.Controls.Add(this.BWFileTxtBox);
-            this.fileToTransferGroupBox.Controls.Add(this.fileToTransferSelectionButton);
-            this.fileToTransferGroupBox.Controls.Add(this.fileToTransferSelectionLabel);
-            this.fileToTransferGroupBox.Location = new System.Drawing.Point(6, 329);
-            this.fileToTransferGroupBox.Name = "fileToTransferGroupBox";
-            this.fileToTransferGroupBox.Size = new System.Drawing.Size(368, 60);
-            this.fileToTransferGroupBox.TabIndex = 15;
-            this.fileToTransferGroupBox.TabStop = false;
-            this.fileToTransferGroupBox.Text = "Choose file to transfer";
+            this.experimentConfigGroupBox.Controls.Add(this.burstSizeLabel);
+            this.experimentConfigGroupBox.Controls.Add(this.burstSize);
+            this.experimentConfigGroupBox.Controls.Add(this.burstSizeUnitLabel);
+            this.experimentConfigGroupBox.Controls.Add(this.probeSizeLabel);
+            this.experimentConfigGroupBox.Controls.Add(this.probeSize);
+            this.experimentConfigGroupBox.Controls.Add(this.probeSizeUnitLabel);
+            this.experimentConfigGroupBox.Controls.Add(this.experimentSleepTimeLabel);
+            this.experimentConfigGroupBox.Controls.Add(this.experimentSleepTime);
+            this.experimentConfigGroupBox.Controls.Add(this.experimentSleepTimeUnitLabel);
+            this.experimentConfigGroupBox.Location = new System.Drawing.Point(171, 19);
+            this.experimentConfigGroupBox.Name = "experimentConfigGroupBox";
+            this.experimentConfigGroupBox.Size = new System.Drawing.Size(206, 111);
+            this.experimentConfigGroupBox.TabIndex = 14;
+            this.experimentConfigGroupBox.TabStop = false;
+            this.experimentConfigGroupBox.Text = "Measurement Config.";
+            //this.experimentConfigGroupBox.Enter += new System.EventHandler(this.experimentConfigGroupBox_Enter);
             // 
-            // BWFileTxtBox
+            // burstSizeUnitLabel
             // 
-            this.BWFileTxtBox.Location = new System.Drawing.Point(83, 26);
-            this.BWFileTxtBox.Name = "BWFileTxtBox";
-            this.BWFileTxtBox.Size = new System.Drawing.Size(183, 20);
-            this.BWFileTxtBox.TabIndex = 14;
+            this.burstSizeUnitLabel.AutoSize = true;
+            this.burstSizeUnitLabel.Location = new System.Drawing.Point(159, 26);
+            this.burstSizeUnitLabel.Name = "burstSizeUnitLabel";
+            this.burstSizeUnitLabel.Size = new System.Drawing.Size(45, 13);
+            this.burstSizeUnitLabel.TabIndex = 9;
+            this.burstSizeUnitLabel.Text = "packets";
+            //this.burstSizeUnitLabel.Click += new System.EventHandler(this.burstSizeUnitLabel_Click);
             // 
-            // fileToTransferSelectionButton
+            // probeSizeLabel
             // 
-            this.fileToTransferSelectionButton.Location = new System.Drawing.Point(275, 24);
-            this.fileToTransferSelectionButton.Name = "fileToTransferSelectionButton";
-            this.fileToTransferSelectionButton.Size = new System.Drawing.Size(87, 23);
-            this.fileToTransferSelectionButton.TabIndex = 14;
-            this.fileToTransferSelectionButton.Text = "Browse...";
-            this.fileToTransferSelectionButton.UseVisualStyleBackColor = true;
+            this.probeSizeLabel.Location = new System.Drawing.Point(12, 53);
+            this.probeSizeLabel.Name = "probeSizeLabel";
+            this.probeSizeLabel.Size = new System.Drawing.Size(62, 23);
+            this.probeSizeLabel.TabIndex = 12;
+            this.probeSizeLabel.Text = "Probe size:";
             // 
-            // fileToTransferSelectionLabel
+            // probeSizeUnitLabel
             // 
-            this.fileToTransferSelectionLabel.AutoSize = true;
-            this.fileToTransferSelectionLabel.Location = new System.Drawing.Point(7, 29);
-            this.fileToTransferSelectionLabel.Name = "fileToTransferSelectionLabel";
-            this.fileToTransferSelectionLabel.Size = new System.Drawing.Size(62, 13);
-            this.fileToTransferSelectionLabel.TabIndex = 1;
-            this.fileToTransferSelectionLabel.Text = "Choose File";
+            this.probeSizeUnitLabel.Location = new System.Drawing.Point(157, 53);
+            this.probeSizeUnitLabel.Name = "probeSizeUnitLabel";
+            this.probeSizeUnitLabel.Size = new System.Drawing.Size(45, 23);
+            this.probeSizeUnitLabel.TabIndex = 13;
+            this.probeSizeUnitLabel.Text = "Bytes";
+            this.probeSizeUnitLabel.Click += new System.EventHandler(this.probeSizeUnitLabel_Click);
             // 
-            // delayConfigGroupBox (configuration for ping test)
-            // 
-            this.delayConfigGroupBox.Controls.Add(this.probesNumberLabel);
-            this.delayConfigGroupBox.Controls.Add(this.probesNumberSelectionLabel);
-            this.delayConfigGroupBox.Controls.Add(this.probesNumber);
-            this.delayConfigGroupBox.Location = new System.Drawing.Point(6, 265);
-            this.delayConfigGroupBox.Name = "delayConfigGroupBox";
-            this.delayConfigGroupBox.Size = new System.Drawing.Size(368, 58);
-            this.delayConfigGroupBox.TabIndex = 14;
-            this.delayConfigGroupBox.TabStop = false;
-            this.delayConfigGroupBox.Text = "Delay Config.";
-            // 
-            // probesNumberLabel
-            // 
-            this.probesNumberLabel.AutoSize = true;
-            this.probesNumberLabel.Location = new System.Drawing.Point(311, 26);
-            this.probesNumberLabel.Name = "probesNumberLabel";
-            this.probesNumberLabel.Size = new System.Drawing.Size(46, 13);
-            this.probesNumberLabel.TabIndex = 9;
-            this.probesNumberLabel.Text = "Probe(s)";
-            
-            // 
-            // button1
+            // okButton
             // 
             this.okButton.Image = global::MasterProject.Properties.Resources.checkmark;
             this.okButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.okButton.Location = new System.Drawing.Point(180, 461);
+            this.okButton.Location = new System.Drawing.Point(104, 362);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(81, 39);
             this.okButton.TabIndex = 1;
             this.okButton.Text = "Run";
             this.okButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.closeButton.Image = global::MasterProject.Properties.Resources.Delete1;
-            this.closeButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.closeButton.Location = new System.Drawing.Point(277, 461);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(93, 39);
-            this.closeButton.TabIndex = 1;
-            this.closeButton.Text = "Close";
-            this.closeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.button2_Click);
+            this.okButton.Click += new System.EventHandler(this.runButtonClick);
             // 
             // Form1
-            // Global window: adding all components
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(879, 511);
+            this.ClientSize = new System.Drawing.Size(883, 499);
             this.Controls.Add(this.configurationGroupBox);
-            this.Controls.Add(this.closeButton);
             this.Controls.Add(this.tabControl);
-            this.Controls.Add(this.okButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "Form1";
             this.ShowIcon = false;
@@ -711,34 +728,30 @@
             this.tabControl.ResumeLayout(false);
             this.jitterAndDelayTab.ResumeLayout(false);
             this.jitterAndDelayGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.jitterChart)).EndInit(); //why?
-            ((System.ComponentModel.ISupportInitialize)(this.delayChart)).EndInit();
-            this.bandwidthTab.ResumeLayout(false);
-            this.bandwidthGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.downloadBandwidthChart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.downloadDelayChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.uploadDelayChart)).EndInit();
             this.lossRateTab.ResumeLayout(false);
             this.lossRateGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.downloadLossRateChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.uploadLossRateChart)).EndInit();
+            this.bandwidthTab.ResumeLayout(false);
+            this.bandwidthGroupBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.downloadBandwidthChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).EndInit();
             this.QoETab.ResumeLayout(false);
             this.QoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.probesNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.burstSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.probeSize)).EndInit();
             this.landmarksListGroupBox.ResumeLayout(false);
             this.configurationGroupBox.ResumeLayout(false);
-            this.configurationGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.landmarkSelectionGroupBox.ResumeLayout(false);
-            this.landmarkSelectionGroupBox.PerformLayout();
             this.decisionTreeGroupBox.ResumeLayout(false);
             this.decisionTreeGroupBox.PerformLayout();
-            this.fileToTransferGroupBox.ResumeLayout(false);
-            this.fileToTransferGroupBox.PerformLayout();
-            this.delayConfigGroupBox.ResumeLayout(false);
-            this.delayConfigGroupBox.PerformLayout();
+            this.experimentConfigGroupBox.ResumeLayout(false);
+            this.experimentConfigGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -750,17 +763,19 @@
         private System.Windows.Forms.TabPage lossRateTab;
         private System.Windows.Forms.TabPage jitterAndDelayTab;
         private System.Windows.Forms.TabPage QoETab;
-        private System.Windows.Forms.Label probesNumberSelectionLabel;
+        private System.Windows.Forms.TabPage secondQoETab;
+        private System.Windows.Forms.Label burstSizeLabel;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.GroupBox landmarksListGroupBox;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.GroupBox jitterAndDelayGroupBox;
         private System.Windows.Forms.RichTextBox landmarksListForm;
-        private System.Windows.Forms.DataVisualization.Charting.Chart delayChart;
-        private System.Windows.Forms.Label measurementPeriodUnitLabel;
-        private System.Windows.Forms.Label measurementPeriodLabel;
+        private System.Windows.Forms.DataVisualization.Charting.Chart uploadDelayChart;
+        private System.Windows.Forms.Label experimentSleepTimeUnitLabel;
+        private System.Windows.Forms.Label experimentSleepTimeLabel;
         private System.Windows.Forms.NumericUpDown experimentSleepTime;
-        private System.Windows.Forms.NumericUpDown probesNumber;
+        private System.Windows.Forms.NumericUpDown burstSize;
+        private System.Windows.Forms.NumericUpDown probeSize;
         private System.Windows.Forms.GroupBox bandwidthGroupBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart uploadBandwidthChart;
         private System.Windows.Forms.GroupBox lossRateGroupBox;
@@ -768,27 +783,35 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart downloadLossRateChart;
         private System.Windows.Forms.GroupBox QoEGroupBox;
         private System.Windows.Forms.DataVisualization.Charting.Chart QoEChart;
+        private System.Windows.Forms.DataVisualization.Charting.Chart meanQoEChart;
+        private System.Windows.Forms.GroupBox secondQoEGroupBox;
+        private System.Windows.Forms.DataVisualization.Charting.Chart secondQoEChart;
+        private System.Windows.Forms.DataVisualization.Charting.Chart secondMeanQoEChart;
         private System.Windows.Forms.GroupBox configurationGroupBox;
-        private System.Windows.Forms.GroupBox delayConfigGroupBox;
-        private System.Windows.Forms.Label probesNumberLabel;
-        private System.Windows.Forms.GroupBox fileToTransferGroupBox;
-        private System.Windows.Forms.Label fileToTransferSelectionLabel;
+        private System.Windows.Forms.GroupBox experimentConfigGroupBox;
+        private System.Windows.Forms.Label burstSizeUnitLabel;
+        private System.Windows.Forms.Label probeSizeLabel;
+        private System.Windows.Forms.Label probeSizeUnitLabel;
+        //private System.Windows.Forms.GroupBox fileToTransferGroupBox;
+       // private System.Windows.Forms.Label fileToTransferSelectionLabel;
         private System.Windows.Forms.GroupBox decisionTreeGroupBox;
         private System.Windows.Forms.Label decisionTreeSelectionLabel;
-        private System.Windows.Forms.DataVisualization.Charting.Chart jitterChart;
-        private System.Windows.Forms.TextBox decisionTreeTxtBox;
+        private System.Windows.Forms.DataVisualization.Charting.Chart downloadDelayChart;
+        private System.Windows.Forms.TextBox decisionTreeTextBox;
         private System.Windows.Forms.Button decisionTreeSelectionButton;
-        private System.Windows.Forms.TextBox BWFileTxtBox;
-        private System.Windows.Forms.Button fileToTransferSelectionButton;
+       // private System.Windows.Forms.TextBox BWFileTxtBox;
+        //private System.Windows.Forms.Button fileToTransferSelectionButton;
         private System.Windows.Forms.DataVisualization.Charting.Chart downloadBandwidthChart;
-        private System.Windows.Forms.DataVisualization.Charting.Chart meanQoEChart;
-        private System.Windows.Forms.RadioButton radioButtonIntelligent;
-        private System.Windows.Forms.RadioButton radioButtonRandom;
-        private System.Windows.Forms.Button SelectLandmarks;
-        private System.Windows.Forms.TextBox LandmarksNo;
-        private System.Windows.Forms.Label landmarksNumberLabel;
-        private System.Windows.Forms.GroupBox landmarkSelectionGroupBox;
+        
+        //private System.Windows.Forms.RadioButton radioButtonIntelligent;
+        //private System.Windows.Forms.RadioButton radioButtonRandom;
+        //private System.Windows.Forms.Button SelectLandmarks;
+        //private System.Windows.Forms.TextBox LandmarksNo;
+        //private System.Windows.Forms.Label landmarksNumberLabel;
+        //private System.Windows.Forms.GroupBox landmarkSelectionGroupBox;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox decisionTreeTwoTextBox;
+        private System.Windows.Forms.Button decisionTreeTwoSelectionButton;
     }
 }
 

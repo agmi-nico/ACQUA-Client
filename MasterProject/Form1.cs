@@ -25,30 +25,28 @@ namespace MasterProject
         }
         int max_num_experiments = 10000;
         int LandmarksNumber = 0;
-        MeasurementVector[] FinalDelayAndJitterArray;
+        MeasurementVector[] FinalOWDArray;
         MeasurementVector[] FinalBandwidthArray;
         MeasurementVector[] FinalLossRateArray;
         //Time[] TimeArray;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void runButtonClick(object sender, EventArgs e)
         {
+
             int[] series = new int[2];
             series[1] = 2;
             series[0] = 1;
 
-            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
-            FinalBandwidthArray = new MeasurementVector[max_num_experiments];
-            FinalLossRateArray = new MeasurementVector[max_num_experiments];
-            //TimeArray = new Time[max_num_experiments];
+
             LandmarksNumber = 0;
 
-            if (decisionTreeTxtBox.Text == "")
+            if (decisionTreeTextBox.Text == "")
             {
                 MessageBox.Show("Decision Tree missing", "Error");
                 return;
             }
 
-            if (probesNumber.Value == 1)
+            if (burstSize.Value == 1)
             {
                 DialogResult dr = MessageBox.Show("Jitter can't be calculated with only one probe. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.No)
@@ -67,19 +65,45 @@ namespace MasterProject
         //int MeanResult = -1;
         int[,] QoEPerLandmark;
         int[,] skypeQoEPerLandmark;
+        int[,] secondQoEPerLandmark;
+        // TODO save QoE for second tree also
         int max_points_per_graph = 10;
         int[] meanQoE;
         int[] skypeQoE;
-
+        bool firstQoETabDrawn = false;
+        bool secondQoETabDrawn = false;
         void Run()
         {
+            // see bit.ly/1qnHcFM
+            // Open a tab for first tree, if present
+            if (! firstQoETabDrawn && firstTreeSelected)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.tabControl.Controls.Add(this.QoETab);
+                });
+                firstQoETabDrawn = true;
+            }
+            // Open a tab for second tree, if present
+            if (! secondQoETabDrawn && secondTreeSelected)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.tabControl.Controls.Add(this.secondQoETab);
+                });
+                secondQoETabDrawn = true;
+            }
+
+
             LandmarksNumber = 1;
             QoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             skypeQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
+            secondQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             meanQoE = new int[max_num_experiments];
             skypeQoE = new int[max_num_experiments];
-            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
+            FinalOWDArray = new MeasurementVector[max_num_experiments];
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
+            FinalLossRateArray = new MeasurementVector[max_num_experiments];
             int LocalIndex = 0;
 
             setUpMeasurement("10.0.0.1", 9050, 9051, 100);
@@ -94,13 +118,16 @@ namespace MasterProject
                 System.Console.WriteLine("LossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
 
                 // Estimate QoE with the provided tree
-                QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
-                                                                measurements[0], // Delay
-                                                                measurements[1], // Jitter
-                                                                measurements[2], // UBandwidth
-                                                                measurements[3], // DBandwidth
-                                                                measurements[4], // ULossRate
-                                                                measurements[5]);// DLossRate 
+                if (firstTreeSelected)
+                {
+                    QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
+                                                                   measurements[0], // Delay
+                                                                   measurements[1], // Jitter
+                                                                   measurements[2], // UBandwidth
+                                                                   measurements[3], // DBandwidth
+                                                                   measurements[4], // ULossRate
+                                                                   measurements[5]);// DLossRate
+                }
                 // just to compare the above result with the hard-coded tree in the bottom of this file
                 skypeQoEPerLandmark[LocalIndex, 0] = estimatedSkypeQuality(measurements[3],
                                                                 measurements[2],
@@ -109,14 +136,25 @@ namespace MasterProject
                                                                 measurements[4],
                                                                 measurements[5]);
 
-                FinalDelayAndJitterArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
+                // Estimate QoE with the second provided tree
+                if (secondTreeSelected)
+                {
+                    secondQoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root2,           // Decision-tree Root
+                                                                    measurements[0], // Delay
+                                                                    measurements[1], // Jitter
+                                                                    measurements[2], // UBandwidth
+                                                                    measurements[3], // DBandwidth
+                                                                    measurements[4], // ULossRate
+                                                                    measurements[5]);// DLossRate 
+                }
+
+                FinalOWDArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
                 FinalBandwidthArray[LocalIndex] = new MeasurementVector(measurements[2], measurements[3]);
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
-
-                FinalDelayAndJitterArray[LocalIndex].dimension1 = measurements[0];
-                FinalDelayAndJitterArray[LocalIndex].dimension2 = measurements[1];
+                FinalOWDArray[LocalIndex].dimension1 = measurements[0];
+                FinalOWDArray[LocalIndex].dimension2 = measurements[1];
                 FinalBandwidthArray[LocalIndex].dimension1 = measurements[2];
                 FinalBandwidthArray[LocalIndex].dimension1 = measurements[3];
                 FinalLossRateArray[LocalIndex].dimension1 = measurements[4];
@@ -130,22 +168,21 @@ namespace MasterProject
                 if (LocalIndex > max_points_per_graph)
                 {
                     // for each graph, clear everything and redraw the last 19 points. Add the 20th at the end.
-                    //delay
-                    this.delayChart.Series["Round-trip Delay"].Points.Clear();
+                    // upload OWD
+                    this.uploadDelayChart.Series["Upload OWD"].Points.Clear();
                     int xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.delayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension1);
+                        this.uploadDelayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension1);
                         xval++;
                     }
 
-
-                    //jitter
-                    this.jitterChart.Series["Jitter"].Points.Clear();
+                    //download OWD [ no jitter computation for the moment]
+                    this.downloadDelayChart.Series["Download OWD"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.jitterChart.Series["Jitter"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension2);
+                        this.downloadDelayChart.Series["Download OWD"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension2);
                         xval++;
                     }
 
@@ -225,8 +262,8 @@ namespace MasterProject
                 //this.DelayChart.Series["Round-trip Delay"].Points.CopyTo(plotted_data, 0);
                 else
                 {
-                    this.delayChart.Series["Round-trip Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension1);
-                    this.jitterChart.Series["Jitter"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension2);
+                    this.uploadDelayChart.Series["Upload OWD"].Points.AddXY(LocalIndex, FinalOWDArray[LocalIndex].dimension1);
+                    this.downloadDelayChart.Series["Download OWD"].Points.AddXY(LocalIndex, FinalOWDArray[LocalIndex].dimension2);
                     this.uploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension1);
                     this.downloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
                     this.uploadLossRateChart.Series["Upload Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension1);
@@ -244,32 +281,66 @@ namespace MasterProject
             }
         }
 
+
         // Choose Decision Tree (Configuration File)
         Node root;
         FileStream DecisionTreeFile;
+        bool firstTreeSelected = false;
         private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 DecisionTreeFile = new FileStream(openFileDialog1.FileName, FileMode.Open);
-                decisionTreeTxtBox.Text = DecisionTreeFile.Name;
+                decisionTreeTextBox.Text = DecisionTreeFile.Name;
                 DecisionTreeFile.Close();
                 root = CallerClass.Load(DecisionTreeFile.Name);
                 if (root == null)
                 {
                     MessageBox.Show("Error in Decision Tree Format. Please choose a valid XML format.", "Error");
                     DecisionTreeFile.Close();
+                    firstTreeSelected = false;
                     return;
                 }
+                firstTreeSelected = true;
             }
             else
             {
                 MessageBox.Show("Error when opening the Decision Tree file", "Error");
+                firstTreeSelected = false;
                 return;
             }
         }
-
+        Node root2;
+        FileStream DecisionTreeFile2;
+        bool secondTreeSelected = false;
+        private void button6_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                DecisionTreeFile2 = new FileStream(openFileDialog1.FileName, FileMode.Open);
+                decisionTreeTwoTextBox.Text = DecisionTreeFile2.Name;
+                DecisionTreeFile2.Close();
+                root2 = CallerClass.Load(DecisionTreeFile2.Name);
+                if (root2 == null)
+                {
+                    MessageBox.Show("Error in Decision Tree Format. Please choose a valid XML format.", "Error");
+                    DecisionTreeFile2.Close();
+                    secondTreeSelected = false;
+                    return;
+                }
+                secondTreeSelected = true;
+            }
+            else
+            {
+                MessageBox.Show("Error when opening the Decision Tree file", "Error");
+                secondTreeSelected = true;
+                return;
+            }
+        }
+        string[] AllLandmarks = new string[100];
+        /*
         private void SelectLandmarks_Click(object sender, EventArgs e)
         {
             try
@@ -464,7 +535,7 @@ namespace MasterProject
                     }
                 }
             }
-
+            
             landmarksListForm.Clear();
             // Fill the Landmarks RichTextBox
             for (int i = 0; i < ChosenLandmarks.Count; i++)
@@ -479,7 +550,7 @@ namespace MasterProject
                 }
             }
         }
-
+        */
         UdpClient udpOut;
         UdpClient udpIn;
         int udpPort;
@@ -623,7 +694,7 @@ namespace MasterProject
         {
             AllLandmarks[0] = "10.0.0.1";
         }
-
+        /*
         private int getLandmarkNumber()
         {
             int count = 0;
@@ -634,7 +705,7 @@ namespace MasterProject
             }
             return count;
         }
-
+        */
         private static IPAddress GetIpFromHost(ref string host)
         {
             //variable to hold our error message (if something fails)
@@ -658,7 +729,7 @@ namespace MasterProject
             return address;
         }
         // Close Application Button
-        private void button2_Click(object sender, EventArgs e)
+        private void closeButtonClick(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -740,5 +811,41 @@ namespace MasterProject
 
             return estimation;
         }
+
+        private void decisionTreeGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void experimentConfigGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void burstSizeUnitLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void probeSizeUnitLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void experimentSleepTime_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void decisionTreeSelectionLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

@@ -58,7 +58,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(18, 31);
-            this.label1.Name = "probesNumberLabel";
+            this.label1.Name = "burstSizeUnitLabel";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Username:";
@@ -67,7 +67,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(18, 73);
-            this.label2.Name = "probesNumberSelectionLabel";
+            this.label2.Name = "burstSizeLabel";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 5;
             this.label2.Text = "Password:";
