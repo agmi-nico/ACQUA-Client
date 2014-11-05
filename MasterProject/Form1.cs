@@ -94,10 +94,21 @@ namespace MasterProject
                 System.Console.WriteLine("\tDelay-U:   \t{0}ms    \tDelay-D:   \t{1}ms    \tSum:{2}", measurements[0], measurements[1], measurements[1] + measurements[0]);
                 System.Console.WriteLine("\tBandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", measurements[2], measurements[3]);
                 System.Console.WriteLine("\tLossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
+                int lowestRTT = Int32.MaxValue;
+                for (int i = 0; i < 4; i++)
+                {
+                    int RTT = PingHostDelay(host);
+                    if (RTT > -1 && RTT < lowestRTT)
+                    {
+                        lowestRTT = RTT;
+                    }
+                }
+
+                Console.WriteLine("\tLowest RTT: {0}ms", lowestRTT);
 
                 // Estimate QoE with the provided tree
                 QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
-                                                                measurements[0], // Delay
+                                                                lowestRTT, // Delay
                                                                 measurements[1], // Jitter
                                                                 measurements[2], // UBandwidth
                                                                 measurements[3], // DBandwidth
@@ -236,8 +247,8 @@ namespace MasterProject
 
                 Console.WriteLine("HARDCODED {0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
-                //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // 
                 Console.WriteLine("\tTotal Execution Time {0}", totalTime.ElapsedMilliseconds);
+                Thread.Sleep(10000);
             }
         }
 
@@ -638,18 +649,6 @@ namespace MasterProject
             ret[3] = (int)bandwith[1];
             ret[4] = (int)lossRate[0];
             ret[5] = (int)lossRate[1];
-
-            int lowestRTT = Int32.MaxValue;
-            for (int i = 0; i < 4; i++)
-            {
-                int RTT = PingHostDelay(host);
-                if (RTT > -1 && RTT < lowestRTT)
-                {
-                    lowestRTT = RTT;
-                }
-            }
-
-            Console.WriteLine("Lowest RTT: {0}ms", lowestRTT);
 
             Console.WriteLine("Measurements Complete.");
 
