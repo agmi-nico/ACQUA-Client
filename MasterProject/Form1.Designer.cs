@@ -343,7 +343,7 @@
             this.QoETab.Padding = new System.Windows.Forms.Padding(3);
             this.QoETab.Size = new System.Drawing.Size(473, 461);
             this.QoETab.TabIndex = 3;
-            this.QoETab.Text = "Skype QoE";
+            this.QoETab.Text = "Estimated QoE";
             this.QoETab.UseVisualStyleBackColor = true;
             // 
             // First QoEGroupBox
@@ -355,6 +355,7 @@
             this.QoEGroupBox.Size = new System.Drawing.Size(463, 456);
             this.QoEGroupBox.TabIndex = 9;
             this.QoEGroupBox.TabStop = false;
+
             // 
             // First meanQoEChart
             // 
@@ -371,6 +372,7 @@
             series8.Legend = "meanQoELegend";
             series8.Name = "Mean QoE";
             this.meanQoEChart.Series.Add(series8);
+
             this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
             this.meanQoEChart.TabIndex = 1;
             this.meanQoEChart.Text = "meanQoEChart";

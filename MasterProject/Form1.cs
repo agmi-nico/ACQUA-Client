@@ -106,16 +106,18 @@ namespace MasterProject
             FinalLossRateArray = new MeasurementVector[max_num_experiments];
             int LocalIndex = 0;
 
-            setUpMeasurement("10.0.0.1", 9050, 9051, 100);
+            setUpMeasurement("10.0.1.1", 9050, 9051, 100);
+            Stopwatch totalTime = new Stopwatch();
 
             while (true)
             {
+                totalTime.Restart();
                 int[] measurements = getMeasurements();
 
-                System.Console.WriteLine("Calculating QoE with values:");
-                System.Console.WriteLine("Delay-U:   \t{0}ms    \tDelay-D:   \t{1}ms    ", measurements[0], measurements[1]);
-                System.Console.WriteLine("Bandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", measurements[2], measurements[3]);
-                System.Console.WriteLine("LossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
+                System.Console.WriteLine("\tCalculating QoE with values:");
+                System.Console.WriteLine("\tDelay-U:   \t{0}ms    \tDelay-D:   \t{1}ms    \tSum:{2}", measurements[0], measurements[1], measurements[1] + measurements[0]);
+                System.Console.WriteLine("\tBandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", measurements[2], measurements[3]);
+                System.Console.WriteLine("\tLossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
 
                 // Estimate QoE with the provided tree
                 if (firstTreeSelected)
@@ -150,6 +152,7 @@ namespace MasterProject
 
                 FinalOWDArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
                 FinalBandwidthArray[LocalIndex] = new MeasurementVector(measurements[2], measurements[3]);
+                FinalLossRateArray[LocalIndex] = new MeasurementVector(measurements[4], measurements[5]);
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
@@ -159,6 +162,7 @@ namespace MasterProject
                 FinalBandwidthArray[LocalIndex].dimension1 = measurements[3];
                 FinalLossRateArray[LocalIndex].dimension1 = measurements[4];
                 FinalLossRateArray[LocalIndex].dimension2 = measurements[5]; 
+
 
                 /*
                 // Get Full Time
@@ -226,20 +230,20 @@ namespace MasterProject
                     for (int i = 0; i < LandmarksNumber; i++)
                     {
                         //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
-                        this.QoEChart.Series["QoE"].Points.Clear();
+                        this.QoEChart.Series["Hardcoded"].Points.Clear();
                         xval = 0;
                         for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                         {
-                            this.QoEChart.Series["QoE"].Points.AddXY((double)xval, QoEPerLandmark[pos, i]);
+                            this.QoEChart.Series["Hardcoded"].Points.AddXY((double)xval, QoEPerLandmark[pos, i]);
                             xval++;
                         }
                     }
                     // QoE bis
-                    this.meanQoEChart.Series["Mean QoE"].Points.Clear();
+                    this.meanQoEChart.Series["Tree"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.meanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, meanQoE[pos]);
+                        this.meanQoEChart.Series["Tree"].Points.AddXY((double)xval, meanQoE[pos]);
                         xval++;
                     }
                 }
@@ -270,14 +274,15 @@ namespace MasterProject
                     this.downloadLossRateChart.Series["Download Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension2);
                     for (int i = 0; i < LandmarksNumber; i++)
                     {
-                        this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
+                        this.QoEChart.Series["Hardcoded"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
                     }
-                    this.meanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
+                    this.meanQoEChart.Series["Tree"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
                 }
 
-                Console.WriteLine("HardCoded calculation:{0}", skypeQoE[LocalIndex]);
+                Console.WriteLine("HARDCODED {0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
                 //Thread.Sleep((int)PeriodNumeric.Value * 60 * 1000); // 
+                Console.WriteLine("\tTotal Execution Time {0}", totalTime.ElapsedMilliseconds);
             }
         }
 
@@ -573,13 +578,18 @@ namespace MasterProject
 
         Byte[] udpPacketBytes;
         Byte[] serverMeasurements = new Byte[100];
-        static int udpPacketSize = 12 + 500;
+        static int udpPacketSize = 12 + 50;
         static int bits_per_packet = 28 * 8 + udpPacketSize * 8; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
         static int serverMeasurementsSize = 4 * 3; //delay bandwith loss_rate [all int]
 
         private int[] getMeasurements()
         {
             Console.WriteLine("Executing Measurements...");
+
+            Stopwatch stopwatch = new Stopwatch();
+            long timestamp;
+            long startTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
+            stopwatch.Start();
 
             int[] ret = new int[6];
 
@@ -589,12 +599,14 @@ namespace MasterProject
             Console.WriteLine("Sending udp packet train...");
             for (int i = 0; i < number_probes; i++)
             {
-                var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+                timestamp = startTime + stopwatch.ElapsedMilliseconds;
+                //Console.WriteLine("Packet {0} timestamp:{1}", i, timestamp);
                 udpPacketBytes = new Byte[udpPacketSize];
                 Buffer.BlockCopy(BitConverter.GetBytes(i), 0, udpPacketBytes, 0, 4);
-                Buffer.BlockCopy(BitConverter.GetBytes(timeSpan.TotalMilliseconds), 0, udpPacketBytes, 4, 8);
+                Buffer.BlockCopy(BitConverter.GetBytes(timestamp), 0, udpPacketBytes, 4, 8);
                 udpOut.Send(udpPacketBytes, udpPacketBytes.Length);
             }
+            stopwatch.Stop();
             Console.WriteLine("Done.");
 
             Console.WriteLine("Connecting to server (tcp)...");
@@ -633,14 +645,21 @@ namespace MasterProject
             udpIn.Client.ReceiveTimeout = 0;
 
             bool probing = true;
-            int seq_id;
-            long timestamp;
+            //int seq_id;
 
             int delay_sum = 0;
             int packets_received = 0;
+            int delay_packets = 0;
             long exec_time = 0;
 
             Stopwatch watch = new Stopwatch();
+
+            startTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
+            stopwatch.Restart();
+            long timestamp2 = 0;
+
+            int lowestDelay = Int32.MaxValue;
+            int packetDelay = Int32.MaxValue;
 
             while (probing)
             {
@@ -653,30 +672,44 @@ namespace MasterProject
                     probing = false;
                     break;
                 }
-                if (exec_time == 0)
+                if (packets_received == 0)
                 {
                     udpIn.Client.ReceiveTimeout = 5000;
                     watch.Start();
                     Console.WriteLine("Receiving packets...");
                 }
                 exec_time = watch.ElapsedMilliseconds;
+                timestamp2 = stopwatch.ElapsedMilliseconds + startTime;
 
-                var timeSpan = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-
-                seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
+                //seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
                 timestamp = BitConverter.ToInt64(udpPacketBytes, 4);
-                delay_sum += (int)(timeSpan.TotalMilliseconds - timestamp);
+                packetDelay = (int)(timestamp2 - timestamp);
+
+                if (lowestDelay > packetDelay)
+                {
+                    lowestDelay = packetDelay;
+                }
+
+                if (delay_packets < 5)
+                {
+                    delay_sum += packetDelay;
+                    delay_packets++;
+                }
+
                 packets_received++;
             }
             watch.Stop();
+            stopwatch.Stop();
 
             Console.WriteLine("Done.");
 
-            delay[1] = delay_sum / packets_received;
+            delay[1] = delay_sum / delay_packets;
+            delay[1] = lowestDelay;
             bandwith[1] = packets_received * bits_per_packet / exec_time;
             lossRate[1] = 100 * (number_probes - packets_received) / number_probes;
 
-            Console.WriteLine("Client measurements Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay[1], bandwith[1], lossRate[1]);
+            Console.WriteLine("Client measurements Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay_sum / delay_packets, bandwith[1], lossRate[1]);
+            Console.WriteLine("Lowest Delay-D:{0}ms", delay[1]);
 
             ret[0] = (int)delay[0];
             ret[1] = (int)delay[1];
@@ -685,14 +718,63 @@ namespace MasterProject
             ret[4] = (int)lossRate[0];
             ret[5] = (int)lossRate[1];
 
+            int lowestRTT = Int32.MaxValue;
+            for (int i = 0; i < 4; i++)
+            {
+                int RTT = PingHostDelay(host);
+                if (RTT > -1 && RTT < lowestRTT)
+                {
+                    lowestRTT = RTT;
+                }
+            }
+
+            Console.WriteLine("Lowest RTT: {0}ms", lowestRTT);
+
             Console.WriteLine("Measurements Complete.");
 
             return ret;
         }
 
+        public static int PingHostDelay(string host)
+        {
+            int RTT = -1;
+            //IPAddress address = GetIpFromHost(ref host);
+            PingOptions pingOptions = new PingOptions(128, true);
+            Ping ping = new Ping();
+            byte[] buffer = new byte[32];
+
+            try
+            {
+                PingReply pingReply = ping.Send(host, 1000, buffer, pingOptions);
+                if (pingReply != null)
+                {
+                    switch (pingReply.Status)
+                    {
+                        case IPStatus.Success:
+                            RTT = (int)pingReply.RoundtripTime;
+                            Console.WriteLine("Ping RTT: {0}", RTT);
+                            break;
+                        default:
+                            Console.WriteLine("Ping failed: {0}", pingReply.Status.ToString());
+                            break;
+                    }
+                }
+            }
+            catch (PingException ex)
+            {
+                Console.WriteLine("Connection Error: {0}", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Connection Error: {0}", ex.Message);
+            }
+
+            return RTT;
+        }
+
         private void InitializeLandmarksArray()
         {
-            AllLandmarks[0] = "10.0.0.1";
+            AllLandmarks[0] = "10.0.1.1";
         }
         /*
         private int getLandmarkNumber()
