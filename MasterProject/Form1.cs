@@ -67,9 +67,10 @@ namespace MasterProject
         int[,] skypeQoEPerLandmark;
         int[,] secondQoEPerLandmark;
         // TODO save QoE for second tree also
-        int max_points_per_graph = 10;
+        int max_points_per_graph = 10; //10
         int[] meanQoE;
         int[] skypeQoE;
+        int[] secondMeanQoE;
         bool firstQoETabDrawn = false;
         bool secondQoETabDrawn = false;
         void Run()
@@ -101,6 +102,7 @@ namespace MasterProject
             secondQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             meanQoE = new int[max_num_experiments];
             skypeQoE = new int[max_num_experiments];
+            secondMeanQoE = new int[max_num_experiments];
             FinalOWDArray = new MeasurementVector[max_num_experiments];
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
             FinalLossRateArray = new MeasurementVector[max_num_experiments];
@@ -134,7 +136,7 @@ namespace MasterProject
                 if (firstTreeSelected)
                 {
                     QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
-                                                                   lowestRTT, // Delay
+                                                                   measurements[0], // Delay
                                                                    measurements[1], // Jitter
                                                                    measurements[2], // UBandwidth
                                                                    measurements[3], // DBandwidth
@@ -167,14 +169,7 @@ namespace MasterProject
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
-                FinalOWDArray[LocalIndex].dimension1 = measurements[0];
-                FinalOWDArray[LocalIndex].dimension2 = measurements[1];
-                FinalBandwidthArray[LocalIndex].dimension1 = measurements[2];
-                FinalBandwidthArray[LocalIndex].dimension1 = measurements[3];
-                FinalLossRateArray[LocalIndex].dimension1 = measurements[4];
-                FinalLossRateArray[LocalIndex].dimension2 = measurements[5]; 
-
-
+                secondMeanQoE[LocalIndex] = secondQoEPerLandmark[LocalIndex, 0];
                 /*
                 // Get Full Time
                 // This will appear on the x axis...
@@ -188,7 +183,7 @@ namespace MasterProject
                     int xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.uploadDelayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension1);
+                        this.uploadDelayChart.Series["Upload OWD"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension1);
                         xval++;
                     }
 
@@ -237,26 +232,60 @@ namespace MasterProject
                         xval++;
                     }
 
-                    // QoE 
-                    for (int i = 0; i < LandmarksNumber; i++)
+                    if (firstTreeSelected)
                     {
-                        //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
-                        this.QoEChart.Series["Hardcoded"].Points.Clear();
+                        Console.WriteLine("Plotting new point on first tree");
+                        // QoE 
+                        for (int i = 0; i < LandmarksNumber; i++)
+                        {
+                            //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
+                            this.QoEChart.Series["Hardcoded"].Points.Clear();
+                            xval = 0;
+                            for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                            {
+                                this.QoEChart.Series["Hardcoded"].Points.AddXY((double)xval, QoEPerLandmark[pos, i]);
+                                xval++;
+                            }
+                        }
+                        // QoE bis
+                        this.meanQoEChart.Series["Tree"].Points.Clear();
                         xval = 0;
                         for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                         {
-                            this.QoEChart.Series["Hardcoded"].Points.AddXY((double)xval, QoEPerLandmark[pos, i]);
+                            this.meanQoEChart.Series["Tree"].Points.AddXY((double)xval, meanQoE[pos]);
                             xval++;
                         }
+
                     }
-                    // QoE bis
-                    this.meanQoEChart.Series["Tree"].Points.Clear();
-                    xval = 0;
-                    for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                    Console.WriteLine("Value of secondTreeSelected when plotting:{0}", secondTreeSelected);
+                    if (secondTreeSelected)
                     {
-                        this.meanQoEChart.Series["Tree"].Points.AddXY((double)xval, meanQoE[pos]);
-                        xval++;
+                        Console.WriteLine("Plotting new point on second tree");
+                        // QoE 
+                        for (int i = 0; i < LandmarksNumber; i++)
+                        {
+                            //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
+                            this.secondQoEChart.Series["QoE"].Points.Clear();
+                            xval = 0;
+                            for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                            {
+                                Console.WriteLine("Plotting new point on graph1 of second tree");
+                                this.secondQoEChart.Series["QoE"].Points.AddXY((double)xval, secondQoEPerLandmark[pos, i]);
+                                xval++;
+                            }
+                        }
+                        // QoE bis
+                        this.secondMeanQoEChart.Series["Mean QoE"].Points.Clear();
+                        xval = 0;
+                        for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
+                        {
+                            Console.WriteLine("Plotting new point on graph2 of second tree");
+                            this.secondMeanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, secondMeanQoE[pos]);
+                            xval++;
+                        }
+
                     }
+                    
                 }
                 // Draw the Charts
                 // I have to:
@@ -288,12 +317,17 @@ namespace MasterProject
                         this.QoEChart.Series["Hardcoded"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
                     }
                     this.meanQoEChart.Series["Tree"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
+                    for (int i = 0; i < LandmarksNumber; i++)
+                    {
+                        this.secondQoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, secondQoEPerLandmark[LocalIndex, i]);
+                    }
+                    this.secondMeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, secondMeanQoE[LocalIndex]);
                 }
 
                 Console.WriteLine("HARDCODED {0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
                 Console.WriteLine("\tTotal Execution Time {0}", totalTime.ElapsedMilliseconds);
-                Thread.Sleep(10000);
+                //Thread.Sleep(10000);
             }
         }
 
@@ -319,6 +353,7 @@ namespace MasterProject
                     return;
                 }
                 firstTreeSelected = true;
+                Console.WriteLine("First tree selected!");
             }
             else
             {
@@ -347,11 +382,12 @@ namespace MasterProject
                     return;
                 }
                 secondTreeSelected = true;
+                Console.WriteLine("Second Tree selected!");
             }
             else
             {
                 MessageBox.Show("Error when opening the Decision Tree file", "Error");
-                secondTreeSelected = true;
+                secondTreeSelected = false;
                 return;
             }
         }

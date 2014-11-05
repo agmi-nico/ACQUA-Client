@@ -370,7 +370,7 @@
             series8.ChartArea = "meanQoEChartArea";
             series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series8.Legend = "meanQoELegend";
-            series8.Name = "Mean QoE";
+            series8.Name = "Tree";//"Mean QoE";
             this.meanQoEChart.Series.Add(series8);
 
             this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
@@ -390,7 +390,7 @@
             series9.ChartArea = "QoEChartArea";
             series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series9.Legend = "QoELegend";
-            series9.Name = "QoE";
+            series9.Name = "Hardcoded";//"QoE";
             this.QoEChart.Series.Add(series9);
             this.QoEChart.Size = new System.Drawing.Size(453, 215);
             this.QoEChart.TabIndex = 0;
@@ -435,7 +435,7 @@
             this.secondMeanQoEChart.Series.Add(series10);
             this.secondMeanQoEChart.Size = new System.Drawing.Size(453, 215);
             this.secondMeanQoEChart.TabIndex = 1;
-            this.secondMeanQoEChart.Text = "meanQoEChart";
+            this.secondMeanQoEChart.Text = "secondMeanQoEChart";
             // 
             // Second QoEChart
             // 
@@ -454,7 +454,7 @@
             this.secondQoEChart.Series.Add(series11);
             this.secondQoEChart.Size = new System.Drawing.Size(453, 215);
             this.secondQoEChart.TabIndex = 0;
-            this.secondQoEChart.Text = "QoEChart";
+            this.secondQoEChart.Text = "secondQoEChart";
             // 
             // experimentSleepTime
             // 
@@ -742,8 +742,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).EndInit();
             this.QoETab.ResumeLayout(false);
             this.QoEGroupBox.ResumeLayout(false);
+            this.secondQoETab.ResumeLayout(false);
+            this.secondQoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.burstSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.probeSize)).EndInit();
