@@ -25,30 +25,28 @@ namespace MasterProject
         }
         int max_num_experiments = 10000;
         int LandmarksNumber = 0;
-        MeasurementVector[] FinalDelayAndJitterArray;
+        MeasurementVector[] FinalOWDArray;
         MeasurementVector[] FinalBandwidthArray;
         MeasurementVector[] FinalLossRateArray;
         //Time[] TimeArray;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void runButtonClick(object sender, EventArgs e)
         {
+
             int[] series = new int[2];
             series[1] = 2;
             series[0] = 1;
 
-            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
-            FinalBandwidthArray = new MeasurementVector[max_num_experiments];
-            FinalLossRateArray = new MeasurementVector[max_num_experiments];
-            //TimeArray = new Time[max_num_experiments];
+
             LandmarksNumber = 0;
 
-            if (decisionTreeTxtBox.Text == "")
+            if (decisionTreeTextBox.Text == "")
             {
                 MessageBox.Show("Decision Tree missing", "Error");
                 return;
             }
 
-            if (probesNumber.Value == 1)
+            if (burstSize.Value == 1)
             {
                 DialogResult dr = MessageBox.Show("Jitter can't be calculated with only one probe. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.No)
@@ -67,19 +65,45 @@ namespace MasterProject
         //int MeanResult = -1;
         int[,] QoEPerLandmark;
         int[,] skypeQoEPerLandmark;
+        int[,] secondQoEPerLandmark;
+        // TODO save QoE for second tree also
         int max_points_per_graph = 10;
         int[] meanQoE;
         int[] skypeQoE;
-
+        bool firstQoETabDrawn = false;
+        bool secondQoETabDrawn = false;
         void Run()
         {
+            // see bit.ly/1qnHcFM
+            // Open a tab for first tree, if present
+            if (! firstQoETabDrawn && firstTreeSelected)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.tabControl.Controls.Add(this.QoETab);
+                });
+                firstQoETabDrawn = true;
+            }
+            // Open a tab for second tree, if present
+            if (! secondQoETabDrawn && secondTreeSelected)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    this.tabControl.Controls.Add(this.secondQoETab);
+                });
+                secondQoETabDrawn = true;
+            }
+
+
             LandmarksNumber = 1;
             QoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             skypeQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
+            secondQoEPerLandmark = new int[max_num_experiments, LandmarksNumber];
             meanQoE = new int[max_num_experiments];
             skypeQoE = new int[max_num_experiments];
-            FinalDelayAndJitterArray = new MeasurementVector[max_num_experiments];
+            FinalOWDArray = new MeasurementVector[max_num_experiments];
             FinalBandwidthArray = new MeasurementVector[max_num_experiments];
+            FinalLossRateArray = new MeasurementVector[max_num_experiments];
             int LocalIndex = 0;
 
             setUpMeasurement("10.0.1.1", 9050, 9051, 100);
@@ -107,13 +131,16 @@ namespace MasterProject
                 Console.WriteLine("\tLowest RTT: {0}ms", lowestRTT);
 
                 // Estimate QoE with the provided tree
-                QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
-                                                                lowestRTT, // Delay
-                                                                measurements[1], // Jitter
-                                                                measurements[2], // UBandwidth
-                                                                measurements[3], // DBandwidth
-                                                                measurements[4], // ULossRate
-                                                                measurements[5]);// DLossRate 
+                if (firstTreeSelected)
+                {
+                    QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
+                                                                   lowestRTT, // Delay
+                                                                   measurements[1], // Jitter
+                                                                   measurements[2], // UBandwidth
+                                                                   measurements[3], // DBandwidth
+                                                                   measurements[4], // ULossRate
+                                                                   measurements[5]);// DLossRate
+                }
                 // just to compare the above result with the hard-coded tree in the bottom of this file
                 skypeQoEPerLandmark[LocalIndex, 0] = estimatedSkypeQuality(measurements[3],
                                                                 measurements[2],
@@ -122,12 +149,31 @@ namespace MasterProject
                                                                 measurements[4],
                                                                 measurements[5]);
 
-                FinalDelayAndJitterArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
+                // Estimate QoE with the second provided tree
+                if (secondTreeSelected)
+                {
+                    secondQoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root2,           // Decision-tree Root
+                                                                    measurements[0], // Delay
+                                                                    measurements[1], // Jitter
+                                                                    measurements[2], // UBandwidth
+                                                                    measurements[3], // DBandwidth
+                                                                    measurements[4], // ULossRate
+                                                                    measurements[5]);// DLossRate 
+                }
+
+                FinalOWDArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
                 FinalBandwidthArray[LocalIndex] = new MeasurementVector(measurements[2], measurements[3]);
                 FinalLossRateArray[LocalIndex] = new MeasurementVector(measurements[4], measurements[5]);
 
                 meanQoE[LocalIndex] = QoEPerLandmark[LocalIndex, 0];
                 skypeQoE[LocalIndex] = skypeQoEPerLandmark[LocalIndex, 0];
+                FinalOWDArray[LocalIndex].dimension1 = measurements[0];
+                FinalOWDArray[LocalIndex].dimension2 = measurements[1];
+                FinalBandwidthArray[LocalIndex].dimension1 = measurements[2];
+                FinalBandwidthArray[LocalIndex].dimension1 = measurements[3];
+                FinalLossRateArray[LocalIndex].dimension1 = measurements[4];
+                FinalLossRateArray[LocalIndex].dimension2 = measurements[5]; 
+
 
                 /*
                 // Get Full Time
@@ -137,22 +183,21 @@ namespace MasterProject
                 if (LocalIndex > max_points_per_graph)
                 {
                     // for each graph, clear everything and redraw the last 19 points. Add the 20th at the end.
-                    //delay
-                    this.delayChart.Series["Upload Delay"].Points.Clear();
+                    // upload OWD
+                    this.uploadDelayChart.Series["Upload OWD"].Points.Clear();
                     int xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.delayChart.Series["Upload Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension1);
+                        this.uploadDelayChart.Series["Round-trip Delay"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension1);
                         xval++;
                     }
 
-
-                    //jitter
-                    this.jitterChart.Series["Download Delay"].Points.Clear();
+                    //download OWD [ no jitter computation for the moment]
+                    this.downloadDelayChart.Series["Download OWD"].Points.Clear();
                     xval = 0;
                     for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                     {
-                        this.jitterChart.Series["Download Delay"].Points.AddXY((double)xval, FinalDelayAndJitterArray[pos].dimension2);
+                        this.downloadDelayChart.Series["Download OWD"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension2);
                         xval++;
                     }
 
@@ -232,8 +277,8 @@ namespace MasterProject
                 //this.DelayChart.Series["Round-trip Delay"].Points.CopyTo(plotted_data, 0);
                 else
                 {
-                    this.delayChart.Series["Upload Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension1);
-                    this.jitterChart.Series["Download Delay"].Points.AddXY(LocalIndex, FinalDelayAndJitterArray[LocalIndex].dimension2);
+                    this.uploadDelayChart.Series["Upload OWD"].Points.AddXY(LocalIndex, FinalOWDArray[LocalIndex].dimension1);
+                    this.downloadDelayChart.Series["Download OWD"].Points.AddXY(LocalIndex, FinalOWDArray[LocalIndex].dimension2);
                     this.uploadBandwidthChart.Series["Upload Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension1);
                     this.downloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
                     this.uploadLossRateChart.Series["Upload Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension1);
@@ -252,241 +297,65 @@ namespace MasterProject
             }
         }
 
+
         // Choose Decision Tree (Configuration File)
         Node root;
         FileStream DecisionTreeFile;
+        bool firstTreeSelected = false;
         private void button5_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 DecisionTreeFile = new FileStream(openFileDialog1.FileName, FileMode.Open);
-                decisionTreeTxtBox.Text = DecisionTreeFile.Name;
+                decisionTreeTextBox.Text = DecisionTreeFile.Name;
                 DecisionTreeFile.Close();
                 root = CallerClass.Load(DecisionTreeFile.Name);
                 if (root == null)
                 {
                     MessageBox.Show("Error in Decision Tree Format. Please choose a valid XML format.", "Error");
                     DecisionTreeFile.Close();
+                    firstTreeSelected = false;
                     return;
                 }
+                firstTreeSelected = true;
             }
             else
             {
                 MessageBox.Show("Error when opening the Decision Tree file", "Error");
+                firstTreeSelected = false;
                 return;
             }
         }
-
-        private void SelectLandmarks_Click(object sender, EventArgs e)
+        Node root2;
+        FileStream DecisionTreeFile2;
+        bool secondTreeSelected = false;
+        private void button6_Click(object sender, EventArgs e)
         {
-            try
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                LandNumber = Convert.ToInt32(LandmarksNo.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Please enter the number of landmarks", "Error");
-                return;
-            }
-            if (LandNumber < 1 || LandNumber > 100)
-            {
-                MessageBox.Show("Landmarks number must be a value between 1 and 100 !", "Error");
-                return;
-            }
-            Thread t = new Thread(new ThreadStart(BeginLandmarksSelection));
-            t.Start();
-        }
-
-        string[] AllLandmarks = new string[100];
-        ArrayList ChosenLandmarks = new ArrayList();
-        ArrayList LandmarksFirstSet = new ArrayList();
-        ArrayList LandmarksSecondSet = new ArrayList();
-        ArrayList LandmarksthirdSet = new ArrayList();
-        int LandNumber;
-        static Random r;
-        private static byte[] data;
-        public void BeginLandmarksSelection()
-        {
-            IPEndPoint iep;
-            EndPoint ep;
-            ICMP packet;
-            Socket host;
-            byte[] data = new byte[1024];
-            int recv;
-            var watch = Stopwatch.StartNew();
-            long MS, RTD = 0;
-
-            // initialize the AllLandmarks array
-            InitializeLandmarksArray();
-
-            string RandomLandmark = "";
-            ChosenLandmarks.Clear();
-            // Select landmarks randomly
-            if (radioButtonRandom.Checked)
-            {
-                int i = 0;
-                r = new Random();
-                while (i < LandNumber)
+                DecisionTreeFile2 = new FileStream(openFileDialog1.FileName, FileMode.Open);
+                decisionTreeTwoTextBox.Text = DecisionTreeFile2.Name;
+                DecisionTreeFile2.Close();
+                root2 = CallerClass.Load(DecisionTreeFile2.Name);
+                if (root2 == null)
                 {
-                    int size = getLandmarkNumber();
-                    int randomNumber = r.Next(0, size - 1);
-                    RandomLandmark = AllLandmarks[randomNumber];
-                    if (!ChosenLandmarks.Contains(RandomLandmark))
-                    {
-                        ChosenLandmarks.Add(RandomLandmark);
-                        i++;
-                    }
-                }
-            }
-            else if (radioButtonIntelligent.Checked) // Select landmarks intelligently according to RTD order
-            {
-                try
-                {
-                    host = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.Icmp);
-                }
-                catch
-                {
-                    MessageBox.Show("A problem occurred when creating the socket !\n Check your administrative settings.", "Error");
+                    MessageBox.Show("Error in Decision Tree Format. Please choose a valid XML format.", "Error");
+                    DecisionTreeFile2.Close();
+                    secondTreeSelected = false;
                     return;
                 }
-
-                for (int i = 0; i < AllLandmarks.Length; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        // Ping all landmarks and sort them in three lists according to RTD value (Each landmark 4 times)
-                        try
-                        {
-                            iep = new IPEndPoint(IPAddress.Parse(AllLandmarks[i]), 0);
-                            ep = (EndPoint)iep;
-                            packet = new ICMP();
-                            packet.Type = 0x08;
-                            packet.Code = 0x00;
-                            packet.Checksum = 0;
-                            Buffer.BlockCopy(BitConverter.GetBytes((short)1), 0, packet.Message, 0, 2);
-                            Buffer.BlockCopy(BitConverter.GetBytes((short)1), 0, packet.Message, 2, 2);
-                            data = Encoding.ASCII.GetBytes("test packet");
-                            Buffer.BlockCopy(data, 0, packet.Message, 4, data.Length);
-                            packet.MessageSize = data.Length + 4;
-                            int packetsize = packet.MessageSize + 4;
-
-                            UInt16 chcksum = packet.getChecksum();
-                            packet.Checksum = chcksum;
-
-                            host.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 2000);
-                            watch = Stopwatch.StartNew(); // Start a timer before ping
-                            host.SendTo(packet.getBytes(), packetsize, SocketFlags.None, iep);
-                            try
-                            {
-                                data = new byte[1024];
-                                recv = host.ReceiveFrom(data, ref ep);
-                                watch.Stop(); // Stop timer after ping
-                            }
-                            catch (SocketException)
-                            {
-                                //MessageBox.Show("No response from host: " + AllLandmarks[i] +
-                                //                " Please check the availability of this host or your Internet connection!", "Error");
-                                continue;
-                            }
-                            ICMP response = new ICMP(data, recv);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Problem in pinging host: " + AllLandmarks[i], "Error");
-                            return;
-                        }
-                        MS = watch.ElapsedMilliseconds;
-                        RTD += MS; // RTD : Two-way Delay
-                    }
-
-                    RTD = RTD / 4;
-
-                    if (RTD < 80)
-                        LandmarksFirstSet.Add(AllLandmarks[i]);
-                    else if (RTD >= 80 && RTD < 200)
-                        LandmarksSecondSet.Add(AllLandmarks[i]);
-                    else if (RTD >= 200)
-                        LandmarksthirdSet.Add(AllLandmarks[i]);
-                }
-
-                // Filling the chosen landmarks
-                ChosenLandmarks.Clear();
-                r = new Random();
-                int k = 0;
-                while (ChosenLandmarks.Count != LandNumber)
-                {
-                    k = 0;
-                    while (k < Convert.ToInt32(LandNumber * LandmarksFirstSet.Count / 100))
-                    {
-                        if (ChosenLandmarks.Count == LandNumber)
-                            break;
-                        else
-                            try
-                            {
-                                RandomLandmark = LandmarksFirstSet[r.Next(0, LandmarksFirstSet.Count)] as string;
-                                if (!ChosenLandmarks.Contains(RandomLandmark))
-                                {
-                                    ChosenLandmarks.Add(RandomLandmark);
-                                    k++;
-                                }
-                            }
-                            catch
-                            { continue; }
-                    }
-                    k = 0;
-                    while (k < Convert.ToInt32(LandNumber * LandmarksSecondSet.Count / 100))
-                    {
-                        if (ChosenLandmarks.Count == LandNumber)
-                            break;
-                        else
-                            try
-                            {
-                                RandomLandmark = LandmarksSecondSet[r.Next(0, LandmarksSecondSet.Count)] as string;
-                                if (!ChosenLandmarks.Contains(RandomLandmark))
-                                {
-                                    ChosenLandmarks.Add(RandomLandmark);
-                                    k++;
-                                }
-                            }
-                            catch
-                            { continue; }
-                    }
-                    k = 0;
-                    while (k < Convert.ToInt32(LandNumber * LandmarksthirdSet.Count / 100))
-                    {
-                        if (ChosenLandmarks.Count == LandNumber)
-                            break;
-                        else
-                            try
-                            {
-                                RandomLandmark = LandmarksthirdSet[r.Next(0, LandmarksthirdSet.Count)] as string;
-                                if (!ChosenLandmarks.Contains(RandomLandmark))
-                                {
-                                    ChosenLandmarks.Add(RandomLandmark);
-                                    k++;
-                                }
-                            }
-                            catch
-                            { continue; }
-                    }
-                }
+                secondTreeSelected = true;
             }
-
-            landmarksListForm.Clear();
-            // Fill the Landmarks RichTextBox
-            for (int i = 0; i < ChosenLandmarks.Count; i++)
+            else
             {
-                if (i != ChosenLandmarks.Count - 1)
-                {
-                    landmarksListForm.Text += ChosenLandmarks[i] + "\n";
-                }
-                else
-                {
-                    landmarksListForm.Text += ChosenLandmarks[i];
-                }
+                MessageBox.Show("Error when opening the Decision Tree file", "Error");
+                secondTreeSelected = true;
+                return;
             }
         }
+        string[] AllLandmarks = new string[100];
 
         UdpClient udpOut;
         UdpClient udpIn;
@@ -577,7 +446,7 @@ namespace MasterProject
             udpIn.Client.ReceiveTimeout = 0;
 
             bool probing = true;
-            int seq_id;
+            //int seq_id;
 
             int delay_sum = 0;
             int packets_received = 0;
@@ -696,7 +565,7 @@ namespace MasterProject
         {
             AllLandmarks[0] = "10.0.1.1";
         }
-
+        /*
         private int getLandmarkNumber()
         {
             int count = 0;
@@ -707,7 +576,7 @@ namespace MasterProject
             }
             return count;
         }
-
+        */
         private static IPAddress GetIpFromHost(ref string host)
         {
             //variable to hold our error message (if something fails)
@@ -731,7 +600,7 @@ namespace MasterProject
             return address;
         }
         // Close Application Button
-        private void button2_Click(object sender, EventArgs e)
+        private void closeButtonClick(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -813,5 +682,41 @@ namespace MasterProject
 
             return estimation;
         }
+
+        private void decisionTreeGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void experimentConfigGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void burstSizeUnitLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void probeSizeUnitLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void experimentSleepTime_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void decisionTreeSelectionLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
