@@ -7,7 +7,7 @@ namespace MasterProject
 {
     public enum EType
     {
-        D, JTR, UBW, DBW, ULR, DLR, LEAF
+        UD, DD, UBW, DBW, ULR, DLR, LEAF
     }
 
     class Node
@@ -30,16 +30,15 @@ namespace MasterProject
         {
             switch (inputVAR.ToUpper())
             {
-                case "D":
-                    return EType.D;
-                case "JTR":
-                    return EType.JTR;
+                case "UD":
+                    return EType.UD;
+                case "DD":
+                    return EType.DD;
                 case "UBW":
                     return EType.UBW;
                 case "DBW":
                     return EType.DBW;
-                    //case LR transform to ULR because ULR and DLR are currently the same, and i didnt want to change the xml files
-                case "LR":
+                case "LR": //LR transform to ULR because currently there is no difference between ULR and DLR, and i didnt want to change the xml files xD
                     return EType.ULR;
                 case "ULR":
                     return EType.ULR;

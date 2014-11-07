@@ -8,11 +8,11 @@ namespace MasterProject
 {
     class CallerClass
     {
-        public static int Call(Node root, int D, int JTR, int UBW, int DBW, int DLR, int ULR)
+        public static int Call(Node root, int UD, int DD, int UBW, int DBW, int ULR, int DLR)
         {
             Node.Values = new int[6];
-            Node.Values[0] = D;
-            Node.Values[1] = JTR;
+            Node.Values[0] = UD;
+            Node.Values[1] = DD;
             Node.Values[2] = UBW;
             Node.Values[3] = DBW;
             Node.Values[4] = ULR;

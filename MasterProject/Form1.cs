@@ -28,16 +28,11 @@ namespace MasterProject
         MeasurementVector[] FinalOWDArray;
         MeasurementVector[] FinalBandwidthArray;
         MeasurementVector[] FinalLossRateArray;
-        //Time[] TimeArray;
+
+        bool running = false;
 
         private void runButtonClick(object sender, EventArgs e)
         {
-
-            int[] series = new int[2];
-            series[1] = 2;
-            series[0] = 1;
-
-
             LandmarksNumber = 0;
 
             if (decisionTreeTextBox.Text == "")
@@ -46,20 +41,21 @@ namespace MasterProject
                 return;
             }
 
-            if (burstSize.Value == 1)
-            {
-                DialogResult dr = MessageBox.Show("Jitter can't be calculated with only one probe. Do you want to continue?", "Alert", MessageBoxButtons.YesNo);
-                if (dr == DialogResult.No)
-                    return;
-            }
-
             // Count the number of landmarks in the richTextBox
             foreach (string landmark in landmarksListForm.Lines)
                 LandmarksNumber++;
 
             Thread t = new Thread(new ThreadStart(Run));
             System.Console.WriteLine("Starting...");
-            t.Start();
+            if (!running)
+            {
+                running = true;
+                t.Start();
+            }
+            else
+            {
+                System.Console.WriteLine("\tAlready Running");
+            }
         }
 
         //int MeanResult = -1;
@@ -73,11 +69,31 @@ namespace MasterProject
         int[] secondMeanQoE;
         bool firstQoETabDrawn = false;
         bool secondQoETabDrawn = false;
+
+        void Run2()
+        {
+            System.Console.WriteLine("\tCalculating QoE with values:");
+            int U_BD = 16;
+            int U_De = 200;
+            int U_LR = 15;
+            int D_BD = 16;
+            int D_De = 200;
+            int D_LR = 15;
+
+            System.Console.WriteLine("\tDelay-U:   \t{0}ms    \tDelay-D:   \t{1}ms", U_De, D_De);
+            System.Console.WriteLine("\tBandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", U_BD, D_BD);
+            System.Console.WriteLine("\tLossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", U_LR, D_LR);
+            // just to compare the above result with the hard-coded tree in the bottom of this file
+            int a = CallerClass.Call(root, U_De, D_De, U_BD, D_BD, U_LR, D_LR);
+            int b = estimatedSkypeQuality(D_BD, U_BD, D_De, U_De, D_LR, U_LR);
+            System.Console.WriteLine("\tSalimCode:\t{0}     \tDecitionTree:\t{1}", b, a);
+        }
+
         void Run()
         {
             // see bit.ly/1qnHcFM
             // Open a tab for first tree, if present
-            if (! firstQoETabDrawn && firstTreeSelected)
+            if (!firstQoETabDrawn && firstTreeSelected)
             {
                 this.Invoke((MethodInvoker)delegate
                 {
@@ -86,7 +102,7 @@ namespace MasterProject
                 firstQoETabDrawn = true;
             }
             // Open a tab for second tree, if present
-            if (! secondQoETabDrawn && secondTreeSelected)
+            if (!secondQoETabDrawn && secondTreeSelected)
             {
                 this.Invoke((MethodInvoker)delegate
                 {
@@ -111,56 +127,50 @@ namespace MasterProject
             setUpMeasurement("10.0.1.1", 9050, 9051, 100);
             Stopwatch totalTime = new Stopwatch();
 
-            while (true)
+            int[] measurements = getMeasurements();
+
+            while (running)
             {
                 totalTime.Restart();
-                int[] measurements = getMeasurements();
+                // measurements = {UD, DD, UBW, DBW, ULR, DLR}
+                measurements = getMeasurements();
 
-                System.Console.WriteLine("\tCalculating QoE with values:");
-                System.Console.WriteLine("\tDelay-U:   \t{0}ms    \tDelay-D:   \t{1}ms    \tSum:{2}", measurements[0], measurements[1], measurements[1] + measurements[0]);
+                System.Console.WriteLine("\tCalculating QoE with values from Experiment {0}:", experimentID);
+
+                System.Console.WriteLine("O-Delay-U: \t{0}ms    \tO-Delay-D: \t{1}ms    \tSum:{2}", measurements[0], measurements[1], measurements[1] + measurements[0]);
+                System.Console.WriteLine("Shift-U:   \t{0}ms    \tShift-D:   \t{1}ms    \tSum:{2}", shift_delay_up, shift_delay_down, shift_delay_up + shift_delay_down);
+
+                measurements[0] -= shift_delay_up;
+                measurements[1] -= shift_delay_down;
+
+                System.Console.WriteLine("\tDelay-U:   \t{0}ms    \tDelay-D:   \t{1}ms", measurements[0], measurements[1]);
                 System.Console.WriteLine("\tBandwith-U:\t{0}Kbit/s\tBandwith-D:\t{1}Kbit/s", measurements[2], measurements[3]);
                 System.Console.WriteLine("\tLossRate-U:\t{0}%     \tLossRate-D:\t{1}%     ", measurements[4], measurements[5]);
-                int lowestRTT = Int32.MaxValue;
-                for (int i = 0; i < 4; i++)
-                {
-                    int RTT = PingHostDelay(host);
-                    if (RTT > -1 && RTT < lowestRTT)
-                    {
-                        lowestRTT = RTT;
-                    }
-                }
+                //int lowestRTT = Int32.MaxValue;
+                //for (int i = 0; i < 4; i++)
+                //{
+                //    int RTT = PingHostDelay(host);
+                //    if (RTT > -1 && RTT < lowestRTT)
+                //    {
+                //        lowestRTT = RTT;
+                //    }
+                //}
 
-                Console.WriteLine("\tLowest RTT: {0}ms", lowestRTT);
+                //Console.WriteLine("\tLowest RTT: {0}ms", lowestRTT);
 
                 // Estimate QoE with the provided tree
                 if (firstTreeSelected)
                 {
-                    QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root,           // Decision-tree Root
-                                                                   measurements[0], // Delay
-                                                                   measurements[1], // Jitter
-                                                                   measurements[2], // UBandwidth
-                                                                   measurements[3], // DBandwidth
-                                                                   measurements[4], // ULossRate
-                                                                   measurements[5]);// DLossRate
+                    //Call(Node root, int UD, int DD, int UBW, int DBW, int ULR, int DLR)
+                    QoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root, measurements[0], measurements[1], measurements[2], measurements[3], measurements[4], measurements[5]);
                 }
                 // just to compare the above result with the hard-coded tree in the bottom of this file
-                skypeQoEPerLandmark[LocalIndex, 0] = estimatedSkypeQuality(measurements[3],
-                                                                measurements[2],
-                                                                measurements[0],
-                                                                measurements[0],
-                                                                measurements[4],
-                                                                measurements[5]);
+                skypeQoEPerLandmark[LocalIndex, 0] = estimatedSkypeQuality(measurements[3], measurements[2], measurements[1], measurements[0], measurements[5], measurements[4]);
 
                 // Estimate QoE with the second provided tree
                 if (secondTreeSelected)
                 {
-                    secondQoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root2,           // Decision-tree Root
-                                                                    measurements[0], // Delay
-                                                                    measurements[1], // Jitter
-                                                                    measurements[2], // UBandwidth
-                                                                    measurements[3], // DBandwidth
-                                                                    measurements[4], // ULossRate
-                                                                    measurements[5]);// DLossRate 
+                    secondQoEPerLandmark[LocalIndex, 0] = CallerClass.Call(root2, measurements[0], measurements[1], measurements[2], measurements[3], measurements[4], measurements[5]);
                 }
 
                 FinalOWDArray[LocalIndex] = new MeasurementVector(measurements[0], measurements[1]);
@@ -285,7 +295,7 @@ namespace MasterProject
                         }
 
                     }
-                    
+
                 }
                 // Draw the Charts
                 // I have to:
@@ -327,8 +337,10 @@ namespace MasterProject
                 Console.WriteLine("HARDCODED {0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
                 Console.WriteLine("\tTotal Execution Time {0}", totalTime.ElapsedMilliseconds);
-                //Thread.Sleep(10000);
+                Thread.Sleep(5000);
             }
+
+            this.Close();
         }
 
 
@@ -401,6 +413,26 @@ namespace MasterProject
         IPEndPoint RemoteIpEndPoint;
         int number_probes;
 
+        byte[] udpPacketBytes;
+        byte[] serverMeasurements = new byte[100];
+        static int serverMeasurementsSize = 4 * 4; //delay bandwith loss_rate experimentID [all int]
+        static int udpPacketSize = serverMeasurementsSize + 60;
+        static int bits_per_packet = 28 * 8 + udpPacketSize * 8; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
+        static int experimentID = -1;
+
+        int shift_delay_up = 0;
+        int shift_delay_down = 0;
+        byte[] udpDelayBytes = new byte[16];
+        UdpClient udpDelay;
+
+        private void delayServer()
+        {
+            udpDelay = new UdpClient(9052);
+            udpDelay.Connect("192.168.0.1", 9052);
+            udpDelay.Client.ReceiveTimeout = 2000;
+        }
+
+
         private void setUpMeasurement(string host_, int udpPort_, int tcpPort_, int number_probes_)
         {
             udpPort = udpPort_;
@@ -411,17 +443,43 @@ namespace MasterProject
             udpIn = new UdpClient(udpPort);
             RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
             number_probes = number_probes_;
+            delayServer();
         }
-
-        Byte[] udpPacketBytes;
-        Byte[] serverMeasurements = new Byte[100];
-        static int udpPacketSize = 12 + 50;
-        static int bits_per_packet = 28 * 8 + udpPacketSize * 8; //NOTE: bandwith consider headers of udp packets => ip_headers[20bytes] and udp_headers[8bytes]
-        static int serverMeasurementsSize = 4 * 3; //delay bandwith loss_rate [all int]
 
         private int[] getMeasurements()
         {
-            Console.WriteLine("Executing Measurements...");
+            experimentID++;
+            Console.WriteLine("Executing Experiment {0}...", experimentID);
+
+            if (experimentID % 2 == 0)
+            {
+                int delayID = experimentID;
+
+                Buffer.BlockCopy(BitConverter.GetBytes(delayID), 0, udpDelayBytes, 0, 4);
+                long delayTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
+                Buffer.BlockCopy(BitConverter.GetBytes(delayTime), 0, udpDelayBytes, 4, 8);
+                udpDelay.Send(udpDelayBytes, udpDelayBytes.Length);
+                bool ok = false;
+                try
+                {
+                    udpDelayBytes = udpDelay.Receive(ref RemoteIpEndPoint);
+                    delayTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
+                    ok = true;
+                }
+                catch
+                {
+                    Console.WriteLine("No response");
+                }
+                if (ok)
+                {
+                    if (delayID != BitConverter.ToInt32(udpDelayBytes, 0))
+                    {
+                        Console.WriteLine("Shift Delay Packet Error");
+                    }
+                    shift_delay_up = BitConverter.ToInt32(udpDelayBytes, 12);
+                    shift_delay_down = (int)(delayTime - BitConverter.ToInt64(udpDelayBytes, 4));
+                }
+            }
 
             Stopwatch stopwatch = new Stopwatch();
             long timestamp;
@@ -433,20 +491,21 @@ namespace MasterProject
             float[] lossRate = new float[2];
             float[] bandwith = new float[2];
             float[] delay = new float[2];
-            Console.WriteLine("Sending udp packet train...");
+            Console.WriteLine("Sending udp packet train to {0}:{1}...", host, udpPort);
+            udpPacketBytes = new byte[udpPacketSize];
             for (int i = 0; i < number_probes; i++)
             {
                 timestamp = startTime + stopwatch.ElapsedMilliseconds;
                 //Console.WriteLine("Packet {0} timestamp:{1}", i, timestamp);
-                udpPacketBytes = new Byte[udpPacketSize];
                 Buffer.BlockCopy(BitConverter.GetBytes(i), 0, udpPacketBytes, 0, 4);
                 Buffer.BlockCopy(BitConverter.GetBytes(timestamp), 0, udpPacketBytes, 4, 8);
+                Buffer.BlockCopy(BitConverter.GetBytes(experimentID), 0, udpPacketBytes, 12, 4);
                 udpOut.Send(udpPacketBytes, udpPacketBytes.Length);
             }
             stopwatch.Stop();
             Console.WriteLine("Done.");
 
-            Console.WriteLine("Connecting to server (tcp)...");
+            Console.WriteLine("Connecting to {0}:{1} (tcp)...", host, tcpPort);
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             bool connected = false;
             while (!connected)
@@ -463,8 +522,8 @@ namespace MasterProject
                 }
             }
 
-            Console.WriteLine("Waiting for server measurements...");
-            serverMeasurements = new Byte[serverMeasurementsSize];
+            Console.WriteLine("Waiting for server measurements results...");
+            serverMeasurements = new byte[serverMeasurementsSize];
             int x = ClientSocket.Receive(serverMeasurements, 0, serverMeasurementsSize, SocketFlags.None);
 
             delay[0] = BitConverter.ToInt32(serverMeasurements, 0);
@@ -474,19 +533,21 @@ namespace MasterProject
             ClientSocket.Send(BitConverter.GetBytes('0'), 1, SocketFlags.None);
 
             ClientSocket.Close();
-            Console.WriteLine("Server measurements Delay-U:{0}ms Bandwith-U:{1}Kbits/s LossRate-U:{2}%", delay[0], bandwith[0], lossRate[0]);
+            Console.WriteLine("Server measurements:\n  Delay-U:{0}ms Bandwith-U:{1}Kbits/s LossRate-U:{2}%", delay[0], bandwith[0], lossRate[0]);
 
             Console.WriteLine("Waiting for udp packet train...");
-            udpPacketBytes = new Byte[udpPacketSize];
+
+            udpPacketBytes = new byte[udpPacketSize];
 
             udpIn.Client.ReceiveTimeout = 0;
 
             bool probing = true;
-            //int seq_id;
+            int seq_id;
 
-            int delay_sum = 0;
+            //int delay_sum = 0;
             int packets_received = 0;
-            int delay_packets = 0;
+            //int delay_packets = 0;
+            int expID;
             long exec_time = 0;
 
             Stopwatch watch = new Stopwatch();
@@ -497,6 +558,11 @@ namespace MasterProject
 
             int lowestDelay = Int32.MaxValue;
             int packetDelay = Int32.MaxValue;
+
+            // Console.WriteLine("ID:{3}, Client:{0}, Server:{1} Result:{2}", timestamp2, timestamp, packetDelay, seq_id);
+            //long[] clientTimestamp = new long[100];
+            //long[] serverTimestamp = new long[100];
+            //long[] resultTimestamp = new long[100];
 
             while (probing)
             {
@@ -511,42 +577,61 @@ namespace MasterProject
                 }
                 if (packets_received == 0)
                 {
-                    udpIn.Client.ReceiveTimeout = 5000;
                     watch.Start();
+                    udpIn.Client.ReceiveTimeout = 5000;
                     Console.WriteLine("Receiving packets...");
                 }
-                exec_time = watch.ElapsedMilliseconds;
                 timestamp2 = stopwatch.ElapsedMilliseconds + startTime;
-
-                //seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
+                exec_time = watch.ElapsedMilliseconds;
+                seq_id = BitConverter.ToInt32(udpPacketBytes, 0);
                 timestamp = BitConverter.ToInt64(udpPacketBytes, 4);
+
+                expID = BitConverter.ToInt32(udpPacketBytes, 12);
+                if (expID != experimentID)
+                {
+                    Console.WriteLine("Experiment ID and Received ID dont match {0}!={1}", experimentID, expID);
+                }
+
                 packetDelay = (int)(timestamp2 - timestamp);
+
+                //clientTimestamp[seq_id] = timestamp;
+                //serverTimestamp[seq_id] = timestamp2;
+                //resultTimestamp[seq_id] = packetDelay;
+
+                //Console.WriteLine("ID:{3}, Client:{0}, Server:{1} Result:{2}", timestamp2, timestamp, packetDelay, seq_id);
 
                 if (lowestDelay > packetDelay)
                 {
                     lowestDelay = packetDelay;
                 }
 
-                if (delay_packets < 5)
-                {
-                    delay_sum += packetDelay;
-                    delay_packets++;
-                }
+                //if (delay_packets < 5)
+                //{
+                //    delay_sum += packetDelay;
+                //    delay_packets++;
+                //}
 
                 packets_received++;
             }
             watch.Stop();
             stopwatch.Stop();
 
+            //for (int i = 0; i < number_probes; i++)
+            //{
+            //    Console.WriteLine("ID:{3}, Client:{0}, Server:{1} Result:{2}", clientTimestamp[i], serverTimestamp[i], resultTimestamp[i], i);
+            //}
+
             Console.WriteLine("Done.");
 
-            delay[1] = delay_sum / delay_packets;
+            //delay[1] = delay_sum / delay_packets;
             delay[1] = lowestDelay;
             bandwith[1] = packets_received * bits_per_packet / exec_time;
+            //Console.WriteLine("Upon reception, the burst spanned: {0} ms", exec_time);
             lossRate[1] = 100 * (number_probes - packets_received) / number_probes;
+            //Console.WriteLine("\tProbes:{0}, Received:{1} Result:{2}", number_probes, packets_received, lossRate[1]);
 
-            Console.WriteLine("Client measurements Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay_sum / delay_packets, bandwith[1], lossRate[1]);
-            Console.WriteLine("Lowest Delay-D:{0}ms", delay[1]);
+            Console.WriteLine("Client measurements:\n  Delay-D:{0}ms Bandwith-D:{1}Kbits/s LossRate-D:{2}%", delay[1], bandwith[1], lossRate[1]);
+            //Console.WriteLine("Lowest Delay-D:{0}ms", delay[1]);
 
             ret[0] = (int)delay[0];
             ret[1] = (int)delay[1];
@@ -555,7 +640,7 @@ namespace MasterProject
             ret[4] = (int)lossRate[0];
             ret[5] = (int)lossRate[1];
 
-            Console.WriteLine("Measurements Complete.");
+            Console.WriteLine("Experiment {0} Complete.", experimentID);
 
             return ret;
         }
@@ -601,18 +686,7 @@ namespace MasterProject
         {
             AllLandmarks[0] = "10.0.1.1";
         }
-        /*
-        private int getLandmarkNumber()
-        {
-            int count = 0;
-            foreach (String landmark in AllLandmarks)
-            {
-                if (landmark != null)
-                    count++;
-            }
-            return count;
-        }
-        */
+
         private static IPAddress GetIpFromHost(ref string host)
         {
             //variable to hold our error message (if something fails)
@@ -638,41 +712,9 @@ namespace MasterProject
         // Close Application Button
         private void closeButtonClick(object sender, EventArgs e)
         {
-            this.Close();
+            running = false;
+            Console.WriteLine("Finishing experiment and closing ACQUA...");
         }
-        /*
-        public System.Windows.Forms.DataVisualization.Charting.DataPointCollection AddPointToFixedSizeCollection(double x_val, double y_val, System.Windows.Forms.DataVisualization.Charting.DataPointCollection aCollection, int max_size)
-        {
-            if (aCollection.Count > max_size)
-            {
-                // remove oldest point and shift the x value of all remaining points to the left
-                aCollection.RemoveAt(0);
-                for (int i = 0; i < aCollection.Count; i++)
-                {
-                    double point_x = aCollection[i].XValue - 1.0;
-                    double[] point_y = aCollection[i].YValues;
-                    aCollection[i].SetValueXY(point_x, point_y);
-                }
-            }
-            aCollection.AddXY(x_val, y_val);
-            return aCollection;
-        }
-        */
-        /*
-        private double[] keepFixedSizeList(double[] aList, int maxSize)
-        {
-            if (aList.Length > maxSize)
-            {
-                for (int i = 1; i < aList.Length; i++)
-                {
-                    aPoint = aList[i];
-                    aList[i - 1] = aPoint;
-                }
-            }
-
-            return aList;
-        }
-        */
 
         private int estimatedSkypeQuality(int downloadBandwidth, int uploadBandwidth, int downloadDelay, int uploadDelay, int downloadLoss, int uploadLoss)
         {

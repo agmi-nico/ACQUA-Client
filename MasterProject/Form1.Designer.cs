@@ -34,35 +34,33 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            // second qoe tab
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.jitterAndDelayTab = new System.Windows.Forms.TabPage();
-            this.jitterAndDelayGroupBox = new System.Windows.Forms.GroupBox();
+            this.delayTab = new System.Windows.Forms.TabPage();
+            this.delayGroupBox = new System.Windows.Forms.GroupBox();
             this.downloadDelayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.uploadDelayChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.lossRateTab = new System.Windows.Forms.TabPage();
@@ -93,19 +91,19 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.decisionTreeGroupBox = new System.Windows.Forms.GroupBox();
-            this.decisionTreeTwoTextBox = new System.Windows.Forms.TextBox();
-            this.decisionTreeTwoSelectionButton = new System.Windows.Forms.Button();
             this.decisionTreeTextBox = new System.Windows.Forms.TextBox();
             this.decisionTreeSelectionLabel = new System.Windows.Forms.Label();
             this.decisionTreeSelectionButton = new System.Windows.Forms.Button();
+            this.decisionTreeTwoTextBox = new System.Windows.Forms.TextBox();
+            this.decisionTreeTwoSelectionButton = new System.Windows.Forms.Button();
             this.experimentConfigGroupBox = new System.Windows.Forms.GroupBox();
             this.burstSizeUnitLabel = new System.Windows.Forms.Label();
             this.probeSizeLabel = new System.Windows.Forms.Label();
             this.probeSizeUnitLabel = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
-            this.jitterAndDelayTab.SuspendLayout();
-            this.jitterAndDelayGroupBox.SuspendLayout();
+            this.delayTab.SuspendLayout();
+            this.delayGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.downloadDelayChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.uploadDelayChart)).BeginInit();
             this.lossRateTab.SuspendLayout();
@@ -118,9 +116,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).BeginInit();
             this.QoETab.SuspendLayout();
             this.QoEGroupBox.SuspendLayout();
-            this.secondQoEGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).BeginInit();
+            this.secondQoETab.SuspendLayout();
+            this.secondQoEGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).BeginInit();
@@ -135,46 +134,46 @@
             // 
             // tabControl
             // 
-            this.tabControl.Controls.Add(this.jitterAndDelayTab);
+            this.tabControl.Controls.Add(this.delayTab);
             this.tabControl.Controls.Add(this.lossRateTab);
             this.tabControl.Controls.Add(this.bandwidthTab);
-            //this.tabControl.Controls.Add(this.QoETab);
-            //this.tabControl.Controls.Add(this.secondQoETab);
             this.tabControl.Location = new System.Drawing.Point(391, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(481, 487);
+            this.tabControl.Size = new System.Drawing.Size(601, 619);
             this.tabControl.TabIndex = 0;
             // 
-            // jitterAndDelayTab
+            // delayTab
             // 
-            this.jitterAndDelayTab.Controls.Add(this.jitterAndDelayGroupBox);
-            this.jitterAndDelayTab.Location = new System.Drawing.Point(4, 22);
-            this.jitterAndDelayTab.Name = "jitterAndDelayTab";
-            this.jitterAndDelayTab.Padding = new System.Windows.Forms.Padding(3);
-            this.jitterAndDelayTab.Size = new System.Drawing.Size(473, 461);
-            this.jitterAndDelayTab.TabIndex = 0;
-            this.jitterAndDelayTab.Text = "Delay";
-            this.jitterAndDelayTab.UseVisualStyleBackColor = true;
+            this.delayTab.Controls.Add(this.delayGroupBox);
+            this.delayTab.Location = new System.Drawing.Point(4, 22);
+            this.delayTab.Name = "delayTab";
+            this.delayTab.Padding = new System.Windows.Forms.Padding(3);
+            this.delayTab.Size = new System.Drawing.Size(593, 593);
+            this.delayTab.TabIndex = 0;
+            this.delayTab.Text = "Delay";
+            this.delayTab.UseVisualStyleBackColor = true;
             // 
-            // jitterAndDelayGroupBox
+            // delayGroupBox
             // 
-            this.jitterAndDelayGroupBox.Controls.Add(this.downloadDelayChart);
-            this.jitterAndDelayGroupBox.Controls.Add(this.uploadDelayChart);
-            this.jitterAndDelayGroupBox.Location = new System.Drawing.Point(3, -1);
-            this.jitterAndDelayGroupBox.Name = "jitterAndDelayGroupBox";
-            this.jitterAndDelayGroupBox.Size = new System.Drawing.Size(464, 487);
-            this.jitterAndDelayGroupBox.TabIndex = 7;
-            this.jitterAndDelayGroupBox.TabStop = false;
+            this.delayGroupBox.Controls.Add(this.downloadDelayChart);
+            this.delayGroupBox.Controls.Add(this.uploadDelayChart);
+            this.delayGroupBox.Location = new System.Drawing.Point(3, -1);
+            this.delayGroupBox.Name = "delayGroupBox";
+            this.delayGroupBox.Size = new System.Drawing.Size(594, 594);
+            this.delayGroupBox.TabIndex = 7;
+            this.delayGroupBox.TabStop = false;
             // 
-            // jitterChart
+            // downloadDelayChart
             // 
+            chartArea1.AxisY.Maximum = 1000D;
+            chartArea1.AxisY.Minimum = 0D;
             chartArea1.AxisY.Title = "One-Way Delay (ms)";
             chartArea1.Name = "downloadDelayChartArea";
             this.downloadDelayChart.ChartAreas.Add(chartArea1);
             legend1.Name = "downloadDelayLegend";
             this.downloadDelayChart.Legends.Add(legend1);
-            this.downloadDelayChart.Location = new System.Drawing.Point(6, 237);
+            this.downloadDelayChart.Location = new System.Drawing.Point(6, 290);
             this.downloadDelayChart.Name = "downloadDelayChart";
             series1.BorderWidth = 5;
             series1.ChartArea = "downloadDelayChartArea";
@@ -182,18 +181,20 @@
             series1.Legend = "downloadDelayLegend";
             series1.Name = "Download OWD";
             this.downloadDelayChart.Series.Add(series1);
-            this.downloadDelayChart.Size = new System.Drawing.Size(452, 215);
+            this.downloadDelayChart.Size = new System.Drawing.Size(567, 308);
             this.downloadDelayChart.TabIndex = 1;
             this.downloadDelayChart.Text = "downloadDelayChart";
             // 
-            // delayChart
+            // uploadDelayChart
             // 
+            chartArea2.AxisY.Maximum = 1000D;
+            chartArea2.AxisY.Minimum = 0D;
             chartArea2.AxisY.Title = "One-Way Delay (ms)";
             chartArea2.Name = "uploadDelayChartArea";
             this.uploadDelayChart.ChartAreas.Add(chartArea2);
             legend2.Name = "uploadDelayLegend";
             this.uploadDelayChart.Legends.Add(legend2);
-            this.uploadDelayChart.Location = new System.Drawing.Point(5, 16);
+            this.uploadDelayChart.Location = new System.Drawing.Point(6, 7);
             this.uploadDelayChart.Name = "uploadDelayChart";
             series2.BorderColor = System.Drawing.Color.Blue;
             series2.BorderWidth = 5;
@@ -201,19 +202,8 @@
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series2.Legend = "uploadDelayLegend";
             series2.Name = "Upload OWD";
-            /*
-            series3.BorderColor = System.Drawing.Color.Red;
-            series3.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash;
-            series3.BorderWidth = 5;
-            series3.ChartArea = "delayChartArea";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Legend = "delayLegend";
-            series3.Name = "Download OWD";
-            this.delayChart.Series.Add(series3);
-             * */
             this.uploadDelayChart.Series.Add(series2);
-            
-            this.uploadDelayChart.Size = new System.Drawing.Size(453, 215);
+            this.uploadDelayChart.Size = new System.Drawing.Size(554, 298);
             this.uploadDelayChart.TabIndex = 0;
             this.uploadDelayChart.Text = "uploadDelayChart";
             // 
@@ -223,7 +213,7 @@
             this.lossRateTab.Location = new System.Drawing.Point(4, 22);
             this.lossRateTab.Name = "lossRateTab";
             this.lossRateTab.Padding = new System.Windows.Forms.Padding(3);
-            this.lossRateTab.Size = new System.Drawing.Size(473, 461);
+            this.lossRateTab.Size = new System.Drawing.Size(593, 593);
             this.lossRateTab.TabIndex = 1;
             this.lossRateTab.Text = "Loss Rate";
             this.lossRateTab.UseVisualStyleBackColor = true;
@@ -234,45 +224,49 @@
             this.lossRateGroupBox.Controls.Add(this.uploadLossRateChart);
             this.lossRateGroupBox.Location = new System.Drawing.Point(4, -1);
             this.lossRateGroupBox.Name = "lossRateGroupBox";
-            this.lossRateGroupBox.Size = new System.Drawing.Size(463, 456);
+            this.lossRateGroupBox.Size = new System.Drawing.Size(589, 591);
             this.lossRateGroupBox.TabIndex = 0;
             this.lossRateGroupBox.TabStop = false;
             // 
             // downloadLossRateChart
             // 
+            chartArea3.AxisY.Maximum = 100D;
+            chartArea3.AxisY.Minimum = 0D;
             chartArea3.AxisY.Title = "Download Loss Rate (%)";
             chartArea3.Name = "downloadLossRateChartArea";
             this.downloadLossRateChart.ChartAreas.Add(chartArea3);
             legend3.Name = "downloadLossRateLegend";
             this.downloadLossRateChart.Legends.Add(legend3);
-            this.downloadLossRateChart.Location = new System.Drawing.Point(6, 237);
+            this.downloadLossRateChart.Location = new System.Drawing.Point(-8, 299);
             this.downloadLossRateChart.Name = "downloadLossRateChart";
-            series4.BorderWidth = 5;
-            series4.ChartArea = "downloadLossRateChartArea";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Legend = "downloadLossRateLegend";
-            series4.Name = "Download Loss Rate";
-            this.downloadLossRateChart.Series.Add(series4);
-            this.downloadLossRateChart.Size = new System.Drawing.Size(453, 215);
+            series3.BorderWidth = 5;
+            series3.ChartArea = "downloadLossRateChartArea";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Legend = "downloadLossRateLegend";
+            series3.Name = "Download Loss Rate";
+            this.downloadLossRateChart.Series.Add(series3);
+            this.downloadLossRateChart.Size = new System.Drawing.Size(608, 295);
             this.downloadLossRateChart.TabIndex = 1;
             this.downloadLossRateChart.Text = "downloadLossRateChartArea";
             // 
             // uploadLossRateChart
             // 
+            chartArea4.AxisY.Maximum = 100D;
+            chartArea4.AxisY.Minimum = 0D;
             chartArea4.AxisY.Title = "Upload Loss Rate (%)";
             chartArea4.Name = "uploadLossRateChartArea";
             this.uploadLossRateChart.ChartAreas.Add(chartArea4);
             legend4.Name = "uploadLossRateLegend";
             this.uploadLossRateChart.Legends.Add(legend4);
-            this.uploadLossRateChart.Location = new System.Drawing.Point(4, 16);
+            this.uploadLossRateChart.Location = new System.Drawing.Point(-8, 1);
             this.uploadLossRateChart.Name = "uploadLossRateChart";
-            series5.BorderWidth = 5;
-            series5.ChartArea = "uploadLossRateChartArea";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series5.Legend = "uploadLossRateLegend";
-            series5.Name = "Upload Loss Rate";
-            this.uploadLossRateChart.Series.Add(series5);
-            this.uploadLossRateChart.Size = new System.Drawing.Size(453, 215);
+            series4.BorderWidth = 5;
+            series4.ChartArea = "uploadLossRateChartArea";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Legend = "uploadLossRateLegend";
+            series4.Name = "Upload Loss Rate";
+            this.uploadLossRateChart.Series.Add(series4);
+            this.uploadLossRateChart.Size = new System.Drawing.Size(591, 307);
             this.uploadLossRateChart.TabIndex = 0;
             this.uploadLossRateChart.Text = "uploadLossRateChart";
             // 
@@ -282,7 +276,7 @@
             this.bandwidthTab.Location = new System.Drawing.Point(4, 22);
             this.bandwidthTab.Name = "bandwidthTab";
             this.bandwidthTab.Padding = new System.Windows.Forms.Padding(3);
-            this.bandwidthTab.Size = new System.Drawing.Size(473, 461);
+            this.bandwidthTab.Size = new System.Drawing.Size(593, 593);
             this.bandwidthTab.TabIndex = 1;
             this.bandwidthTab.Text = "Bandwidth";
             this.bandwidthTab.UseVisualStyleBackColor = true;
@@ -293,49 +287,53 @@
             this.bandwidthGroupBox.Controls.Add(this.uploadBandwidthChart);
             this.bandwidthGroupBox.Location = new System.Drawing.Point(4, -1);
             this.bandwidthGroupBox.Name = "bandwidthGroupBox";
-            this.bandwidthGroupBox.Size = new System.Drawing.Size(463, 456);
+            this.bandwidthGroupBox.Size = new System.Drawing.Size(589, 591);
             this.bandwidthGroupBox.TabIndex = 9;
             this.bandwidthGroupBox.TabStop = false;
             // 
             // downloadBandwidthChart
             // 
+            chartArea5.AxisY.Maximum = 6000D;
+            chartArea5.AxisY.Minimum = 0D;
             chartArea5.AxisY.Title = "Download Bandwidth (Kbs)";
             chartArea5.Name = "downloadBandwidthChartArea";
             this.downloadBandwidthChart.ChartAreas.Add(chartArea5);
             legend5.Name = "downloadBandwidthLegend";
             this.downloadBandwidthChart.Legends.Add(legend5);
-            this.downloadBandwidthChart.Location = new System.Drawing.Point(6, 237);
+            this.downloadBandwidthChart.Location = new System.Drawing.Point(-8, 277);
             this.downloadBandwidthChart.Name = "downloadBandwidthChart";
-            series6.BorderWidth = 5;
-            series6.ChartArea = "downloadBandwidthChartArea";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series6.Legend = "downloadBandwidthLegend";
-            series6.Name = "Download Bandwidth";
-            this.downloadBandwidthChart.Series.Add(series6);
-            this.downloadBandwidthChart.Size = new System.Drawing.Size(453, 215);
+            series5.BorderWidth = 5;
+            series5.ChartArea = "downloadBandwidthChartArea";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "downloadBandwidthLegend";
+            series5.Name = "Download Bandwidth";
+            this.downloadBandwidthChart.Series.Add(series5);
+            this.downloadBandwidthChart.Size = new System.Drawing.Size(601, 317);
             this.downloadBandwidthChart.TabIndex = 1;
             this.downloadBandwidthChart.Text = "downloadBandwidthChartArea";
             // 
             // uploadBandwidthChart
             // 
+            chartArea6.AxisY.Maximum = 6000D;
+            chartArea6.AxisY.Minimum = 0D;
             chartArea6.AxisY.Title = "Upload Bandwidth (Kbs)";
             chartArea6.Name = "uploadBandwidthChartArea";
             this.uploadBandwidthChart.ChartAreas.Add(chartArea6);
             legend6.Name = "uploadBandwidthLegend";
             this.uploadBandwidthChart.Legends.Add(legend6);
-            this.uploadBandwidthChart.Location = new System.Drawing.Point(4, 16);
+            this.uploadBandwidthChart.Location = new System.Drawing.Point(-8, 17);
             this.uploadBandwidthChart.Name = "uploadBandwidthChart";
-            series7.BorderWidth = 5;
-            series7.ChartArea = "uploadBandwidthChartArea";
-            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series7.Legend = "uploadBandwidthLegend";
-            series7.Name = "Upload Bandwidth";
-            this.uploadBandwidthChart.Series.Add(series7);
-            this.uploadBandwidthChart.Size = new System.Drawing.Size(453, 215);
+            series6.BorderWidth = 5;
+            series6.ChartArea = "uploadBandwidthChartArea";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series6.Legend = "uploadBandwidthLegend";
+            series6.Name = "Upload Bandwidth";
+            this.uploadBandwidthChart.Series.Add(series6);
+            this.uploadBandwidthChart.Size = new System.Drawing.Size(575, 255);
             this.uploadBandwidthChart.TabIndex = 0;
             this.uploadBandwidthChart.Text = "uploadBandwidthChart";
             // 
-            // First QoETab
+            // QoETab
             // 
             this.QoETab.Controls.Add(this.QoEGroupBox);
             this.QoETab.Location = new System.Drawing.Point(4, 22);
@@ -346,7 +344,7 @@
             this.QoETab.Text = "Estimated QoE";
             this.QoETab.UseVisualStyleBackColor = true;
             // 
-            // First QoEGroupBox
+            // QoEGroupBox
             // 
             this.QoEGroupBox.Controls.Add(this.meanQoEChart);
             this.QoEGroupBox.Controls.Add(this.QoEChart);
@@ -355,10 +353,11 @@
             this.QoEGroupBox.Size = new System.Drawing.Size(463, 456);
             this.QoEGroupBox.TabIndex = 9;
             this.QoEGroupBox.TabStop = false;
-
             // 
-            // First meanQoEChart
+            // meanQoEChart
             // 
+            chartArea7.AxisY.Maximum = 3D;
+            chartArea7.AxisY.Minimum = 0D;
             chartArea7.AxisY.Title = "QoE";
             chartArea7.Name = "meanQoEChartArea";
             this.meanQoEChart.ChartAreas.Add(chartArea7);
@@ -366,19 +365,20 @@
             this.meanQoEChart.Legends.Add(legend7);
             this.meanQoEChart.Location = new System.Drawing.Point(6, 235);
             this.meanQoEChart.Name = "meanQoEChart";
-            series8.BorderWidth = 5;
-            series8.ChartArea = "meanQoEChartArea";
-            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series8.Legend = "meanQoELegend";
-            series8.Name = "Tree";//"Mean QoE";
-            this.meanQoEChart.Series.Add(series8);
-
+            series7.BorderWidth = 5;
+            series7.ChartArea = "meanQoEChartArea";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series7.Legend = "meanQoELegend";
+            series7.Name = "Tree";
+            this.meanQoEChart.Series.Add(series7);
             this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
             this.meanQoEChart.TabIndex = 1;
             this.meanQoEChart.Text = "meanQoEChart";
             // 
-            // First QoEChart
+            // QoEChart
             // 
+            chartArea8.AxisY.Maximum = 3D;
+            chartArea8.AxisY.Minimum = 0D;
             chartArea8.AxisY.Title = "QoE";
             chartArea8.Name = "QoEChartArea";
             this.QoEChart.ChartAreas.Add(chartArea8);
@@ -386,29 +386,28 @@
             this.QoEChart.Legends.Add(legend8);
             this.QoEChart.Location = new System.Drawing.Point(4, 16);
             this.QoEChart.Name = "QoEChart";
-            series9.BorderWidth = 5;
-            series9.ChartArea = "QoEChartArea";
-            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series9.Legend = "QoELegend";
-            series9.Name = "Hardcoded";//"QoE";
-            this.QoEChart.Series.Add(series9);
+            series8.BorderWidth = 5;
+            series8.ChartArea = "QoEChartArea";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series8.Legend = "QoELegend";
+            series8.Name = "Hardcoded";
+            this.QoEChart.Series.Add(series8);
             this.QoEChart.Size = new System.Drawing.Size(453, 215);
             this.QoEChart.TabIndex = 0;
             this.QoEChart.Text = "QoEChart";
-
             // 
-            // Second QoETab
+            // secondQoETab
             // 
             this.secondQoETab.Controls.Add(this.secondQoEGroupBox);
             this.secondQoETab.Location = new System.Drawing.Point(4, 22);
-            this.secondQoETab.Name = "QoETab2";
+            this.secondQoETab.Name = "secondQoETab";
             this.secondQoETab.Padding = new System.Windows.Forms.Padding(3);
             this.secondQoETab.Size = new System.Drawing.Size(473, 461);
             this.secondQoETab.TabIndex = 3;
             this.secondQoETab.Text = "QoE 2";
             this.secondQoETab.UseVisualStyleBackColor = true;
             // 
-            // Second QoEGroupBox
+            // secondQoEGroupBox
             // 
             this.secondQoEGroupBox.Controls.Add(this.secondMeanQoEChart);
             this.secondQoEGroupBox.Controls.Add(this.secondQoEChart);
@@ -418,40 +417,44 @@
             this.secondQoEGroupBox.TabIndex = 9;
             this.secondQoEGroupBox.TabStop = false;
             // 
-            // Second meanQoEChart
+            // secondMeanQoEChart
             // 
-            chartArea10.AxisY.Title = "QoE";
-            chartArea10.Name = "secondMeanQoEChartArea";
-            this.secondMeanQoEChart.ChartAreas.Add(chartArea10);
-            legend10.Name = "secondMeanQoELegend";
-            this.secondMeanQoEChart.Legends.Add(legend10);
+            chartArea9.AxisY.Maximum = 3D;
+            chartArea9.AxisY.Minimum = 0D;
+            chartArea9.AxisY.Title = "QoE";
+            chartArea9.Name = "secondMeanQoEChartArea";
+            this.secondMeanQoEChart.ChartAreas.Add(chartArea9);
+            legend9.Name = "secondMeanQoELegend";
+            this.secondMeanQoEChart.Legends.Add(legend9);
             this.secondMeanQoEChart.Location = new System.Drawing.Point(6, 235);
             this.secondMeanQoEChart.Name = "secondMeanQoEChart";
-            series10.BorderWidth = 5;
-            series10.ChartArea = "secondMeanQoEChartArea";
-            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series10.Legend = "secondMeanQoELegend";
-            series10.Name = "Mean QoE";
-            this.secondMeanQoEChart.Series.Add(series10);
+            series9.BorderWidth = 5;
+            series9.ChartArea = "secondMeanQoEChartArea";
+            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series9.Legend = "secondMeanQoELegend";
+            series9.Name = "Mean QoE";
+            this.secondMeanQoEChart.Series.Add(series9);
             this.secondMeanQoEChart.Size = new System.Drawing.Size(453, 215);
             this.secondMeanQoEChart.TabIndex = 1;
             this.secondMeanQoEChart.Text = "secondMeanQoEChart";
             // 
-            // Second QoEChart
+            // secondQoEChart
             // 
-            chartArea11.AxisY.Title = "QoE";
-            chartArea11.Name = "secondQoEChartArea";
-            this.secondQoEChart.ChartAreas.Add(chartArea11);
-            legend11.Name = "secondQoELegend";
-            this.secondQoEChart.Legends.Add(legend11);
+            chartArea10.AxisY.Maximum = 3D;
+            chartArea10.AxisY.Minimum = 0D;
+            chartArea10.AxisY.Title = "QoE";
+            chartArea10.Name = "secondQoEChartArea";
+            this.secondQoEChart.ChartAreas.Add(chartArea10);
+            legend10.Name = "secondQoELegend";
+            this.secondQoEChart.Legends.Add(legend10);
             this.secondQoEChart.Location = new System.Drawing.Point(4, 16);
             this.secondQoEChart.Name = "secondQoEChart";
-            series11.BorderWidth = 5;
-            series11.ChartArea = "secondQoEChartArea";
-            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series11.Legend = "secondQoELegend";
-            series11.Name = "QoE";
-            this.secondQoEChart.Series.Add(series11);
+            series10.BorderWidth = 5;
+            series10.ChartArea = "secondQoEChartArea";
+            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series10.Legend = "secondQoELegend";
+            series10.Name = "QoE";
+            this.secondQoEChart.Series.Add(series10);
             this.secondQoEChart.Size = new System.Drawing.Size(453, 215);
             this.secondQoEChart.TabIndex = 0;
             this.secondQoEChart.Text = "secondQoEChart";
@@ -611,7 +614,32 @@
             this.decisionTreeGroupBox.TabIndex = 10;
             this.decisionTreeGroupBox.TabStop = false;
             this.decisionTreeGroupBox.Text = "QoE Config.";
-            //this.decisionTreeGroupBox.Enter += new System.EventHandler(this.decisionTreeGroupBox_Enter);
+            // 
+            // decisionTreeTextBox
+            // 
+            this.decisionTreeTextBox.Location = new System.Drawing.Point(137, 20);
+            this.decisionTreeTextBox.Name = "decisionTreeTextBox";
+            this.decisionTreeTextBox.Size = new System.Drawing.Size(129, 20);
+            this.decisionTreeTextBox.TabIndex = 16;
+            // 
+            // decisionTreeSelectionLabel
+            // 
+            this.decisionTreeSelectionLabel.AutoSize = true;
+            this.decisionTreeSelectionLabel.Location = new System.Drawing.Point(7, 25);
+            this.decisionTreeSelectionLabel.Name = "decisionTreeSelectionLabel";
+            this.decisionTreeSelectionLabel.Size = new System.Drawing.Size(123, 13);
+            this.decisionTreeSelectionLabel.TabIndex = 2;
+            this.decisionTreeSelectionLabel.Text = "Choose Decision Tree(s)";
+            // 
+            // decisionTreeSelectionButton
+            // 
+            this.decisionTreeSelectionButton.Location = new System.Drawing.Point(275, 18);
+            this.decisionTreeSelectionButton.Name = "decisionTreeSelectionButton";
+            this.decisionTreeSelectionButton.Size = new System.Drawing.Size(87, 23);
+            this.decisionTreeSelectionButton.TabIndex = 15;
+            this.decisionTreeSelectionButton.Text = "Browse...";
+            this.decisionTreeSelectionButton.UseVisualStyleBackColor = true;
+            this.decisionTreeSelectionButton.Click += new System.EventHandler(this.button5_Click);
             // 
             // decisionTreeTwoTextBox
             // 
@@ -630,33 +658,6 @@
             this.decisionTreeTwoSelectionButton.UseVisualStyleBackColor = true;
             this.decisionTreeTwoSelectionButton.Click += new System.EventHandler(this.button6_Click);
             // 
-            // decisionTreeTextBox
-            // 
-            this.decisionTreeTextBox.Location = new System.Drawing.Point(137, 20);
-            this.decisionTreeTextBox.Name = "decisionTreeTextBox";
-            this.decisionTreeTextBox.Size = new System.Drawing.Size(129, 20);
-            this.decisionTreeTextBox.TabIndex = 16;
-            // 
-            // decisionTreeSelectionLabel
-            // 
-            this.decisionTreeSelectionLabel.AutoSize = true;
-            this.decisionTreeSelectionLabel.Location = new System.Drawing.Point(7, 25);
-            this.decisionTreeSelectionLabel.Name = "decisionTreeSelectionLabel";
-            this.decisionTreeSelectionLabel.Size = new System.Drawing.Size(123, 13);
-            this.decisionTreeSelectionLabel.TabIndex = 2;
-            this.decisionTreeSelectionLabel.Text = "Choose Decision Tree(s)";
-           // this.decisionTreeSelectionLabel.Click += new System.EventHandler(this.decisionTreeSelectionLabel_Click);
-            // 
-            // decisionTreeSelectionButton
-            // 
-            this.decisionTreeSelectionButton.Location = new System.Drawing.Point(275, 18);
-            this.decisionTreeSelectionButton.Name = "decisionTreeSelectionButton";
-            this.decisionTreeSelectionButton.Size = new System.Drawing.Size(87, 23);
-            this.decisionTreeSelectionButton.TabIndex = 15;
-            this.decisionTreeSelectionButton.Text = "Browse...";
-            this.decisionTreeSelectionButton.UseVisualStyleBackColor = true;
-            this.decisionTreeSelectionButton.Click += new System.EventHandler(this.button5_Click);
-            // 
             // experimentConfigGroupBox
             // 
             this.experimentConfigGroupBox.Controls.Add(this.burstSizeLabel);
@@ -674,7 +675,6 @@
             this.experimentConfigGroupBox.TabIndex = 14;
             this.experimentConfigGroupBox.TabStop = false;
             this.experimentConfigGroupBox.Text = "Measurement Config.";
-            //this.experimentConfigGroupBox.Enter += new System.EventHandler(this.experimentConfigGroupBox_Enter);
             // 
             // burstSizeUnitLabel
             // 
@@ -684,7 +684,6 @@
             this.burstSizeUnitLabel.Size = new System.Drawing.Size(45, 13);
             this.burstSizeUnitLabel.TabIndex = 9;
             this.burstSizeUnitLabel.Text = "packets";
-            //this.burstSizeUnitLabel.Click += new System.EventHandler(this.burstSizeUnitLabel_Click);
             // 
             // probeSizeLabel
             // 
@@ -720,7 +719,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(883, 499);
+            this.ClientSize = new System.Drawing.Size(998, 623);
             this.Controls.Add(this.configurationGroupBox);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -728,8 +727,8 @@
             this.ShowIcon = false;
             this.Text = "ACQUA";
             this.tabControl.ResumeLayout(false);
-            this.jitterAndDelayTab.ResumeLayout(false);
-            this.jitterAndDelayGroupBox.ResumeLayout(false);
+            this.delayTab.ResumeLayout(false);
+            this.delayGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.downloadDelayChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.uploadDelayChart)).EndInit();
             this.lossRateTab.ResumeLayout(false);
@@ -742,10 +741,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.uploadBandwidthChart)).EndInit();
             this.QoETab.ResumeLayout(false);
             this.QoEGroupBox.ResumeLayout(false);
-            this.secondQoETab.ResumeLayout(false);
-            this.secondQoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).EndInit();
+            this.secondQoETab.ResumeLayout(false);
+            this.secondQoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).EndInit();
@@ -767,14 +766,14 @@
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage bandwidthTab;
         private System.Windows.Forms.TabPage lossRateTab;
-        private System.Windows.Forms.TabPage jitterAndDelayTab;
+        private System.Windows.Forms.TabPage delayTab;
         private System.Windows.Forms.TabPage QoETab;
         private System.Windows.Forms.TabPage secondQoETab;
         private System.Windows.Forms.Label burstSizeLabel;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.GroupBox landmarksListGroupBox;
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.GroupBox jitterAndDelayGroupBox;
+        private System.Windows.Forms.GroupBox delayGroupBox;
         private System.Windows.Forms.RichTextBox landmarksListForm;
         private System.Windows.Forms.DataVisualization.Charting.Chart uploadDelayChart;
         private System.Windows.Forms.Label experimentSleepTimeUnitLabel;
