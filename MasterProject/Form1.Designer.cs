@@ -117,11 +117,11 @@
             this.QoETab.SuspendLayout();
             this.QoEGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.QoEChart)).BeginInit();
             this.secondQoETab.SuspendLayout();
             this.secondQoEGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).BeginInit();
+           // ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.burstSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.probeSize)).BeginInit();
@@ -168,6 +168,7 @@
             // 
             chartArea1.AxisY.Maximum = 1000D;
             chartArea1.AxisY.Minimum = 0D;
+            chartArea1.AxisX.Minimum = 0;
             chartArea1.AxisY.Title = "One-Way Delay (ms)";
             chartArea1.Name = "downloadDelayChartArea";
             this.downloadDelayChart.ChartAreas.Add(chartArea1);
@@ -189,6 +190,7 @@
             // 
             chartArea2.AxisY.Maximum = 1000D;
             chartArea2.AxisY.Minimum = 0D;
+            chartArea2.AxisX.Minimum = 0;
             chartArea2.AxisY.Title = "One-Way Delay (ms)";
             chartArea2.Name = "uploadDelayChartArea";
             this.uploadDelayChart.ChartAreas.Add(chartArea2);
@@ -232,6 +234,7 @@
             // 
             chartArea3.AxisY.Maximum = 100D;
             chartArea3.AxisY.Minimum = 0D;
+            chartArea3.AxisX.Minimum = 0;
             chartArea3.AxisY.Title = "Download Loss Rate (%)";
             chartArea3.Name = "downloadLossRateChartArea";
             this.downloadLossRateChart.ChartAreas.Add(chartArea3);
@@ -253,6 +256,7 @@
             // 
             chartArea4.AxisY.Maximum = 100D;
             chartArea4.AxisY.Minimum = 0D;
+            chartArea4.AxisX.Minimum = 0;
             chartArea4.AxisY.Title = "Upload Loss Rate (%)";
             chartArea4.Name = "uploadLossRateChartArea";
             this.uploadLossRateChart.ChartAreas.Add(chartArea4);
@@ -295,6 +299,7 @@
             // 
             chartArea5.AxisY.Maximum = 6000D;
             chartArea5.AxisY.Minimum = 0D;
+            chartArea5.AxisX.Minimum = 0;
             chartArea5.AxisY.Title = "Download Bandwidth (Kbs)";
             chartArea5.Name = "downloadBandwidthChartArea";
             this.downloadBandwidthChart.ChartAreas.Add(chartArea5);
@@ -316,6 +321,7 @@
             // 
             chartArea6.AxisY.Maximum = 6000D;
             chartArea6.AxisY.Minimum = 0D;
+            chartArea6.AxisX.Minimum = 0;
             chartArea6.AxisY.Title = "Upload Bandwidth (Kbs)";
             chartArea6.Name = "uploadBandwidthChartArea";
             this.uploadBandwidthChart.ChartAreas.Add(chartArea6);
@@ -349,7 +355,7 @@
             // QoEGroupBox
             // 
             this.QoEGroupBox.Controls.Add(this.meanQoEChart);
-            this.QoEGroupBox.Controls.Add(this.QoEChart);
+            //this.QoEGroupBox.Controls.Add(this.QoEChart);
             this.QoEGroupBox.Location = new System.Drawing.Point(4, -1);
             this.QoEGroupBox.Name = "QoEGroupBox";
             this.QoEGroupBox.Size = new System.Drawing.Size(589, 591);
@@ -360,54 +366,61 @@
             // 
             chartArea7.AxisY.Maximum = 3D;
             chartArea7.AxisY.Minimum = 0D;
+            chartArea7.AxisX.Minimum = 0;
             chartArea7.AxisY.Title = "QoE";
             chartArea7.Name = "meanQoEChartArea";
             this.meanQoEChart.ChartAreas.Add(chartArea7);
             legend7.Name = "meanQoELegend";
             this.meanQoEChart.Legends.Add(legend7);
-            this.meanQoEChart.Location = new System.Drawing.Point(-8, 277);
+            this.meanQoEChart.Location = new System.Drawing.Point(-8, 17); //(-8, 277)
             this.meanQoEChart.Name = "meanQoEChart";
             series7.BorderWidth = 5;
             series7.ChartArea = "meanQoEChartArea";
             series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series7.Legend = "meanQoELegend";
-            series7.Name = "Tree";
+            series7.Name = "QoE";
             this.meanQoEChart.Series.Add(series7);
             this.meanQoEChart.Size = new System.Drawing.Size(601, 317);
             this.meanQoEChart.TabIndex = 1;
             this.meanQoEChart.Text = "meanQoEChart";
+            // setting tick marks on 0, 1, 2, 3 on y-axis
+            this.meanQoEChart.ChartAreas[0].AxisY.MajorTickMark.Interval = 1.0;
+            this.meanQoEChart.ChartAreas[0].AxisY.MajorTickMark.IntervalOffset = 0.0;
+            // setting grid lines on tick marks
+            this.meanQoEChart.ChartAreas[0].AxisY.MajorGrid.Interval = 1.0;
+            this.meanQoEChart.ChartAreas[0].AxisY.MajorGrid.IntervalOffset = 0.0;
             // no_call
             System.Windows.Forms.DataVisualization.Charting.CustomLabel label_nocall = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
             label_nocall.FromPosition = 0.0;
-            label_nocall.ToPosition = 0.1;
+            label_nocall.ToPosition = 0.01;
             label_nocall.Text = "no call";
             label_nocall.RowIndex = 0;
             this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Clear();
             this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_nocall);
+            this.meanQoEChart.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Arial", 12);
             //poor
             System.Windows.Forms.DataVisualization.Charting.CustomLabel label_poor = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
             label_poor.FromPosition = 1.0;
-            label_poor.ToPosition = 1.1;
+            label_poor.ToPosition = 1.01;
             label_poor.Text = "poor";
             label_poor.RowIndex = 0;
             this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_poor);
             // good
             System.Windows.Forms.DataVisualization.Charting.CustomLabel label_good = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
             label_good.FromPosition = 2.0;
-            label_good.ToPosition = 2.1;
+            label_good.ToPosition = 2.01;
             label_good.Text = "good";
             label_good.RowIndex = 0;
             this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_good);
-
             //excellent 
             System.Windows.Forms.DataVisualization.Charting.CustomLabel label_excellent = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
-            label_excellent.FromPosition = 3.0;
-            label_excellent.ToPosition = 3.1;
+            label_excellent.FromPosition = 2.9;
+            label_excellent.ToPosition = 3.0;
             label_excellent.Text = "excellent";
             label_excellent.RowIndex = 0;
             this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_excellent);
 
-
+            /*
             // 
             // QoEChart
             // 
@@ -429,6 +442,7 @@
             this.QoEChart.Size = new System.Drawing.Size(583, 255);
             this.QoEChart.TabIndex = 0;
             this.QoEChart.Text = "QoEChart";
+             */
             // 
             // secondQoETab
             // 
@@ -444,7 +458,7 @@
             // secondQoEGroupBox
             // 
             this.secondQoEGroupBox.Controls.Add(this.secondMeanQoEChart);
-            this.secondQoEGroupBox.Controls.Add(this.secondQoEChart);
+            //this.secondQoEGroupBox.Controls.Add(this.secondQoEChart);
             this.secondQoEGroupBox.Location = new System.Drawing.Point(4, -1);
             this.secondQoEGroupBox.Name = "secondQoEGroupBox";
             this.secondQoEGroupBox.Size = new System.Drawing.Size(589, 591);
@@ -455,22 +469,63 @@
             // 
             chartArea9.AxisY.Maximum = 3D;
             chartArea9.AxisY.Minimum = 0D;
+            chartArea9.AxisX.Minimum = 0;
             chartArea9.AxisY.Title = "QoE";
             chartArea9.Name = "secondMeanQoEChartArea";
             this.secondMeanQoEChart.ChartAreas.Add(chartArea9);
             legend9.Name = "secondMeanQoELegend";
             this.secondMeanQoEChart.Legends.Add(legend9);
-            this.secondMeanQoEChart.Location = new System.Drawing.Point(-8, 277);
+            this.secondMeanQoEChart.Location = new System.Drawing.Point(-8, 17);//(-8, 277)
             this.secondMeanQoEChart.Name = "secondMeanQoEChart";
             series9.BorderWidth = 5;
             series9.ChartArea = "secondMeanQoEChartArea";
             series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series9.Legend = "secondMeanQoELegend";
-            series9.Name = "Mean QoE";
+            series9.Name = "QoE";
             this.secondMeanQoEChart.Series.Add(series9);
             this.secondMeanQoEChart.Size = new System.Drawing.Size(601, 317);
             this.secondMeanQoEChart.TabIndex = 1;
             this.secondMeanQoEChart.Text = "secondMeanQoEChart";
+            // setting tick marks on 0, 1, 2, 3 on y-axis
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.MajorTickMark.Interval = 1.0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.MajorTickMark.IntervalOffset = 0.0;
+            // setting grid lines on tick marks
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.MajorGrid.Interval = 1.0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.MajorGrid.IntervalOffset = 0.0;
+            // no_call
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_nocall2 = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_nocall2.FromPosition = 0.0;
+            label_nocall2.ToPosition = 0.01;
+            label_nocall2.Text = "poor";
+            label_nocall2.RowIndex = 0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.CustomLabels.Clear();
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_nocall2);
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.LabelStyle.Font = new System.Drawing.Font("Arial", 12);
+            //poor
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_poor2 = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_poor2.FromPosition = 1.0;
+            label_poor2.ToPosition = 1.01;
+            label_poor2.Text = "average";
+            label_poor2.RowIndex = 0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_poor2);
+            // good
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_good2 = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_good2.FromPosition = 2.0;
+            label_good2.ToPosition = 2.01;
+            label_good2.Text = "good";
+            label_good2.RowIndex = 0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_good2);
+            //excellent 
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_excellent2 = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_excellent2.FromPosition = 2.9;
+            label_excellent2.ToPosition = 3.0;
+            label_excellent2.Text = "excellent";
+            label_excellent2.RowIndex = 0;
+            this.secondMeanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_excellent2);
+
+
+
+            /*
             // 
             // secondQoEChart
             // 
@@ -492,6 +547,7 @@
             this.secondQoEChart.Size = new System.Drawing.Size(583, 255);
             this.secondQoEChart.TabIndex = 0;
             this.secondQoEChart.Text = "secondQoEChart";
+            */
             // 
             // experimentSleepTime
             // 
@@ -776,11 +832,11 @@
             this.QoETab.ResumeLayout(false);
             this.QoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.meanQoEChart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.QoEChart)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.QoEChart)).EndInit();
             this.secondQoETab.ResumeLayout(false);
             this.secondQoEGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.secondMeanQoEChart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.secondQoEChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.experimentSleepTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.burstSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.probeSize)).EndInit();

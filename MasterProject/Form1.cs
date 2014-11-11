@@ -35,7 +35,7 @@ namespace MasterProject
         {
             LandmarksNumber = 0;
 
-            if (decisionTreeTextBox.Text == "")
+            if (decisionTreeTextBox.Text == "" && decisionTreeTwoTextBox.Text == "")
             {
                 MessageBox.Show("Decision Tree missing", "Error");
                 return;
@@ -252,8 +252,8 @@ namespace MasterProject
 
                     if (firstTreeSelected)
                     {
-                        Console.WriteLine("Plotting new point on first tree");
-                        // QoE 
+                        /*
+                        // QoE from hardcoded decision tree
                         for (int i = 0; i < LandmarksNumber; i++)
                         {
                             //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
@@ -265,12 +265,13 @@ namespace MasterProject
                                 xval++;
                             }
                         }
-                        // QoE bis
-                        this.meanQoEChart.Series["Tree"].Points.Clear();
+                         * */
+                        // QoE
+                        this.meanQoEChart.Series["QoE"].Points.Clear();
                         xval = 0;
                         for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                         {
-                            this.meanQoEChart.Series["Tree"].Points.AddXY((double)xval, meanQoE[pos]);
+                            this.meanQoEChart.Series["QoE"].Points.AddXY((double)xval, meanQoE[pos]);
                             xval++;
                         }
 
@@ -278,8 +279,8 @@ namespace MasterProject
                     Console.WriteLine("Value of secondTreeSelected when plotting:{0}", secondTreeSelected);
                     if (secondTreeSelected)
                     {
-                        Console.WriteLine("Plotting new point on second tree");
-                        // QoE 
+                        /*
+                        // QoE for each landmark
                         for (int i = 0; i < LandmarksNumber; i++)
                         {
                             //this.QoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]); // TODO how does this work?
@@ -292,13 +293,14 @@ namespace MasterProject
                                 xval++;
                             }
                         }
-                        // QoE bis
-                        this.secondMeanQoEChart.Series["Mean QoE"].Points.Clear();
+                         */
+                        // QoE
+                        this.secondMeanQoEChart.Series["QoE"].Points.Clear();
                         xval = 0;
                         for (int pos = LocalIndex - max_points_per_graph + 1; pos <= LocalIndex; pos++)
                         {
                             Console.WriteLine("Plotting new point on graph2 of second tree");
-                            this.secondMeanQoEChart.Series["Mean QoE"].Points.AddXY((double)xval, secondMeanQoE[pos]);
+                            this.secondMeanQoEChart.Series["QoE"].Points.AddXY((double)xval, secondMeanQoE[pos]);
                             xval++;
                         }
 
@@ -330,22 +332,26 @@ namespace MasterProject
                     this.downloadBandwidthChart.Series["Download Bandwidth"].Points.AddXY(LocalIndex, FinalBandwidthArray[LocalIndex].dimension2);
                     this.uploadLossRateChart.Series["Upload Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension1);
                     this.downloadLossRateChart.Series["Download Loss Rate"].Points.AddXY(LocalIndex, FinalLossRateArray[LocalIndex].dimension2);
+                    /*
                     for (int i = 0; i < LandmarksNumber; i++)
                     {
                         this.QoEChart.Series["Hardcoded"].Points.AddXY("Landmark " + i + 1, QoEPerLandmark[LocalIndex, i]);
                     }
-                    this.meanQoEChart.Series["Tree"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
+                     */
+                    this.meanQoEChart.Series["QoE"].Points.AddXY(LocalIndex, meanQoE[LocalIndex]);
+                    /*
                     for (int i = 0; i < LandmarksNumber; i++)
                     {
                         this.secondQoEChart.Series["QoE"].Points.AddXY("Landmark " + i + 1, secondQoEPerLandmark[LocalIndex, i]);
                     }
-                    this.secondMeanQoEChart.Series["Mean QoE"].Points.AddXY(LocalIndex, secondMeanQoE[LocalIndex]);
+                    */
+                    this.secondMeanQoEChart.Series["QoE"].Points.AddXY(LocalIndex, secondMeanQoE[LocalIndex]);
                 }
 
                 Console.WriteLine("HARDCODED {0}", skypeQoE[LocalIndex]);
                 LocalIndex++;
                 Console.WriteLine("\tTotal Execution Time {0}", totalTime.ElapsedMilliseconds);
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
             }
 
             this.Close();
@@ -454,11 +460,22 @@ namespace MasterProject
             delayServer();
         }
 
+        //int[] dummy = new int[20]{0, 0, 0, 0, 30, 50, 100, 100, 20, 70, 0, 0, 10, 10, 20, 0, 10, 90, 100, 100};
+        //int[] dummy = new int[10] {1, 51, 101, 501, 10, 60, 110, 510, 20, 80 };
         private int[] getMeasurements()
         {
             experimentID++;
             Console.WriteLine("Executing Experiment {0}...", experimentID);
-
+            /*
+            int[] ret = new int[6];
+            ret[0] = 20;
+            ret[1] = 30;
+            ret[2] =100;
+            ret[3] = dummy[experimentID];
+            ret[4]=0;
+            ret[5] = 0;
+            return ret;
+            */
             if (experimentID % 2 == 0)
             {
                 int delayID = experimentID;
