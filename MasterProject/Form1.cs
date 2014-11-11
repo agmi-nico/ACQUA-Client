@@ -196,6 +196,14 @@ namespace MasterProject
                         this.uploadDelayChart.Series["Upload OWD"].Points.AddXY((double)xval, FinalOWDArray[pos].dimension1);
                         xval++;
                     }
+                    foreach (System.Windows.Forms.DataVisualization.Charting.DataPoint dp in uploadDelayChart.Series["Upload OWD"].Points)
+                    {
+                        switch ((int)dp.YValues[0])
+                        {
+                            case 0: dp.AxisLabel = "No Call"; break;
+                            
+                        }
+                    }
 
                     //download OWD [ no jitter computation for the moment]
                     this.downloadDelayChart.Series["Download OWD"].Points.Clear();

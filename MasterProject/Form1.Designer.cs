@@ -329,9 +329,11 @@
             series6.Legend = "uploadBandwidthLegend";
             series6.Name = "Upload Bandwidth";
             this.uploadBandwidthChart.Series.Add(series6);
-            this.uploadBandwidthChart.Size = new System.Drawing.Size(575, 255);
+            this.uploadBandwidthChart.Size = new System.Drawing.Size(583, 255);
             this.uploadBandwidthChart.TabIndex = 0;
             this.uploadBandwidthChart.Text = "uploadBandwidthChart";
+            
+
             // 
             // QoETab
             // 
@@ -339,9 +341,9 @@
             this.QoETab.Location = new System.Drawing.Point(4, 22);
             this.QoETab.Name = "QoETab";
             this.QoETab.Padding = new System.Windows.Forms.Padding(3);
-            this.QoETab.Size = new System.Drawing.Size(473, 461);
+            this.QoETab.Size = new System.Drawing.Size(593, 593);
             this.QoETab.TabIndex = 3;
-            this.QoETab.Text = "Estimated QoE";
+            this.QoETab.Text = "Skype QoE";
             this.QoETab.UseVisualStyleBackColor = true;
             // 
             // QoEGroupBox
@@ -350,7 +352,7 @@
             this.QoEGroupBox.Controls.Add(this.QoEChart);
             this.QoEGroupBox.Location = new System.Drawing.Point(4, -1);
             this.QoEGroupBox.Name = "QoEGroupBox";
-            this.QoEGroupBox.Size = new System.Drawing.Size(463, 456);
+            this.QoEGroupBox.Size = new System.Drawing.Size(589, 591);
             this.QoEGroupBox.TabIndex = 9;
             this.QoEGroupBox.TabStop = false;
             // 
@@ -363,7 +365,7 @@
             this.meanQoEChart.ChartAreas.Add(chartArea7);
             legend7.Name = "meanQoELegend";
             this.meanQoEChart.Legends.Add(legend7);
-            this.meanQoEChart.Location = new System.Drawing.Point(6, 235);
+            this.meanQoEChart.Location = new System.Drawing.Point(-8, 277);
             this.meanQoEChart.Name = "meanQoEChart";
             series7.BorderWidth = 5;
             series7.ChartArea = "meanQoEChartArea";
@@ -371,9 +373,41 @@
             series7.Legend = "meanQoELegend";
             series7.Name = "Tree";
             this.meanQoEChart.Series.Add(series7);
-            this.meanQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.meanQoEChart.Size = new System.Drawing.Size(601, 317);
             this.meanQoEChart.TabIndex = 1;
             this.meanQoEChart.Text = "meanQoEChart";
+            // no_call
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_nocall = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_nocall.FromPosition = 0.0;
+            label_nocall.ToPosition = 0.1;
+            label_nocall.Text = "no call";
+            label_nocall.RowIndex = 0;
+            this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Clear();
+            this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_nocall);
+            //poor
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_poor = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_poor.FromPosition = 1.0;
+            label_poor.ToPosition = 1.1;
+            label_poor.Text = "poor";
+            label_poor.RowIndex = 0;
+            this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_poor);
+            // good
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_good = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_good.FromPosition = 2.0;
+            label_good.ToPosition = 2.1;
+            label_good.Text = "good";
+            label_good.RowIndex = 0;
+            this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_good);
+
+            //excellent 
+            System.Windows.Forms.DataVisualization.Charting.CustomLabel label_excellent = new System.Windows.Forms.DataVisualization.Charting.CustomLabel();
+            label_excellent.FromPosition = 3.0;
+            label_excellent.ToPosition = 3.1;
+            label_excellent.Text = "excellent";
+            label_excellent.RowIndex = 0;
+            this.meanQoEChart.ChartAreas[0].AxisY.CustomLabels.Add(label_excellent);
+
+
             // 
             // QoEChart
             // 
@@ -384,7 +418,7 @@
             this.QoEChart.ChartAreas.Add(chartArea8);
             legend8.Name = "QoELegend";
             this.QoEChart.Legends.Add(legend8);
-            this.QoEChart.Location = new System.Drawing.Point(4, 16);
+            this.QoEChart.Location = new System.Drawing.Point(-8, 17);
             this.QoEChart.Name = "QoEChart";
             series8.BorderWidth = 5;
             series8.ChartArea = "QoEChartArea";
@@ -392,7 +426,7 @@
             series8.Legend = "QoELegend";
             series8.Name = "Hardcoded";
             this.QoEChart.Series.Add(series8);
-            this.QoEChart.Size = new System.Drawing.Size(453, 215);
+            this.QoEChart.Size = new System.Drawing.Size(583, 255);
             this.QoEChart.TabIndex = 0;
             this.QoEChart.Text = "QoEChart";
             // 
@@ -402,9 +436,9 @@
             this.secondQoETab.Location = new System.Drawing.Point(4, 22);
             this.secondQoETab.Name = "secondQoETab";
             this.secondQoETab.Padding = new System.Windows.Forms.Padding(3);
-            this.secondQoETab.Size = new System.Drawing.Size(473, 461);
+            this.secondQoETab.Size = new System.Drawing.Size(593, 593);
             this.secondQoETab.TabIndex = 3;
-            this.secondQoETab.Text = "QoE 2";
+            this.secondQoETab.Text = "Video QoE";
             this.secondQoETab.UseVisualStyleBackColor = true;
             // 
             // secondQoEGroupBox
@@ -413,7 +447,7 @@
             this.secondQoEGroupBox.Controls.Add(this.secondQoEChart);
             this.secondQoEGroupBox.Location = new System.Drawing.Point(4, -1);
             this.secondQoEGroupBox.Name = "secondQoEGroupBox";
-            this.secondQoEGroupBox.Size = new System.Drawing.Size(463, 456);
+            this.secondQoEGroupBox.Size = new System.Drawing.Size(589, 591);
             this.secondQoEGroupBox.TabIndex = 9;
             this.secondQoEGroupBox.TabStop = false;
             // 
@@ -426,7 +460,7 @@
             this.secondMeanQoEChart.ChartAreas.Add(chartArea9);
             legend9.Name = "secondMeanQoELegend";
             this.secondMeanQoEChart.Legends.Add(legend9);
-            this.secondMeanQoEChart.Location = new System.Drawing.Point(6, 235);
+            this.secondMeanQoEChart.Location = new System.Drawing.Point(-8, 277);
             this.secondMeanQoEChart.Name = "secondMeanQoEChart";
             series9.BorderWidth = 5;
             series9.ChartArea = "secondMeanQoEChartArea";
@@ -434,7 +468,7 @@
             series9.Legend = "secondMeanQoELegend";
             series9.Name = "Mean QoE";
             this.secondMeanQoEChart.Series.Add(series9);
-            this.secondMeanQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.secondMeanQoEChart.Size = new System.Drawing.Size(601, 317);
             this.secondMeanQoEChart.TabIndex = 1;
             this.secondMeanQoEChart.Text = "secondMeanQoEChart";
             // 
@@ -447,7 +481,7 @@
             this.secondQoEChart.ChartAreas.Add(chartArea10);
             legend10.Name = "secondQoELegend";
             this.secondQoEChart.Legends.Add(legend10);
-            this.secondQoEChart.Location = new System.Drawing.Point(4, 16);
+            this.secondQoEChart.Location = new System.Drawing.Point(-8, 17);
             this.secondQoEChart.Name = "secondQoEChart";
             series10.BorderWidth = 5;
             series10.ChartArea = "secondQoEChartArea";
@@ -455,7 +489,7 @@
             series10.Legend = "secondQoELegend";
             series10.Name = "QoE";
             this.secondQoEChart.Series.Add(series10);
-            this.secondQoEChart.Size = new System.Drawing.Size(453, 215);
+            this.secondQoEChart.Size = new System.Drawing.Size(583, 255);
             this.secondQoEChart.TabIndex = 0;
             this.secondQoEChart.Text = "secondQoEChart";
             // 
@@ -572,7 +606,7 @@
             this.configurationGroupBox.Controls.Add(this.landmarksListGroupBox);
             this.configurationGroupBox.Location = new System.Drawing.Point(2, 3);
             this.configurationGroupBox.Name = "configurationGroupBox";
-            this.configurationGroupBox.Size = new System.Drawing.Size(383, 487);
+            this.configurationGroupBox.Size = new System.Drawing.Size(383, 619);
             this.configurationGroupBox.TabIndex = 13;
             this.configurationGroupBox.TabStop = false;
             this.configurationGroupBox.Text = "Configuration";
@@ -592,7 +626,7 @@
             // 
             this.closeButton.Image = global::MasterProject.Properties.Resources.Delete1;
             this.closeButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.closeButton.Location = new System.Drawing.Point(204, 362);
+            this.closeButton.Location = new System.Drawing.Point(202, 525);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(93, 39);
             this.closeButton.TabIndex = 1;
@@ -706,7 +740,7 @@
             // 
             this.okButton.Image = global::MasterProject.Properties.Resources.checkmark;
             this.okButton.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.okButton.Location = new System.Drawing.Point(104, 362);
+            this.okButton.Location = new System.Drawing.Point(102, 525);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(81, 39);
             this.okButton.TabIndex = 1;
